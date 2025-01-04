@@ -51,7 +51,7 @@ public class ModuleIOSim implements ModuleIO {
   private double driveAppliedVolts = 0.0;
   private double turnAppliedVolts = 0.0;
 
-  public ModuleIOSim(SwerveModuleConstants constants) {
+  public ModuleIOSim(SwerveModuleConstants<?,?,?> constants) {
     // Create drive and turn sim models
     driveSim =
         new DCMotorSim(
