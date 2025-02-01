@@ -5,18 +5,18 @@
 package org.supurdueper.robot2025.subsystems;
 
 import com.ctre.phoenix.led.CANdle;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Lights extends SubsystemBase {
-  /** Creates a new Lights. */
-  private CANdle candle;
-  public Lights() {
-    candle = new CANdle(0);
-  }
+    /** Creates a new Lights. */
+    private CANdle candle;
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+    public Lights() {
+        candle = new CANdle(0);
+    }
+
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+    }
 }
