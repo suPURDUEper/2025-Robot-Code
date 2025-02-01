@@ -8,20 +8,23 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import org.supurdueper.robot2025.Constants;
 
-public class AlgeaScore extends SubsystemBase {
-    /** Creates a new AlgaeIntake. */
+import org.supurdueper.robot2025.CanId;
+import org.supurdueper.robot2025.Constants;
+import org.supurdueper.util.TalonFXFactory;
+
+public class Funnel extends SubsystemBase {
+    private TalonFX funnelMotor;
+    private TalonFX tiltMotor;
+    private TalonFXConfiguration intakeConfigs;
     private DigitalInput breakbeam;
 
-    private TalonFX algeaMotor;
-    private TalonFX pivotMotor;
-    private TalonFXConfiguration algeaConfig;
-
-    public AlgeaScore() {
-        algeaMotor = new TalonFX(Constants.CANIDs.algeaMotor, "canivore");
-        pivotMotor = new TalonFX(Constants.CANIDs.pivotMotor, "canivore");
-        algeaConfig = new TalonFXConfiguration();
+    /** Creates a new CoralIntake. */
+    public Funnel() {
+        funnelMotor = TalonFXFactory.createDefaultTalon(CanId.TALONFX_FUNNEL);
+        tiltMotor = TalonFXFactory.createDefaultTalon(CanId.TALONFX_FUNNEL_TILT);
+        intakeConfigs = new TalonFXConfiguration();
+        breakbeam = new DigitalInput(Constants.DIOport.intakeBreakbeam);
     }
 
     @Override

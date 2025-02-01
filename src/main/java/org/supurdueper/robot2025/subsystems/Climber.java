@@ -4,24 +4,24 @@
 
 package org.supurdueper.robot2025.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import org.supurdueper.robot2025.Constants;
+
+import org.supurdueper.robot2025.CanId;
+import org.supurdueper.util.TalonFXFactory;
 
 public class Climber extends SubsystemBase {
     private TalonFX grabMotor;
-    private TalonFX pulleyMotor1;
-    private TalonFX pulleyMotor2;
-    private TalonFXConfiguration climbConfig;
+    private TalonFX liftMotorLeader;
+    private TalonFX liftMotorFollower;
     private DigitalInput breakbeam1;
     private DigitalInput breakbeam2;
 
     public Climber() {
-        grabMotor = new TalonFX(Constants.CANIDs.grabMotor, "canivore");
-        pulleyMotor1 = new TalonFX(Constants.CANIDs.pulleyMotor1, "canivore");
-        pulleyMotor2 = new TalonFX(Constants.CANIDs.pulleyMotor2, "canivore");
+        grabMotor = TalonFXFactory.createDefaultTalon(CanId.TALONFX_CLIMBER_GRAB);
+        liftMotorLeader = TalonFXFactory.createDefaultTalon(CanId.TALONFX_CLIMBER_LEADER);
+        liftMotorFollower = TalonFXFactory.createPermanentFollowerTalon(CanId.TALONFX_CLIMBER_FOLLOWER,liftMotorLeader,false);
         breakbeam1 = new DigitalInput(0);
         breakbeam2 = new DigitalInput(0);
     }

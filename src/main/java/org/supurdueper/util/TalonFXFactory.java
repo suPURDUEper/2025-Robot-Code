@@ -1,5 +1,7 @@
 package org.supurdueper.util;
 
+import org.supurdueper.robot2025.CanId;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -25,13 +27,13 @@ public class TalonFXFactory {
     private TalonFXFactory() {}
 
     // create a CANTalon with the default (out of the box) configuration
-    public static TalonFX createDefaultTalon(CanDeviceId id) {
+    public static TalonFX createDefaultTalon(CanId id) {
         var talon = createTalon(id);
         talon.getConfigurator().apply(getDefaultConfig());
         return talon;
     }
 
-    public static TalonFX createConfigTalon(CanDeviceId id, TalonFXConfiguration config) {
+    public static TalonFX createConfigTalon(CanId id, TalonFXConfiguration config) {
         var talon = createTalon(id);
         talon.getConfigurator().apply(config);
         return talon;
@@ -39,7 +41,7 @@ public class TalonFXFactory {
 
     // Create a new follower talon with same configuration as the leader talon
     public static TalonFX createPermanentFollowerTalon(
-            CanDeviceId followerId, TalonFX leaderTalonFX, boolean opposeLeaderDirection) {
+            CanId followerId, TalonFX leaderTalonFX, boolean opposeLeaderDirection) {
         String leaderCanBus = leaderTalonFX.getNetwork();
         int leaderId = leaderTalonFX.getDeviceID();
         if (!followerId.getBus().equals(leaderCanBus)) {
@@ -92,7 +94,7 @@ public class TalonFXFactory {
         return config;
     }
 
-    private static TalonFX createTalon(CanDeviceId id) {
+    private static TalonFX createTalon(CanId id) {
         TalonFX talon = new TalonFX(id.getDeviceNumber(), id.getBus());
         talon.clearStickyFaults();
 
