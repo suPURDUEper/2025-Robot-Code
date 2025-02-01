@@ -4,23 +4,23 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
-
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class AlgaeIntake extends SubsystemBase {
-  /** Creates a new AlgaeIntake. */
-  private TalonFX intakeMotor;
-  private TalonFX pivotMotor;
+    /** Creates a new AlgaeIntake. */
+    private DigitalInput breakbeam;
 
+    private TalonFX intakeMotor;
+    private TalonFX pivotMotor;
+    private TalonFXConfiguration intakeConfig;
 
+    public AlgaeIntake() {}
 
-  public AlgaeIntake() {
-
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+    }
 }
