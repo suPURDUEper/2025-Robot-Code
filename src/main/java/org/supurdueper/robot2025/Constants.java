@@ -13,6 +13,11 @@
 
 package org.supurdueper.robot2025;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -34,32 +39,6 @@ public final class Constants {
         REPLAY
     }
 
-    public final class CANIDs {
-
-        // Motors
-
-        // Elevator
-        public static final int elevatorMotor1 = 0;
-        public static final int elevatorMotor2 = 0;
-        // Coral scoring
-        public static final int coralScoreMotor = 0;
-        // Wrist
-        public static final int wristMotor = 0;
-        // Algea
-        public static final int algeaMotor = 0;
-        // Intake
-        public static final int intakeMotor = 0;
-        public static final int pivotMotor = 0;
-        // Climber
-        public static final int grabMotor = 0;
-        public static final int pulleyMotor1 = 0;
-        public static final int pulleyMotor2 = 0;
-
-        // Cancoders
-
-        public static final int wristCancoder = 0;
-    }
-
     public final class DIOport {
 
         // Intake
@@ -72,7 +51,16 @@ public final class Constants {
         public static final int climberBreakbeam2 = 0;
     }
 
-    public final class AlgeaScoreConstants {}
+    public static final class AlgaeScoreConstants {
+        public static final Current hasBallCurrent = Units.Amps.of(30);
+        public static final int hasBallCurrentFilterTaps = 5;
+        public static final Time hasBallCurrentDebounceTime = Units.Milliseconds.of(200);
+        public static final Time scoreBallTime = Units.Second.of(0.5);
+        public static final CurrentLimitsConfigs algaeCurrentLimit = new CurrentLimitsConfigs()
+            .withStatorCurrentLimit(20)
+            .withStatorCurrentLimitEnable(true);
+
+    }
 
     public final class ElevatorConstants {}
 

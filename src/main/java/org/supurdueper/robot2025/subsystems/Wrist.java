@@ -23,7 +23,6 @@ public class Wrist extends SubsystemBase {
 
     public Wrist() {
         wristMotor = TalonFXFactory.createDefaultTalon(CanId.TALONFX_WRIST);
-        wristCancoder = new CANcoder(Constants.CANIDs.wristCancoder, "canivore");
         wristMotorConfig = new TalonFXConfiguration();
         wristCanCoderConfig = new CANcoderConfiguration();
     }

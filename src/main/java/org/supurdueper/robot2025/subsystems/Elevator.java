@@ -18,8 +18,6 @@ public class Elevator extends SubsystemBase {
     private TalonFXConfiguration elevatorConfig;
 
     public Elevator() {
-        elevatorMotor1 = new TalonFX(Constants.CANIDs.elevatorMotor1, "canivore");
-        elevatorMotor2 = new TalonFX(Constants.CANIDs.elevatorMotor2, "canivore");
         elevatorConfig = new TalonFXConfiguration();
     }
 

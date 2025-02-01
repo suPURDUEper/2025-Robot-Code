@@ -19,7 +19,6 @@ public class CoralScore extends SubsystemBase {
     private DigitalInput breakbeam2;
 
     public CoralScore() {
-        coralScoreMotor = new TalonFX(Constants.CANIDs.coralScoreMotor, "canivore");
         coralScoreConfig = new TalonFXConfiguration();
         breakbeam1 = new DigitalInput(Constants.DIOport.scoreBreakbeam1);
         breakbeam2 = new DigitalInput(Constants.DIOport.scoreBreakbeam2);
