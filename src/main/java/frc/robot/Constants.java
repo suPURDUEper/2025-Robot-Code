@@ -33,4 +33,74 @@ public final class Constants {
         /** Replaying from a log file. */
         REPLAY
     }
+
+    public final class CANIDs {
+
+            //Motors
+
+        //Elevator
+        public static final int elevatorMotor1 = 0;
+        public static final int elevatorMotor2 = 0;
+        //Coral scoring
+        public static final int coralScoreMotor = 0;
+        //Wrist
+        public static final int wristMotor = 0;
+        //Algea
+        public static final int algeaMotor = 0;
+        //Intake
+        public static final int intakeMotor = 0;
+        public static final int pivotMotor = 0;
+        //Climber
+        public static final int grabMotor = 0;
+        public static final int pulleyMotor1 = 0;
+        public static final int pulleyMotor2 = 0;
+
+
+            //Cancoders
+            
+        public static final int wristCancoder = 0;
+    
+
+    }
+
+    public final class DIOport {
+
+        //Intake
+        public static final int intakeBreakbeam = 0;
+        //Coral score
+        public static final int scoreBreakbeam1 = 0;
+        public static final int scoreBreakbeam2 = 0;
+        //Climber
+        public static final int climberBreakbeam1 = 0;
+        public static final int climberBreakbeam2 = 0;
+
+    }
+
+    public final class AlgeaScoreConstants {
+
+    }
+
+    
+    public final class ElevatorConstants {
+        
+    }
+
+    
+    public final class WristConstants {
+        
+    }
+
+    
+    public final class ClimberConstants {
+        
+    }
+
+    
+    public final class CoralIntakeConstants {
+        
+    }
+
+    public final class CoralScoreConstants {
+
+    }
 }

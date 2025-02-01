@@ -9,24 +9,23 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class CoralIntake extends SubsystemBase {
     private TalonFX intakeMotor;
     private TalonFXConfiguration intakeConfigs;
     private DigitalInput breakbeam;
-    private boolean elasticTest1;
-    private boolean elasticTest2;
 
     /** Creates a new CoralIntake. */
     public CoralIntake() {
-        elasticTest1 = true;
-        elasticTest1 = false;
+        intakeMotor = new TalonFX(Constants.CANIDs.intakeMotor, "canivore");
+        intakeConfigs = new TalonFXConfiguration();
+        breakbeam = new DigitalInput(Constants.DIOport.intakeBreakbeam);
+
     }
 
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
-        SmartDashboard.putBoolean("Coral/Elastic Test 1 (should be true)", elasticTest1);
-        SmartDashboard.putBoolean("Coral/Elastic Test 2 (should be false)", elasticTest2);
     }
 }

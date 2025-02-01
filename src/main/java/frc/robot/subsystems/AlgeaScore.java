@@ -6,18 +6,25 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
-public class AlgaeIntake extends SubsystemBase {
+public class AlgeaScore extends SubsystemBase {
     /** Creates a new AlgaeIntake. */
     private DigitalInput breakbeam;
 
-    private TalonFX intakeMotor;
+    private TalonFX algeaMotor;
     private TalonFX pivotMotor;
-    private TalonFXConfiguration intakeConfig;
+    private TalonFXConfiguration algeaConfig;
 
-    public AlgaeIntake() {}
+    public AlgeaScore() {
+        algeaMotor = new TalonFX(Constants.CANIDs.algeaMotor, "canivore");
+        pivotMotor = new TalonFX(Constants.CANIDs.pivotMotor, "canivore");
+        algeaConfig = new TalonFXConfiguration();
+
+    }
 
     @Override
     public void periodic() {
