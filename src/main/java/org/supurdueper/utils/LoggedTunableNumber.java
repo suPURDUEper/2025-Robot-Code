@@ -25,7 +25,6 @@ public class LoggedTunableNumber implements DoubleSupplier {
     private final String name;
     private boolean hasDefault = false;
     private double defaultValue;
-    private LoggedNetworkNumber dashboardNumber;
     private Map<Integer, Double> lastHasChangedValues = new HashMap<>();
 
     /**
