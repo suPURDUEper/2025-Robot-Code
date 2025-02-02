@@ -7,10 +7,12 @@ package org.supurdueper.robot2025;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.ironmaple.simulation.SimulatedArena;
+import org.supurdueper.BuildConstants;
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
@@ -31,11 +33,32 @@ public class Robot extends TimedRobot {
                 .withNtPublish(true)
                 .withCaptureNt(true));
         DogLog.setPdh(new PowerDistribution());
+         // Record metadata
+        DogLog.log("ProjectName", BuildConstants.MAVEN_NAME);
+        DogLog.log("BuildDate", BuildConstants.BUILD_DATE);
+        DogLog.log("GitSHA", BuildConstants.GIT_SHA);
+        DogLog.log("GitDate", BuildConstants.GIT_DATE);
+        DogLog.log("GitBranch", BuildConstants.GIT_BRANCH);
+        switch (BuildConstants.DIRTY) {
+            case 0:
+                DogLog.log("GitDirty", "All changes committed");
+                break;
+            case 1:
+                DogLog.log("GitDirty", "Uncomitted changes");
+                break;
+            default:
+                DogLog.log("GitDirty", "Unknown");
+                break;
+        }
     }
 
     @Override
     public void robotPeriodic() {
+        // Switch thread to high priority to improve loop timing
+        Threads.setCurrentThreadPriority(true, 99);
         CommandScheduler.getInstance().run();
+        // Return to normal thread priority
+        Threads.setCurrentThreadPriority(false, 10);
     }
 
     @Override
