@@ -4,13 +4,13 @@
 
 package org.supurdueper.robot2025.subsystems;
 
+import static org.supurdueper.robot2025.Constants.AlgaeScoreConstants;
+
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.units.Units;
@@ -19,13 +19,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import org.supurdueper.robot2025.CanId;
-import org.supurdueper.robot2025.Constants;
 import org.supurdueper.util.TalonFXFactory;
-
-import static edu.wpi.first.units.Units.Amp;
-import static org.supurdueper.robot2025.Constants.AlgaeScoreConstants;
 
 public class AlgaeScore extends SubsystemBase {
 
@@ -35,14 +30,14 @@ public class AlgaeScore extends SubsystemBase {
     private StatusSignal<Current> currentSignal;
     private LinearFilter currentFilter;
     private Debouncer currentDebouncer;
-    private Current filteredCurrent; 
+    private Current filteredCurrent;
 
     private final double intakeVoltage = 12;
     private final double outtakeVoltage = -12;
 
     public AlgaeScore() {
-        TalonFXConfiguration config = TalonFXFactory.getDefaultConfig()
-            .withCurrentLimits(AlgaeScoreConstants.algaeCurrentLimit);
+        TalonFXConfiguration config =
+                TalonFXFactory.getDefaultConfig().withCurrentLimits(AlgaeScoreConstants.algaeCurrentLimit);
         algaeMotor = TalonFXFactory.createConfigTalon(CanId.TALONFX_ALGAE, config);
         currentSignal = algaeMotor.getTorqueCurrent();
         currentFilter = LinearFilter.movingAverage(AlgaeScoreConstants.hasBallCurrentFilterTaps);
@@ -57,11 +52,11 @@ public class AlgaeScore extends SubsystemBase {
 
     // Public methods
     public Command intakeBall() {
-       return Commands.runEnd(this::intake, this::stop, this).until(this::hasBall);
+        return Commands.runEnd(this::intake, this::stop, this).until(this::hasBall);
     }
 
     public Command scoreBall() {
-        return Commands.runEnd(this::outtake,this::stop, this).withTimeout(AlgaeScoreConstants.scoreBallTime);
+        return Commands.runEnd(this::outtake, this::stop, this).withTimeout(AlgaeScoreConstants.scoreBallTime);
     }
 
     public Trigger hasBallTrigger() {
@@ -83,7 +78,7 @@ public class AlgaeScore extends SubsystemBase {
     private void outtake() {
         algaeMotor.setControl(request.withOutput(outtakeVoltage));
     }
-    
+
     private void stop() {
         algaeMotor.setControl(stopRequest);
     }

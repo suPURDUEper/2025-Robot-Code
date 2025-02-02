@@ -14,7 +14,6 @@
 package org.supurdueper.robot2025;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Time;
@@ -56,10 +55,8 @@ public final class Constants {
         public static final int hasBallCurrentFilterTaps = 5;
         public static final Time hasBallCurrentDebounceTime = Units.Milliseconds.of(200);
         public static final Time scoreBallTime = Units.Second.of(0.5);
-        public static final CurrentLimitsConfigs algaeCurrentLimit = new CurrentLimitsConfigs()
-            .withStatorCurrentLimit(20)
-            .withStatorCurrentLimitEnable(true);
-
+        public static final CurrentLimitsConfigs algaeCurrentLimit =
+                new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
     }
 
     public final class ElevatorConstants {}
@@ -68,7 +65,10 @@ public final class Constants {
 
     public final class ClimberConstants {}
 
-    public final class CoralIntakeConstants {}
+    public final class FunnelConstants {
+        public static final CurrentLimitsConfigs funnelCurrentLimit =
+                new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
+    }
 
     public final class CoralScoreConstants {}
 }

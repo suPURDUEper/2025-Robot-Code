@@ -7,7 +7,6 @@ package org.supurdueper.robot2025.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.util.TalonFXFactory;
 
@@ -21,7 +20,8 @@ public class Climber extends SubsystemBase {
     public Climber() {
         grabMotor = TalonFXFactory.createDefaultTalon(CanId.TALONFX_CLIMBER_GRAB);
         liftMotorLeader = TalonFXFactory.createDefaultTalon(CanId.TALONFX_CLIMBER_LEADER);
-        liftMotorFollower = TalonFXFactory.createPermanentFollowerTalon(CanId.TALONFX_CLIMBER_FOLLOWER,liftMotorLeader,false);
+        liftMotorFollower =
+                TalonFXFactory.createPermanentFollowerTalon(CanId.TALONFX_CLIMBER_FOLLOWER, liftMotorLeader, false);
         breakbeam1 = new DigitalInput(0);
         breakbeam2 = new DigitalInput(0);
     }
