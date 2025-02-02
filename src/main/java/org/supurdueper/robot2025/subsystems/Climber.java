@@ -21,7 +21,7 @@ public class Climber extends SubsystemBase {
         grabMotor = TalonFXFactory.createDefaultTalon(CanId.TALONFX_CLIMBER_GRAB);
         liftMotorLeader = TalonFXFactory.createDefaultTalon(CanId.TALONFX_CLIMBER_LEADER);
         liftMotorFollower =
-                TalonFXFactory.createPermanentFollowerTalon(CanId.TALONFX_CLIMBER_FOLLOWER, liftMotorLeader, false);
+                TalonFXFactory.createPermanentFollowerTalon(CanId.TALONFX_CLIMBER_FOLLOWER, liftMotorLeader, true);
         breakbeam1 = new DigitalInput(0);
         breakbeam2 = new DigitalInput(0);
     }

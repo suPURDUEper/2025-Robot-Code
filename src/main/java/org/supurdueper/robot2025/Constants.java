@@ -13,12 +13,13 @@
 
 package org.supurdueper.robot2025;
 
+import static edu.wpi.first.units.Units.*;
+
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -53,19 +54,24 @@ public final class Constants {
     }
 
     public static final class AlgaeScoreConstants {
-        public static final Current hasBallCurrent = Units.Amps.of(30);
-        public static final int hasBallCurrentFilterTaps = 5;
-        public static final Time hasBallCurrentDebounceTime = Units.Milliseconds.of(200);
-        public static final Time scoreBallTime = Units.Second.of(0.5);
-        public static final CurrentLimitsConfigs algaeCurrentLimit =
+        public static final Current kHasBallCurrent = Amps.of(30);
+        public static final CurrentLimitsConfigs kAlgaeCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
+        public static final Voltage kIntakeVoltage = Volts.of(12);
+        public static final Current kHoldCurrent = Amps.of(8);
+        public static final Voltage kNetScoreVoltage = Volts.of(-12);
+        public static final Time kNetScoreTime = Seconds.of(0.5);
+        public static final Voltage kProcessorScoreVoltage = Volts.of(-12);
+        public static final Time kProcessorScoreTime = Seconds.of(0.5);
+        public static final String hasBallCurrentDebounceTime = null;
+        public static final Time netScoreTime = null;
     }
 
     public final class ElevatorConstants {
-
         public static double kp;
         public static double ki;
         public static double kd;
+        public static double ks;
         public static double kv;
         public static double ka;
         public static double kg;
@@ -73,9 +79,10 @@ public final class Constants {
         public static double profileKa;
         public static Current kStatorCurrentLimit;
         public static double kMetersPerRotation;
-        public static Angle kForwardSoftLimit;
-        public static Angle kReverseSoftLimit;
+        public static Distance kForwardSoftLimit;
+        public static Distance kReverseSoftLimit;
         public static Distance kPositionTolerance;
+        public static Current kHomingCurrent;
     }
 
     public final class WristConstants {}

@@ -4,82 +4,90 @@
 
 package org.supurdueper.robot2025.subsystems;
 
-import static org.supurdueper.robot2025.Constants.AlgaeScoreConstants;
+import static org.supurdueper.robot2025.Constants.AlgaeScoreConstants.*;
 
-import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.StaticBrake;
-import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.math.filter.Debouncer;
-import edu.wpi.first.math.filter.LinearFilter;
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Current;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.supurdueper.robot2025.CanId;
-import org.supurdueper.util.TalonFXFactory;
+import org.supurdueper.util.CurrentStallFilter;
 
-public class AlgaeScore extends SubsystemBase {
+public class AlgaeScore extends TalonFXSubsystem {
 
-    private TalonFX algaeMotor;
-    private VoltageOut request = new VoltageOut(0);
-    private StaticBrake stopRequest = new StaticBrake();
-    private StatusSignal<Current> currentSignal;
-    private LinearFilter currentFilter;
-    private Debouncer currentDebouncer;
-    private Current filteredCurrent;
-
-    private final double intakeVoltage = 12;
-    private final double outtakeVoltage = -12;
+    private CurrentStallFilter ballDetector;
 
     public AlgaeScore() {
-        TalonFXConfiguration config =
-                TalonFXFactory.getDefaultConfig().withCurrentLimits(AlgaeScoreConstants.algaeCurrentLimit);
-        algaeMotor = TalonFXFactory.createConfigTalon(CanId.TALONFX_ALGAE, config);
-        currentSignal = algaeMotor.getTorqueCurrent();
-        currentFilter = LinearFilter.movingAverage(AlgaeScoreConstants.hasBallCurrentFilterTaps);
-        currentDebouncer = new Debouncer(AlgaeScoreConstants.hasBallCurrentDebounceTime.in(Units.Second));
+        configureMotors();
+        ballDetector = new CurrentStallFilter(motor.getStatorCurrent(), kHasBallCurrent);
     }
 
     @Override
     public void periodic() {
-        currentSignal.refresh();
-        currentFilter.calculate(currentSignal.getValueAsDouble());
+        super.periodic();
+        ballDetector.periodic();
     }
 
     // Public methods
-    public Command intakeBall() {
-        return Commands.runEnd(this::intake, this::stop, this).until(this::hasBall);
+    public Command intake() {
+        return Commands.runEnd(this::runIntake, this::hold, this).until(this::hasBall);
     }
 
-    public Command scoreBall() {
-        return Commands.runEnd(this::outtake, this::stop, this).withTimeout(AlgaeScoreConstants.scoreBallTime);
+    public Command scoreNet() {
+        return Commands.runEnd(this::net, this::stop, this).withTimeout(netScoreTime);
+    }
+
+    public Command scoreProcessor() {
+        return Commands.runEnd(this::processor, this::stop, this).withTimeout(kNetScoreTime);
     }
 
     public Trigger hasBallTrigger() {
-        return new Trigger(this::hasBall);
+        return ballDetector.stallTrigger();
     }
 
     // Private methods
-
     private boolean hasBall() {
-        return currentDebouncer.calculate(filteredCurrent.gt(AlgaeScoreConstants.hasBallCurrent));
+        return ballDetector.isStalled();
     }
 
-    // TODO: Separate intake and hold
-    private void intake() {
-        algaeMotor.setControl(request.withOutput(intakeVoltage));
+    private void runIntake() {
+        runVoltage(kIntakeVoltage);
     }
 
-    // TODO: Might need different outtake for net and processor
-    private void outtake() {
-        algaeMotor.setControl(request.withOutput(outtakeVoltage));
+    private void net() {
+        runVoltage(kNetScoreVoltage);
     }
 
-    private void stop() {
-        algaeMotor.setControl(stopRequest);
+    private void processor() {
+        runVoltage(kProcessorScoreVoltage);
+    }
+
+    private void hold() {
+        runCurrent(kHoldCurrent);
+    }
+
+    @Override
+    public CanId canIdLeader() {
+        return CanId.TALONFX_ALGAE;
+    }
+
+    @Override
+    public CanId canIdFollower() {
+        return null;
+    }
+
+    @Override
+    public CurrentLimitsConfigs currentLimits() {
+        return new CurrentLimitsConfigs().withSupplyCurrentLimit(20).withSupplyCurrentLimitEnable(true);
+    }
+
+    @Override
+    public boolean inverted() {
+        return false;
+    }
+
+    @Override
+    public boolean brakeMode() {
+        return true;
     }
 }
