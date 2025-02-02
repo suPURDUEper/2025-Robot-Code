@@ -13,7 +13,7 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.supurdueper.robot2025.CanId;
-import org.supurdueper.util.TalonFXFactory;
+import org.supurdueper.utils.TalonFXFactory;
 
 public abstract class TalonFXSubsystem extends SubsystemBase {
 

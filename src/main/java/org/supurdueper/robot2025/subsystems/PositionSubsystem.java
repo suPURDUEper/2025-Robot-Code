@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import java.util.ArrayList;
 import java.util.List;
-import org.supurdueper.util.LoggedTunableNumber;
+import org.supurdueper.utils.LoggedTunableNumber;
 
 public abstract class PositionSubsystem extends TalonFXSubsystem {
 

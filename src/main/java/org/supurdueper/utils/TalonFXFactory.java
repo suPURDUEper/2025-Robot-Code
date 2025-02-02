@@ -1,4 +1,4 @@
-package org.supurdueper.util;
+package org.supurdueper.utils;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;

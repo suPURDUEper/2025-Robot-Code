@@ -5,14 +5,14 @@
 // license that can be found in the LICENSE file at
 // the root directory of this project.
 
-package org.supurdueper.util;
+package org.supurdueper.utils;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.DoubleSupplier;
-import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 import org.supurdueper.robot2025.Constants;
 
 /**
@@ -22,7 +22,7 @@ import org.supurdueper.robot2025.Constants;
 public class LoggedTunableNumber implements DoubleSupplier {
     private static final String tableKey = "/Tuning";
 
-    private final String key;
+    private final String name;
     private boolean hasDefault = false;
     private double defaultValue;
     private LoggedNetworkNumber dashboardNumber;
@@ -34,7 +34,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
      * @param dashboardKey Key on dashboard
      */
     public LoggedTunableNumber(String dashboardKey) {
-        this.key = tableKey + "/" + dashboardKey;
+        this.name = tableKey + "/" + dashboardKey;
     }
 
     /**
@@ -58,7 +58,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
             hasDefault = true;
             this.defaultValue = defaultValue;
             if (Constants.tuningMode) {
-                dashboardNumber = new LoggedNetworkNumber(key, defaultValue);
+                SmartDashboard.putNumber(name, defaultValue);
             }
         }
     }
@@ -72,7 +72,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
         if (!hasDefault) {
             return 0.0;
         } else {
-            return Constants.tuningMode ? dashboardNumber.get() : defaultValue;
+            return Constants.tuningMode ? SmartDashboard.getNumber(name, defaultValue) : defaultValue;
         }
     }
 
