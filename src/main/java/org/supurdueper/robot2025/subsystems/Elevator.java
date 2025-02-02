@@ -4,43 +4,34 @@
 
 package org.supurdueper.robot2025.subsystems;
 
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicExpoTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicExpoVoltage;
-import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.*;
 import edu.wpi.first.units.Units;
-import edu.wpi.first.units.VoltageUnit;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.units.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Volts;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Constants.ElevatorConstants;
 import org.supurdueper.util.LoggedTunableNumber;
@@ -68,7 +59,7 @@ public class Elevator extends SubsystemBase {
     private TalonFX elevatorLeader;
     private TalonFX elevatorFollower;
     private TalonFXConfiguration elevatorConfig;
-    private StatusSignal<Angle> elevatorPosition; 
+    private StatusSignal<Angle> elevatorPosition;
     private Distance setpoint;
 
     static {
@@ -87,8 +78,8 @@ public class Elevator extends SubsystemBase {
     public Elevator() {
         elevatorConfig = configureTalonFx(TalonFXFactory.getDefaultConfig());
         elevatorLeader = TalonFXFactory.createConfigTalon(CanId.TALONFX_ELEVATOR_LEADER, elevatorConfig);
-        elevatorFollower = TalonFXFactory.createPermanentFollowerTalon(CanId.TALONFX_ELEVATOR_FOLLOWER, elevatorLeader,
-                false);
+        elevatorFollower =
+                TalonFXFactory.createPermanentFollowerTalon(CanId.TALONFX_ELEVATOR_FOLLOWER, elevatorLeader, false);
     }
 
     // SysID Setup
@@ -152,13 +143,13 @@ public class Elevator extends SubsystemBase {
 
     private Distance getSetpoint() {
         return motorRotationToDistance(
-            Units.Rotations.of(elevatorLeader.getClosedLoopReference(true).getValue()));
+                Units.Rotations.of(elevatorLeader.getClosedLoopReference(true).getValue()));
     }
 
     public boolean isAtPosition() {
         return (setpoint.minus(getPosition())).lt(ElevatorConstants.kPositionTolerance)
-            && elevatorLeader.getVelocity().getValueAsDouble() < 0.1;
-      }
+                && elevatorLeader.getVelocity().getValueAsDouble() < 0.1;
+    }
 
     private Distance motorRotationToDistance(Angle motorRotations) {
         return Units.Meters.of(motorRotations.in(Units.Rotation) * ElevatorConstants.kMetersPerRotation);
@@ -188,8 +179,7 @@ public class Elevator extends SubsystemBase {
                 .withForwardSoftLimitEnable(true)
                 .withReverseSoftLimitThreshold(ElevatorConstants.kReverseSoftLimit)
                 .withReverseSoftLimitEnable(true);
-        return config
-                .withMotorOutput(motorOutputConfigs)
+        return config.withMotorOutput(motorOutputConfigs)
                 .withSoftwareLimitSwitch(softlimitConfig)
                 .withSlot0(slot0config)
                 .withCurrentLimits(currentConfig)
