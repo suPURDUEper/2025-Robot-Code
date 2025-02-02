@@ -276,7 +276,7 @@ public class Drive extends TunerSwerveDrivetrain implements Subsystem {
                 Inches.of(30),
                 Inches.of(30),
                 DCMotor.getKrakenX60(1),
-                DCMotor.getFalcon500(1),
+                DCMotor.getKrakenX60(1),
                 1.2,
                 getModuleLocations(),
                 getPigeon2(),
