@@ -60,13 +60,17 @@ public class Elevator extends PositionSubsystem {
     }
 
     private Distance motorRotationToHeight(Angle motorRotations) {
-        return Units.Meters.of(motorRotations.in(Units.Rotation) * kMetersPerRotation);
+        return Units.Inches.of(motorRotations.in(Units.Rotation) * kInchesPerRotation);
     }
 
     private Angle heightToMotorRotations(Distance height) {
-        return Units.Rotations.of(height.in(Units.Meters) / kMetersPerRotation);
+        return Units.Rotations.of(height.in(Units.Inches) / kInchesPerRotation);
     }
 
+    /**
+     * ************************************************************************ PositionSubsystem setup
+     * ************************************************************************
+     */
     @Override
     public Slot0Configs pidGains() {
         return new Slot0Configs()
@@ -112,9 +116,9 @@ public class Elevator extends PositionSubsystem {
     @Override
     public CurrentLimitsConfigs currentLimits() {
         return new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(80)
+                .withStatorCurrentLimit(kStatorCurrentLimit)
                 .withStatorCurrentLimitEnable(true)
-                .withSupplyCurrentLimit(40)
+                .withSupplyCurrentLimit(kSupplyCurrentLimit)
                 .withSupplyCurrentLimitEnable(true);
     }
 
@@ -133,8 +137,8 @@ public class Elevator extends PositionSubsystem {
         return new SysIdRoutine(
                 // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
                 new SysIdRoutine.Config(
-                        Volts.of(1).per(Second.of(1).baseUnit()),
-                        Volts.of(1),
+                        Volts.of(1).per(Second),
+                        Volts.of(7),
                         null,
                         state -> SignalLogger.writeString("state", state.toString())),
                 new SysIdRoutine.Mechanism(

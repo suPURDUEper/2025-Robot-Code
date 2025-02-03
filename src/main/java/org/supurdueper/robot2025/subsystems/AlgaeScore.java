@@ -35,11 +35,11 @@ public class AlgaeScore extends TalonFXSubsystem {
     }
 
     public Command scoreNet() {
-        return Commands.runEnd(this::net, this::stop, this).withTimeout(netScoreTime);
+        return Commands.runEnd(this::net, this::stop, this).withTimeout(kNetScoreTime);
     }
 
     public Command scoreProcessor() {
-        return Commands.runEnd(this::processor, this::stop, this).withTimeout(kNetScoreTime);
+        return Commands.runEnd(this::processor, this::stop, this).withTimeout(kProcessorScoreTime);
     }
 
     public Trigger hasBallTrigger() {

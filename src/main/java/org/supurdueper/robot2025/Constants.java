@@ -16,16 +16,13 @@ package org.supurdueper.robot2025;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.units.measure.Voltage;
 import org.supurdueper.lib.utils.ExpCurve;
 
-/**
- * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running on a roboRIO. Change
- * the value of "simMode" to switch between "sim" (physics sim) and "replay" (log replay from a file).
- */
 public final class Constants {
 
     public static final class DriverConstants {
@@ -61,8 +58,6 @@ public final class Constants {
         public static final Time kNetScoreTime = Seconds.of(0.5);
         public static final Voltage kProcessorScoreVoltage = Volts.of(-12);
         public static final Time kProcessorScoreTime = Seconds.of(0.5);
-        public static final String hasBallCurrentDebounceTime = null;
-        public static final Time netScoreTime = null;
     }
 
     public final class ElevatorConstants {
@@ -76,14 +71,29 @@ public final class Constants {
         public static final double profileKv = 0;
         public static final double profileKa = 0;
         public static final Current kStatorCurrentLimit = Amps.of(80);
-        public static final double kMetersPerRotation = 72 / 12 * Math.PI * 1.744;
+        public static final Current kSupplyCurrentLimit = Amps.of(40);
+        public static final double kInchesPerRotation = 72 / 12 * Math.PI * 1.744;
         public static final Distance kForwardSoftLimit = Inches.of(55);
         public static final Distance kReverseSoftLimit = Inches.of(0);
         public static final Distance kPositionTolerance = Inches.of(0.5);
         public static final Current kHomingCurrent = Amps.of(13);
     }
 
-    public final class WristConstants {}
+    public final class WristConstants {
+        public static final double kp = 0;
+        public static final double ki = 0;
+        public static final double kd = 0;
+        public static final double ks = 0;
+        public static final double kv = 0;
+        public static final double ka = 0;
+        public static final double kg = 0;
+        public static final double profileKv = 0;
+        public static final double profileKa = 0;
+        public static final Current kStatorCurrentLimit = Amps.of(80);
+        public static final Angle kForwardSoftLimit = Degrees.of(55);
+        public static final Angle kReverseSoftLimit = Degrees.of(0);
+        public static final Angle kPositionTolerance = Degrees.of(0.25);
+    }
 
     public final class ClimberConstants {}
 
