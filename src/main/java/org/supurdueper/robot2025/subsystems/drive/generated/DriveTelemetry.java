@@ -1,4 +1,4 @@
-package org.supurdueper.robot2025.generated;
+package org.supurdueper.robot2025.subsystems.drive.generated;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
-public class Telemetry {
+public class DriveTelemetry {
     private final double MaxSpeed;
 
     /**
@@ -27,7 +27,7 @@ public class Telemetry {
      *
      * @param maxSpeed Maximum speed in meters per second
      */
-    public Telemetry(double maxSpeed) {
+    public DriveTelemetry(double maxSpeed) {
         MaxSpeed = maxSpeed;
         SignalLogger.start();
     }

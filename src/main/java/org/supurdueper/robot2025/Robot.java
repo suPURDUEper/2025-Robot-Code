@@ -31,7 +31,7 @@ public class Robot extends TimedRobot {
                 .withNtPublish(true)
                 .withCaptureNt(true));
         DogLog.setPdh(new PowerDistribution());
-         // Record metadata
+        // Record metadata
         DogLog.log("ProjectName", BuildConstants.MAVEN_NAME);
         DogLog.log("BuildDate", BuildConstants.BUILD_DATE);
         DogLog.log("GitSHA", BuildConstants.GIT_SHA);

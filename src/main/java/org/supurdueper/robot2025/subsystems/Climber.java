@@ -7,8 +7,8 @@ package org.supurdueper.robot2025.subsystems;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.supurdueper.lib.TalonFXFactory;
 import org.supurdueper.robot2025.CanId;
-import org.supurdueper.utils.TalonFXFactory;
 
 public class Climber extends SubsystemBase {
     private TalonFX grabMotor;

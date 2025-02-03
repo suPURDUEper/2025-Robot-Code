@@ -1,4 +1,4 @@
-package org.supurdueper.robot2025.subsystems;
+package org.supurdueper.lib.subsystems;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -12,8 +12,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.supurdueper.lib.TalonFXFactory;
 import org.supurdueper.robot2025.CanId;
-import org.supurdueper.utils.TalonFXFactory;
 
 public abstract class TalonFXSubsystem extends SubsystemBase {
 

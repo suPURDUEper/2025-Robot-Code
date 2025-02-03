@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.supurdueper.lib.TalonFXFactory;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Constants;
 import org.supurdueper.robot2025.Constants.FunnelConstants;
-import org.supurdueper.utils.TalonFXFactory;
 
 public class Funnel extends SubsystemBase {
     private TalonFX funnelMotor;

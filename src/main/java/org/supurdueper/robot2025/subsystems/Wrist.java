@@ -9,8 +9,8 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.supurdueper.lib.TalonFXFactory;
 import org.supurdueper.robot2025.CanId;
-import org.supurdueper.utils.TalonFXFactory;
 
 public class Wrist extends SubsystemBase {
     /** Creates a new Wrist. */

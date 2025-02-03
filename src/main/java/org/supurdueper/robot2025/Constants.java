@@ -15,30 +15,29 @@ package org.supurdueper.robot2025;
 
 import static edu.wpi.first.units.Units.*;
 
+import org.supurdueper.lib.utils.ExpCurve;
+
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.units.measure.Voltage;
-import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running on a roboRIO. Change
  * the value of "simMode" to switch between "sim" (physics sim) and "replay" (log replay from a file).
  */
 public final class Constants {
-    public static final Mode simMode = Mode.SIM;
-    public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
 
-    public static enum Mode {
-        /** Running on a real robot. */
-        REAL,
-
-        /** Running a physics simulator. */
-        SIM,
-
-        /** Replaying from a log file. */
-        REPLAY
+    public static final class DriverConstants {
+        public static final int kControllerPort = 0;
+        public static final double kDeadzone = 0.001;
+        public static final ExpCurve kLeftStickCurve = new ExpCurve(2.0, 0, 6, kDeadzone);
+        public static final ExpCurve kRightStickCurve = new ExpCurve(2.0, 0, 12, kDeadzone);
+        public static final ExpCurve kTriggerCurve = new ExpCurve(1, 0, 1, kDeadzone);
+        public static final double kSlowModeScalor = 0.45;
+        public static final double kDefaultTurnScalor = 0.75;
+        public static final double kTurboModeScalor = 1;
     }
 
     public final class DIOport {
@@ -68,21 +67,21 @@ public final class Constants {
     }
 
     public final class ElevatorConstants {
-        public static double kp;
-        public static double ki;
-        public static double kd;
-        public static double ks;
-        public static double kv;
-        public static double ka;
-        public static double kg;
-        public static double profileKv;
-        public static double profileKa;
-        public static Current kStatorCurrentLimit;
-        public static double kMetersPerRotation;
-        public static Distance kForwardSoftLimit;
-        public static Distance kReverseSoftLimit;
-        public static Distance kPositionTolerance;
-        public static Current kHomingCurrent;
+        public static final double kp = 0;
+        public static final double ki = 0;
+        public static final double kd = 0;
+        public static final double ks = 0;
+        public static final double kv = 0;
+        public static final double ka = 0;
+        public static final double kg = 0;
+        public static final double profileKv = 0;
+        public static final double profileKa = 0;
+        public static final Current kStatorCurrentLimit = Amps.of(80);
+        public static final double kMetersPerRotation = 72 / 12 * Math.PI * 1.744;
+        public static final Distance kForwardSoftLimit = Inches.of(55);
+        public static final Distance kReverseSoftLimit = Inches.of(0);
+        public static final Distance kPositionTolerance = Inches.of(0.5);
+        public static final Current kHomingCurrent = Amps.of(13);
     }
 
     public final class WristConstants {}
@@ -96,5 +95,5 @@ public final class Constants {
 
     public final class CoralScoreConstants {}
 
-    public static boolean tuningMode;
+    public static boolean tuningMode = true;
 }

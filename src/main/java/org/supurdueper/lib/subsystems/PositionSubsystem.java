@@ -1,4 +1,4 @@
-package org.supurdueper.robot2025.subsystems;
+package org.supurdueper.lib.subsystems;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import java.util.ArrayList;
 import java.util.List;
-import org.supurdueper.utils.LoggedTunableNumber;
+import org.supurdueper.lib.LoggedTunableNumber;
 
 public abstract class PositionSubsystem extends TalonFXSubsystem {
 

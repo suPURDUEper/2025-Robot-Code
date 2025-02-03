@@ -1,4 +1,4 @@
-package org.supurdueper.utils;
+package org.supurdueper.lib;
 
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.filter.Debouncer;
