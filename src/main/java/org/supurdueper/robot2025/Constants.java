@@ -15,13 +15,12 @@ package org.supurdueper.robot2025;
 
 import static edu.wpi.first.units.Units.*;
 
-import org.supurdueper.lib.utils.ExpCurve;
-
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.units.measure.Voltage;
+import org.supurdueper.lib.utils.ExpCurve;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running on a roboRIO. Change

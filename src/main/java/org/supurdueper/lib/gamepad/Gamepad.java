@@ -59,7 +59,7 @@ public abstract class Gamepad extends SubsystemBase {
     private Rotation2d storedLeftStickDirection = new Rotation2d();
     private Rotation2d storedRightStickDirection = new Rotation2d();
     private boolean configured = false; // Used to determine if we detected the gamepad is plugged and we have
-                                        // configured
+    // configured
     // it
     private boolean printed = false; // Used to only print Gamepad Not Detected once
 
@@ -77,12 +77,16 @@ public abstract class Gamepad extends SubsystemBase {
     protected Trigger testMode = Util.testMode;
     protected Trigger disabled = Util.disabled;
 
-    /**
-     * Constructs a Gamepad object with the specified configuration.
-     */
-    protected Gamepad(int port, ExpCurve leftStickCurve, double leftStickDeadzone,
-            ExpCurve rightStickCurve, double rightStickDeadzone, ExpCurve triggersCurve, double triggersDeadzone) {
-        disconnectedAlert = new Alert(getName()  + " Gamepad Disconnected", Alert.AlertType.kError);
+    /** Constructs a Gamepad object with the specified configuration. */
+    protected Gamepad(
+            int port,
+            ExpCurve leftStickCurve,
+            double leftStickDeadzone,
+            ExpCurve rightStickCurve,
+            double rightStickDeadzone,
+            ExpCurve triggersCurve,
+            double triggersDeadzone) {
+        disconnectedAlert = new Alert(getName() + " Gamepad Disconnected", Alert.AlertType.kError);
 
         // Curve objects that we use to configure the controller axis objects
         this.leftStickCurve = leftStickCurve;
@@ -335,10 +339,8 @@ public abstract class Gamepad extends SubsystemBase {
     }
 
     /**
-     * Returns a new Command object that combines the given command with a rumble
-     * command. The rumble command has a
-     * rumble strength of 1 and a duration of 0.5 seconds. The name of the returned
-     * command is set to the name of the
+     * Returns a new Command object that combines the given command with a rumble command. The rumble command has a
+     * rumble strength of 1 and a duration of 0.5 seconds. The name of the returned command is set to the name of the
      * given command.
      *
      * @param command the command to be combined with the rumble command

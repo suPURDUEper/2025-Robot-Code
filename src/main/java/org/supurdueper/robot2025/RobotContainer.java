@@ -4,12 +4,10 @@
 
 package org.supurdueper.robot2025;
 
-
 import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-
 import org.supurdueper.robot2025.autos.AutoRoutines;
 import org.supurdueper.robot2025.subsystems.drive.Drive;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;

@@ -15,10 +15,7 @@ public class AutoRoutines {
         final AutoRoutine routine = m_factory.newRoutine("SimplePath Auto");
         final AutoTrajectory simplePath = routine.trajectory("SimplePath");
 
-        routine.active().onTrue(
-            simplePath.resetOdometry()
-                .andThen(simplePath.cmd())
-        );
+        routine.active().onTrue(simplePath.resetOdometry().andThen(simplePath.cmd()));
         return routine;
     }
 }

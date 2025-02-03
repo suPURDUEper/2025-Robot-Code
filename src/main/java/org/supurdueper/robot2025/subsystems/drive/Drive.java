@@ -2,15 +2,14 @@ package org.supurdueper.robot2025.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
 
+import choreo.Choreo.TrajectoryLogger;
+import choreo.auto.AutoFactory;
+import choreo.trajectory.SwerveSample;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
-import choreo.Choreo.TrajectoryLogger;
-import choreo.auto.AutoFactory;
-import choreo.trajectory.SwerveSample;
 import dev.doglog.DogLog;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
@@ -48,6 +47,7 @@ public class Drive extends TunerSwerveDrivetrain implements Subsystem {
 
     /** Swerve request to apply during field-centric path following */
     private final SwerveRequest.ApplyFieldSpeeds m_pathApplyFieldSpeeds = new SwerveRequest.ApplyFieldSpeeds();
+
     private final PIDController m_pathXController = new PIDController(10, 0, 0);
     private final PIDController m_pathYController = new PIDController(10, 0, 0);
     private final PIDController m_pathThetaController = new PIDController(7, 0, 0);
@@ -151,23 +151,14 @@ public class Drive extends TunerSwerveDrivetrain implements Subsystem {
     }
 
     /**
-     * Creates a new auto factory for this drivetrain with the given
-     * trajectory logger.
+     * Creates a new auto factory for this drivetrain with the given trajectory logger.
      *
      * @param trajLogger Logger for the trajectory
      * @return AutoFactory for this drivetrain
      */
     public AutoFactory createAutoFactory(TrajectoryLogger<SwerveSample> trajLogger) {
-        return new AutoFactory(
-            () -> getState().Pose,
-            this::resetPose,
-            this::followPath,
-            true,
-            this,
-            trajLogger
-        );
+        return new AutoFactory(() -> getState().Pose, this::resetPose, this::followPath, true, this, trajLogger);
     }
-
 
     /**
      * Returns a command that applies the specified control request to this swerve drivetrain.
@@ -179,7 +170,7 @@ public class Drive extends TunerSwerveDrivetrain implements Subsystem {
         return run(() -> this.setControl(requestSupplier.get()));
     }
 
-     /**
+    /**
      * Follows the given field-centric path sample with PID.
      *
      * @param sample Sample along the path to follow
@@ -190,21 +181,15 @@ public class Drive extends TunerSwerveDrivetrain implements Subsystem {
         var pose = getState().Pose;
 
         var targetSpeeds = sample.getChassisSpeeds();
-        targetSpeeds.vxMetersPerSecond += m_pathXController.calculate(
-            pose.getX(), sample.x
-        );
-        targetSpeeds.vyMetersPerSecond += m_pathYController.calculate(
-            pose.getY(), sample.y
-        );
-        targetSpeeds.omegaRadiansPerSecond += m_pathThetaController.calculate(
-            pose.getRotation().getRadians(), sample.heading
-        );
+        targetSpeeds.vxMetersPerSecond += m_pathXController.calculate(pose.getX(), sample.x);
+        targetSpeeds.vyMetersPerSecond += m_pathYController.calculate(pose.getY(), sample.y);
+        targetSpeeds.omegaRadiansPerSecond +=
+                m_pathThetaController.calculate(pose.getRotation().getRadians(), sample.heading);
 
-        setControl(
-            m_pathApplyFieldSpeeds.withSpeeds(targetSpeeds)
+        setControl(m_pathApplyFieldSpeeds
+                .withSpeeds(targetSpeeds)
                 .withWheelForceFeedforwardsX(sample.moduleForcesX())
-                .withWheelForceFeedforwardsY(sample.moduleForcesY())
-        );
+                .withWheelForceFeedforwardsY(sample.moduleForcesY()));
     }
 
     @Override
@@ -238,7 +223,7 @@ public class Drive extends TunerSwerveDrivetrain implements Subsystem {
     private MapleSimSwerveDrivetrain mapleSimSwerveDrivetrain = null;
 
     @SuppressWarnings("unchecked")
-	private void startSimThread() {
+    private void startSimThread() {
         mapleSimSwerveDrivetrain = new MapleSimSwerveDrivetrain(
                 Seconds.of(kSimLoopPeriod),
                 Pounds.of(115),
@@ -267,8 +252,8 @@ public class Drive extends TunerSwerveDrivetrain implements Subsystem {
     }
 
     /**
-     * Adds a vision measurement to the Kalman Filter. This will correct the odometry pose estimate
-     * while still accounting for measurement noise.
+     * Adds a vision measurement to the Kalman Filter. This will correct the odometry pose estimate while still
+     * accounting for measurement noise.
      *
      * @param visionRobotPoseMeters The pose of the robot as measured by the vision camera.
      * @param timestampSeconds The timestamp of the vision measurement in seconds.
@@ -279,25 +264,21 @@ public class Drive extends TunerSwerveDrivetrain implements Subsystem {
     }
 
     /**
-     * Adds a vision measurement to the Kalman Filter. This will correct the odometry pose estimate
-     * while still accounting for measurement noise.
-     * <p>
-     * Note that the vision measurement standard deviations passed into this method
-     * will continue to apply to future measurements until a subsequent call to
-     * {@link #setVisionMeasurementStdDevs(Matrix)} or this method.
+     * Adds a vision measurement to the Kalman Filter. This will correct the odometry pose estimate while still
+     * accounting for measurement noise.
+     *
+     * <p>Note that the vision measurement standard deviations passed into this method will continue to apply to future
+     * measurements until a subsequent call to {@link #setVisionMeasurementStdDevs(Matrix)} or this method.
      *
      * @param visionRobotPoseMeters The pose of the robot as measured by the vision camera.
      * @param timestampSeconds The timestamp of the vision measurement in seconds.
-     * @param visionMeasurementStdDevs Standard deviations of the vision pose measurement
-     *     in the form [x, y, theta]ᵀ, with units in meters and radians.
+     * @param visionMeasurementStdDevs Standard deviations of the vision pose measurement in the form [x, y, theta]ᵀ,
+     *     with units in meters and radians.
      */
     @Override
     public void addVisionMeasurement(
-        Pose2d visionRobotPoseMeters,
-        double timestampSeconds,
-        Matrix<N3, N1> visionMeasurementStdDevs
-    ) {
-        super.addVisionMeasurement(visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
+            Pose2d visionRobotPoseMeters, double timestampSeconds, Matrix<N3, N1> visionMeasurementStdDevs) {
+        super.addVisionMeasurement(
+                visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
     }
-
 }
