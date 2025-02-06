@@ -4,30 +4,75 @@
 
 package org.supurdueper.robot2025.subsystems;
 
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import org.supurdueper.lib.TalonFXFactory;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.robot2025.CanId;
+import org.supurdueper.robot2025.Constants;
 
-public class Wrist extends SubsystemBase {
-    /** Creates a new Wrist. */
-    private TalonFX wristMotor;
-
-    private CANcoder wristCancoder;
-    private TalonFXConfiguration wristMotorConfig;
-    private CANcoderConfiguration wristCanCoderConfig;
+public class Wrist extends PositionSubsystem {
 
     public Wrist() {
-        wristMotor = TalonFXFactory.createDefaultTalon(CanId.TALONFX_WRIST);
-        wristMotorConfig = new TalonFXConfiguration();
-        wristCanCoderConfig = new CANcoderConfiguration();
+        configureMotors();
     }
 
     @Override
     public void periodic() {
-        // This method will be called once per scheduler run
+        super.periodic();
+    }
+
+    @Override
+    public Slot0Configs pidGains() {
+        return new Slot0Configs();
+    }
+
+    @Override
+    public MotionMagicConfigs motionMagicConfig() {
+        return new MotionMagicConfigs();
+    }
+
+    @Override
+    public SoftwareLimitSwitchConfigs softLimitConfig() {
+        return new SoftwareLimitSwitchConfigs();
+    }
+
+    @Override
+    public Angle positionTolerance() {
+        return Constants.ClimberConstants.kPositionTolerance;
+    }
+
+    @Override
+    public SysIdRoutine sysIdConfig() {
+        return new SysIdRoutine(null, null);
+    }
+
+    @Override
+    public CanId canIdLeader() {
+        // TODO Auto-generated method stub
+        return CanId.CANCODER_FUNNEL_TILT;
+    }
+
+    @Override
+    public CanId canIdFollower() {
+        return null;
+    }
+
+    @Override
+    public CurrentLimitsConfigs currentLimits() {
+        return Constants.WristConstants.kCurrentLimit;
+    }
+
+    @Override
+    public boolean inverted() {
+        return false;
+    }
+
+    @Override
+    public boolean brakeMode() {
+        return true;
     }
 }

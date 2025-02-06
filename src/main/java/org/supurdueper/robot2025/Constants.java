@@ -93,16 +93,35 @@ public final class Constants {
         public static final Angle kForwardSoftLimit = Degrees.of(55);
         public static final Angle kReverseSoftLimit = Degrees.of(0);
         public static final Angle kPositionTolerance = Degrees.of(0.25);
+        public static final CurrentLimitsConfigs kCurrentLimit =
+                new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
     }
 
-    public final class ClimberConstants {}
+    public final class ClimberConstants {
+        public static final CurrentLimitsConfigs kCurrentLimit =
+                new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
+        public static final Angle kPositionTolerance = null;
+    }
+
+    public final class CageGrabberConstants {
+        public static final CurrentLimitsConfigs kCurrentLimit =
+                new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
+    }
 
     public final class FunnelConstants {
         public static final CurrentLimitsConfigs funnelCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
     }
 
-    public final class CoralScoreConstants {}
+    public final class CoralScoreConstants {
+        public static final CurrentLimitsConfigs kCurrentLimit =
+                new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
+    }
+
+    public final class FunnelTiltConstants {
+        public static final CurrentLimitsConfigs kCurrentLimit =
+                new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
+    }
 
     public static boolean tuningMode = true;
 }

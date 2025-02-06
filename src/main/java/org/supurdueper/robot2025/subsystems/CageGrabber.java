@@ -4,37 +4,16 @@
 
 package org.supurdueper.robot2025.subsystems;
 
-import static edu.wpi.first.units.Units.*;
-
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
 import org.supurdueper.robot2025.CanId;
+import org.supurdueper.robot2025.Constants;
 
-public class Funnel extends TalonFXSubsystem {
-
-    /** Creates a new CoralIntake. */
-    public Funnel() {
-        configureMotors();
-    }
-
-    @Override
-    public void periodic() {
-        super.periodic();
-    }
-
-    public Command intake() {
-        return Commands.run(() -> runVoltage(Volts.of(12)));
-    }
-
-    public Command unjam() {
-        return Commands.run(() -> runVoltage(Volts.of(-10)));
-    }
+public class CageGrabber extends TalonFXSubsystem {
 
     @Override
     public CanId canIdLeader() {
-        return CanId.TALONFX_FUNNEL;
+        return CanId.TALONFX_CLIMBER_GRAB;
     }
 
     @Override
@@ -44,8 +23,7 @@ public class Funnel extends TalonFXSubsystem {
 
     @Override
     public CurrentLimitsConfigs currentLimits() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'currentLimits'");
+        return Constants.CageGrabberConstants.kCurrentLimit;
     }
 
     @Override

@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package org.supurdueper.robot2025.subsystems;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
@@ -14,9 +10,9 @@ import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Constants;
 
-public class Climber extends PositionSubsystem {
+public class FunnelTilt extends PositionSubsystem {
 
-    public Climber() {
+    public FunnelTilt() {
         configureMotors();
     }
 
@@ -52,26 +48,30 @@ public class Climber extends PositionSubsystem {
 
     @Override
     public CanId canIdLeader() {
-        return CanId.TALONFX_CLIMBER_LEADER;
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'canIdLeader'");
     }
 
     @Override
     public CanId canIdFollower() {
-        return CanId.TALONFX_CLIMBER_FOLLOWER;
+        return null;
     }
 
     @Override
     public CurrentLimitsConfigs currentLimits() {
-        return Constants.ClimberConstants.kCurrentLimit;
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'currentLimits'");
     }
 
     @Override
     public boolean inverted() {
-        return true;
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'inverted'");
     }
 
     @Override
     public boolean brakeMode() {
-        return true;
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'brakeMode'");
     }
 }

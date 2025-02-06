@@ -4,28 +4,45 @@
 
 package org.supurdueper.robot2025.subsystems;
 
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import org.supurdueper.lib.subsystems.TalonFXSubsystem;
+import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Constants;
 
-public class CoralScore extends SubsystemBase {
-    /** Creates a new EndEffector. */
-    private TalonFX coralScoreMotor;
-
-    private TalonFXConfiguration coralScoreConfig;
-    private DigitalInput breakbeam1;
-    private DigitalInput breakbeam2;
+public class CoralScore extends TalonFXSubsystem {
 
     public CoralScore() {
-        coralScoreConfig = new TalonFXConfiguration();
-        breakbeam1 = new DigitalInput(Constants.DIOport.scoreBreakbeam1);
-        breakbeam2 = new DigitalInput(Constants.DIOport.scoreBreakbeam2);
+        configureMotors();
     }
 
     @Override
     public void periodic() {
-        // This method will be called once per scheduler run
+        super.periodic();
+    }
+
+    @Override
+    public CanId canIdLeader() {
+        return CanId.TALONFX_CORAL;
+    }
+
+    @Override
+    public CanId canIdFollower() {
+        return null;
+    }
+
+    @Override
+    public CurrentLimitsConfigs currentLimits() {
+        // TODO Auto-generated method stub
+        return Constants.CoralScoreConstants.kCurrentLimit;
+    }
+
+    @Override
+    public boolean inverted() {
+        return false;
+    }
+
+    @Override
+    public boolean brakeMode() {
+        return true;
     }
 }
