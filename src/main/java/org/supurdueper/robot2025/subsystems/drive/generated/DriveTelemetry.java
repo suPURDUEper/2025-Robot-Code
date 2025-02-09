@@ -1,5 +1,7 @@
 package org.supurdueper.robot2025.subsystems.drive.generated;
 
+import static edu.wpi.first.units.Units.MetersPerSecond;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -20,15 +22,13 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
 public class DriveTelemetry {
-    private final double MaxSpeed;
+    private final double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    ;
 
     /**
      * Construct a telemetry object, with the specified max speed of the robot
-     *
-     * @param maxSpeed Maximum speed in meters per second
      */
-    public DriveTelemetry(double maxSpeed) {
-        MaxSpeed = maxSpeed;
+    public DriveTelemetry() {
         SignalLogger.start();
     }
 

@@ -15,10 +15,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import lombok.Getter;
 
 /**
  * Contains various field dimensions and useful reference points. All units are in meters and poses have a blue alliance
@@ -27,8 +25,8 @@ import java.util.Map;
 public class FieldConstants {
     public static final double fieldLength = Units.inchesToMeters(690.876);
     public static final double fieldWidth = Units.inchesToMeters(317);
-    public static final double startingLineX = Units.inchesToMeters(299.438); // Measured from the inside of starting
-    // line
+    public static final double startingLineX = Units.inchesToMeters(299.438); // Measured from the inside of
+    // starting line
     public static final double algaeDiameter = Units.inchesToMeters(16);
 
     public static class Processor {
@@ -57,16 +55,19 @@ public class FieldConstants {
     }
 
     public static class Reef {
+        public static final double faceLength = Units.inchesToMeters(36.792600);
         public static final Translation2d center =
                 new Translation2d(Units.inchesToMeters(176.746), Units.inchesToMeters(158.501));
-        public static final double faceToZoneLine = Units.inchesToMeters(12); // Side of the reef to the inside of the
-        // reef zone line
+        public static final double faceToZoneLine = Units.inchesToMeters(12); // Side of the reef to the inside
+        // of the reef zone line
 
-        public static final Pose2d[] centerFaces = new Pose2d[6]; // Starting facing the driver station in clockwise
-        // order
-        public static final List<Map<ReefHeight, Pose3d>> branchPositions = new ArrayList<>(); // Starting at the right
-        // branch facing the
-        // driver station in
+        public static final Pose2d[] centerFaces = new Pose2d[6]; // Starting facing the driver station in
+        // clockwise order
+        public static final List<Map<ReefHeight, Pose3d>> branchPositions = new ArrayList<>(); // Starting at
+        // the right
+        // branch facing
+        // the driver
+        // station in
         // clockwise
 
         static {
@@ -141,14 +142,21 @@ public class FieldConstants {
     }
 
     public enum ReefHeight {
-        L4(Units.inchesToMeters(72), -90),
-        L3(Units.inchesToMeters(47.625), -35),
+        L1(Units.inchesToMeters(25.0), 0),
         L2(Units.inchesToMeters(31.875), -35),
-        L1(Units.inchesToMeters(18), 0);
+        L3(Units.inchesToMeters(47.625), -35),
+        L4(Units.inchesToMeters(72), -90);
 
         ReefHeight(double height, double pitch) {
             this.height = height;
             this.pitch = pitch; // in degrees
+        }
+
+        public static ReefHeight fromLevel(int level) {
+            return Arrays.stream(values())
+                    .filter(height -> height.ordinal() == level)
+                    .findFirst()
+                    .orElse(L4);
         }
 
         public final double height;
@@ -156,11 +164,15 @@ public class FieldConstants {
     }
 
     public static final double aprilTagWidth = Units.inchesToMeters(6.50);
-    public static final AprilTagLayoutType defaultAprilTagType = AprilTagLayoutType.OFFICIAL;
     public static final int aprilTagCount = 22;
+    public static final AprilTagLayoutType defaultAprilTagType = AprilTagLayoutType.NO_BARGE;
 
+    @Getter
     public enum AprilTagLayoutType {
-        OFFICIAL("2025-official");
+        OFFICIAL("2025-official"),
+        NO_BARGE("2025-no-barge"),
+        BLUE_REEF("2025-blue-reef"),
+        RED_REEF("2025-red-reef");
 
         AprilTagLayoutType(String name) {
             try {
@@ -184,4 +196,6 @@ public class FieldConstants {
         private final AprilTagFieldLayout layout;
         private final String layoutString;
     }
+
+    public record CoralObjective(int branchId, ReefHeight reefLevel) {}
 }

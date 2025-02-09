@@ -26,6 +26,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import java.util.function.Supplier;
+
+import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.subsystems.drive.generated.DriveTelemetry;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants.TunerSwerveDrivetrain;
@@ -34,7 +36,7 @@ import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants.Tuner
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements Subsystem so it can easily be used in
  * command-based projects.
  */
-public class Drive extends TunerSwerveDrivetrain implements Subsystem {
+public class Drivetrain extends TunerSwerveDrivetrain implements SupurdueperSubsystem {
     private static final double kSimLoopPeriod = 0.002; // 2 ms
     private Notifier m_simNotifier = null;
 
@@ -52,19 +54,9 @@ public class Drive extends TunerSwerveDrivetrain implements Subsystem {
     private final PIDController m_pathYController = new PIDController(10, 0, 0);
     private final PIDController m_pathThetaController = new PIDController(7, 0, 0);
 
-    /* Setting up bindings for necessary control of the swerve drive platform */
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate =
-            RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-    private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1)
-            .withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-            .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-    private final SwerveRequest.RobotCentric forwardStraight =
-            new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-    private DriveTelemetry telemetry = new DriveTelemetry(MaxSpeed);
+    private DriveTelemetry telemetry = new DriveTelemetry();
+
+    private DriveStates driveStates;
 
     /**
      * Constructs a CTRE SwerveDrivetrain using the specified constants.
@@ -75,12 +67,13 @@ public class Drive extends TunerSwerveDrivetrain implements Subsystem {
      * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
      * @param modules Constants for each specific module
      */
-    public Drive(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... modules) {
+    public Drivetrain(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, MapleSimSwerveDrivetrain.regulateModuleConstantsForSimulation(modules));
         if (Utils.isSimulation()) {
             startSimThread();
         }
         registerTelemetry(telemetry::telemeterize);
+        driveStates = new DriveStates();
     }
 
     /**
@@ -94,7 +87,7 @@ public class Drive extends TunerSwerveDrivetrain implements Subsystem {
      *     Hz on CAN FD, and 100 Hz on CAN 2.0.
      * @param modules Constants for each specific module
      */
-    public Drive(
+    public Drivetrain(
             SwerveDrivetrainConstants drivetrainConstants,
             double odometryUpdateFrequency,
             SwerveModuleConstants<?, ?, ?>... modules) {
@@ -106,6 +99,7 @@ public class Drive extends TunerSwerveDrivetrain implements Subsystem {
             startSimThread();
         }
         registerTelemetry(telemetry::telemeterize);
+        driveStates = new DriveStates();
     }
 
     /**
@@ -123,7 +117,7 @@ public class Drive extends TunerSwerveDrivetrain implements Subsystem {
      *     units in meters and radians
      * @param modules Constants for each specific module
      */
-    public Drive(
+    public Drivetrain(
             SwerveDrivetrainConstants drivetrainConstants,
             double odometryUpdateFrequency,
             Matrix<N3, N1> odometryStandardDeviation,
@@ -139,6 +133,7 @@ public class Drive extends TunerSwerveDrivetrain implements Subsystem {
             startSimThread();
         }
         registerTelemetry(telemetry::telemeterize);
+        driveStates = new DriveStates();
     }
 
     /**
@@ -280,5 +275,10 @@ public class Drive extends TunerSwerveDrivetrain implements Subsystem {
             Pose2d visionRobotPoseMeters, double timestampSeconds, Matrix<N3, N1> visionMeasurementStdDevs) {
         super.addVisionMeasurement(
                 visionRobotPoseMeters, Utils.fpgaToCurrentTime(timestampSeconds), visionMeasurementStdDevs);
+    }
+
+    @Override
+    public void bindCommands() {
+        driveStates.bindCommands();
     }
 }
