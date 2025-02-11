@@ -77,6 +77,13 @@ public final class Constants {
         public static final Distance kReverseSoftLimit = Inches.of(0);
         public static final Distance kPositionTolerance = Inches.of(0.5);
         public static final Current kHomingCurrent = Amps.of(13);
+        public static final Distance kBottomHeight = Inches.of(0);
+        public static final Distance kL1Height = Inches.of(13);
+        public static final Distance kL2Height = Inches.of(13);
+        public static final Distance kL3Height = Inches.of(13);
+        public static final Distance kL4Height = Inches.of(13);
+        public static final Distance kProcessorHeight = Inches.of(13);
+        public static final Distance kNetHeight = Inches.of(13);
     }
 
     public final class WristConstants {

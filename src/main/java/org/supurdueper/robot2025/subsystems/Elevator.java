@@ -23,15 +23,45 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.supurdueper.lib.CurrentStallFilter;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
+import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
+import org.supurdueper.robot2025.state.RobotStates;
 
-public class Elevator extends PositionSubsystem {
+public class Elevator extends PositionSubsystem implements SupurdueperSubsystem {
 
     CurrentStallFilter homingDetector;
 
     public Elevator() {
         configureMotors();
         homingDetector = new CurrentStallFilter(motor.getStatorCurrent(), kHomingCurrent);
+    }
+
+    public Command l1() {
+        return goToHeight(kL1Height).withName("Elevator.L1");
+    }
+
+    public Command l2() {
+        return goToHeight(kL2Height).withName("Elevator.L2");
+    }
+
+    public Command l3() {
+        return goToHeight(kL3Height).withName("Elevator.L3");
+    }
+
+    public Command l4() {
+        return goToHeight(kL4Height).withName("Elevator.L4");
+    }
+
+    public Command net() {
+        return goToHeight(kNetHeight).withName("Elevator.Net");
+    }
+
+    public Command processor() {
+        return goToHeight(kProcessorHeight).withName("Elevator.Processor");
+    }
+
+    public Command home() {
+        return goToHeight(kBottomHeight).withName("Elevator.Bottom");
     }
 
     public Command goToHeight(Distance height) {
@@ -42,9 +72,21 @@ public class Elevator extends PositionSubsystem {
         return goToPositionBlocking(heightToMotorRotations(height));
     }
 
-    public Command home() {
+    public Command zero() {
         return Commands.runEnd(() -> runVoltage(Volts.of(-2)), () -> motor.setPosition(0), this)
-                .until(() -> homingDetector.isStalled());
+                .until(() -> homingDetector.isStalled())
+                .withName("Elevator.Zero");
+    }
+
+    @Override
+    public void bindCommands() {
+        RobotStates.actionL1.onTrue(l1());
+        RobotStates.actionL2.onTrue(l2());
+        RobotStates.actionL3.onTrue(l3());
+        RobotStates.actionL4.onTrue(l4());
+        RobotStates.actionProcessor.onTrue(processor());
+        RobotStates.actionNet.onTrue(net());
+        RobotStates.actionScore.onFalse(home());
     }
 
     @Override

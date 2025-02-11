@@ -5,7 +5,6 @@ import static org.supurdueper.robot2025.Constants.DriverConstants.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import lombok.Getter;
 import lombok.Setter;
-import org.supurdueper.lib.Telemetry;
 import org.supurdueper.lib.gamepad.Gamepad;
 import org.supurdueper.lib.utils.Util;
 
@@ -15,11 +14,21 @@ public class Driver extends Gamepad {
     // etc.
     // // If triggers need any of the config values set them in the constructor
     // /* A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simulation */
-    // public final Trigger fn = leftBumper;
-    // public final Trigger noFn = fn.not();
+    public final Trigger fn = leftBumper;
+    public final Trigger noFn = fn.not();
 
     // // TODO: Finalize Buttons
-    // public final Trigger intake_A = Y.and(noFn, teleop);
+    public final Trigger intake_A = rightTrigger.and(noFn, teleop);
+    public final Trigger l1_A = A.and(noFn, teleop);
+    public final Trigger l2_B = B.and(noFn, teleop);
+    public final Trigger l3_X = X.and(noFn, teleop);
+    public final Trigger l4_Y = Y.and(noFn, teleop);
+
+    public final Trigger home_fA = A.and(fn, teleop);
+    public final Trigger processor_fX = X.and(fn, teleop);
+    public final Trigger net_fY = Y.and(fn, teleop);
+
+    public final Trigger score_rb = rightBumper.and(noFn, teleop);
 
     // // Drive Triggers
     // public final Trigger upReorient = upDpad.and(fn, teleop);
@@ -53,11 +62,8 @@ public class Driver extends Gamepad {
     /** Create a new Pilot with the default name and port. */
     public Driver() {
         super(0, kLeftStickCurve, kDeadzone, kRightStickCurve, kDeadzone, kTriggerCurve, kDeadzone);
-
         driving = Util.teleop.and(leftStickX.or(leftStickY));
         steer = Util.teleop.and(rightStickX.or(rightStickY));
-
-        Telemetry.print("Pilot Subsystem Initialized: ");
     }
 
     // DRIVE METHODS

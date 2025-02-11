@@ -13,7 +13,7 @@
     <Bug pattern="DM_DEFAULT_ENCODING" />
   </Match>
   <Match>
-    <Class name="frc.robot.Robot" />
+    <Class name="org.supurdueper.robot2025.RobotContainer" />
     <And>
       <OR>
         <Bug pattern="ST_WRITE_TO_STATIC_FROM_INSTANCE_METHOD" />
@@ -23,10 +23,10 @@
   </Match>
   <Match>
     <Class
-      name="frc.spectrumLib.vision.LimelightHelpers$RawDetection" />
+      name="org.supurdueper.lib.LimelightHelpers$RawDetection" />
   </Match>
   <Match>
-    <Class name="frc.spectrumLib.vision.LimelightHelpers" />
+    <Class name="org.supurdueper.lib.LimelightHelpers" />
   </Match>
   <Match>
     <Class name="frc.robot.RobotLogger" />

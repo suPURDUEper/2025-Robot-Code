@@ -8,13 +8,13 @@ import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Threads;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.ironmaple.simulation.SimulatedArena;
 import org.supurdueper.BuildConstants;
+import org.supurdueper.lib.subsystems.SupurdueperRobot;
 
-public class Robot extends TimedRobot {
+public class Robot extends SupurdueperRobot {
     private Command m_autonomousCommand;
 
     private final RobotContainer m_robotContainer;
@@ -70,6 +70,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
+        resetCommandsAndButtons();
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
         if (m_autonomousCommand != null) {
@@ -85,9 +86,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.cancel();
-        }
+        resetCommandsAndButtons();
     }
 
     @Override
@@ -98,7 +97,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void testInit() {
-        CommandScheduler.getInstance().cancelAll();
+        resetCommandsAndButtons();
     }
 
     @Override
@@ -111,5 +110,18 @@ public class Robot extends TimedRobot {
     public void simulationPeriodic() {
         DogLog.log("Simulation/CoralPoses", SimulatedArena.getInstance().getGamePiecesArrayByType("Coral"));
         DogLog.log("Simulation/AlgaePoses", SimulatedArena.getInstance().getGamePiecesArrayByType("Algae"));
+    }
+
+    /**
+     * This method cancels all commands and returns subsystems to their default commands and the gamepad configs are
+     * reset so that new bindings can be assigned based on mode This method should be called when each mode is
+     * initialized
+     */
+    public void resetCommandsAndButtons() {
+        CommandScheduler.getInstance().cancelAll(); // Disable any currently running commands
+        CommandScheduler.getInstance().getActiveButtonLoop().clear();
+
+        // Bind Triggers for all subsystems
+        bindCommands();
     }
 }

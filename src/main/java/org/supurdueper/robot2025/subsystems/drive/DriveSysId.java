@@ -41,7 +41,7 @@ public class DriveSysId {
     /* The SysId routine to test */
     private SysIdRoutine m_sysIdRoutineToApply;
 
-    public DriveSysId(Drive drive) {
+    public DriveSysId(Drivetrain drive) {
         m_sysIdRoutineTranslation = new SysIdRoutine(
                 new SysIdRoutine.Config(
                         null, // Use default ramp rate (1 V/s)
