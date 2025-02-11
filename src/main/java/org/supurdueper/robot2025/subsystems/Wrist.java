@@ -42,7 +42,7 @@ public class Wrist extends PositionSubsystem {
 
     @Override
     public Angle positionTolerance() {
-        return Constants.ClimberConstants.kPositionTolerance;
+        return Constants.WristConstants.kPositionTolerance;
     }
 
     @Override

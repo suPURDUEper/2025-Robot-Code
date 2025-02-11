@@ -106,16 +106,21 @@ public final class Constants {
     public final class CageGrabberConstants {
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
+        public static final Voltage kGrabVolrage = Volts.of(12);
     }
 
     public final class FunnelConstants {
         public static final CurrentLimitsConfigs funnelCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
+        public static final Voltage kIntakeVoltage = null;
+        public static final Voltage kUnjamVoltage = null;
     }
 
     public final class CoralScoreConstants {
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
+        public static final Voltage scoreVoltage = Volts.of(12);
+        public static final Voltage backupVoltage = Volts.of(-2);
     }
 
     public final class FunnelTiltConstants {

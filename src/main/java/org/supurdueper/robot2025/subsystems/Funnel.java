@@ -11,11 +11,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
 import org.supurdueper.robot2025.CanId;
+import org.supurdueper.robot2025.Constants;
 
 public class Funnel extends TalonFXSubsystem {
 
+    CoralScore coralScore;
+
     /** Creates a new CoralIntake. */
     public Funnel() {
+        coralScore = new CoralScore();
         configureMotors();
     }
 
@@ -24,8 +28,16 @@ public class Funnel extends TalonFXSubsystem {
         super.periodic();
     }
 
+    private void run() {
+        runVoltage(Constants.FunnelConstants.kIntakeVoltage);
+    }
+
+    private void runreverse() {
+        runVoltage(Constants.FunnelConstants.kUnjamVoltage);
+    }
+
     public Command intake() {
-        return Commands.run(() -> runVoltage(Volts.of(12)));
+        return Commands.runEnd(null, null, null);
     }
 
     public Command unjam() {

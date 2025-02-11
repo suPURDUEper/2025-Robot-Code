@@ -7,6 +7,7 @@ package org.supurdueper.robot2025.subsystems;
 import static org.supurdueper.robot2025.Constants.AlgaeScoreConstants.*;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -27,6 +28,7 @@ public class AlgaeScore extends TalonFXSubsystem {
     public void periodic() {
         super.periodic();
         ballDetector.periodic();
+        SmartDashboard.putBoolean("AlgaeScore/HasBall", hasBall());
     }
 
     // Public methods

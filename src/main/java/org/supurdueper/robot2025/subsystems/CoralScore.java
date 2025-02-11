@@ -5,19 +5,78 @@
 package org.supurdueper.robot2025.subsystems;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Constants;
 
 public class CoralScore extends TalonFXSubsystem {
 
+    private DigitalInput coralScoreBB;
+    public boolean hasCoral;
+
     public CoralScore() {
+        coralScoreBB = new DigitalInput(Constants.DIOport.scoreBreakbeam1);
         configureMotors();
+    }
+
+    public boolean scoredCoral() {
+        return !coralScoreBB.get();
+    }
+
+    public boolean hasCoral() {
+        return coralScoreBB.get();
+    }
+
+    private void score() {
+        runVoltage(Constants.CoralScoreConstants.scoreVoltage);
+    }
+
+    private void runForward() {
+        runVoltage(Constants.CoralScoreConstants.scoreVoltage);
+    }
+
+    private void runBackwards() {
+        runVoltage(Constants.CoralScoreConstants.backupVoltage);
+    }
+
+    public Command ScoreCoral() {
+        return Commands.runEnd(this::score, this::stop).until(this::scoredCoral);
+    }
+
+    /* In case L4 needs a diffrent speed than l2 and l3
+    public Command ScoreCoralL4( ) {
+        return Commands.runEnd(this::scoreL4, this::stop).until(this::scoredCoral);
+    }
+
+    private void scoreL4() {
+        runVoltage(Constants.CoralScoreConstants.scoreL4Voltage);
+    } */
+
+    /* In case L1 needs a diffrent speed than l2 and l3
+    public Command ScoreCoralL1( ) {
+        return Commands.runEnd(this::scoreL1, this::stop).until(this::scoredCoral);
+    }
+
+    private void scoreL1() {
+        runVoltage(Constants.CoralScoreConstants.scoreL1Voltage);
+    } */
+
+    public Command loadCoral() {
+        return Commands.runEnd(this::runForward, this::stop).until(this::hasCoral);
+    }
+
+    public Command unJam() {
+        return Commands.runEnd(this::runBackwards, this::stop);
     }
 
     @Override
     public void periodic() {
         super.periodic();
+        SmartDashboard.putBoolean("CoralScore/BreakBeam1", coralScoreBB.get());
     }
 
     @Override
