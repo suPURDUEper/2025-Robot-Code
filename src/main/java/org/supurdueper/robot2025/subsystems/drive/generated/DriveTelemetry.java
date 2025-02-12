@@ -22,12 +22,11 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 
 public class DriveTelemetry {
-    private final double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private final double MaxSpeed =
+            TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     ;
 
-    /**
-     * Construct a telemetry object, with the specified max speed of the robot
-     */
+    /** Construct a telemetry object, with the specified max speed of the robot */
     public DriveTelemetry() {
         SignalLogger.start();
     }

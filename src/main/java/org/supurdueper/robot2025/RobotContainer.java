@@ -8,14 +8,10 @@ import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-<<<<<<< HEAD
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import org.supurdueper.robot2025.autos.AutoRoutines;
-=======
 import lombok.Getter;
 import org.supurdueper.robot2025.autos.AutoRoutines;
 import org.supurdueper.robot2025.state.Driver;
->>>>>>> 3a2b718afdde7751fdd6fb0f5dceee38b32c6d7c
 import org.supurdueper.robot2025.subsystems.AlgaeScore;
 import org.supurdueper.robot2025.subsystems.CageGrabber;
 import org.supurdueper.robot2025.subsystems.Climber;
@@ -23,25 +19,11 @@ import org.supurdueper.robot2025.subsystems.CoralScore;
 import org.supurdueper.robot2025.subsystems.Elevator;
 import org.supurdueper.robot2025.subsystems.Funnel;
 import org.supurdueper.robot2025.subsystems.FunnelTilt;
-<<<<<<< HEAD
-import org.supurdueper.robot2025.subsystems.Lights;
-import org.supurdueper.robot2025.subsystems.Wrist;
-import org.supurdueper.robot2025.subsystems.drive.Drive;
-=======
 import org.supurdueper.robot2025.subsystems.drive.Drivetrain;
->>>>>>> 3a2b718afdde7751fdd6fb0f5dceee38b32c6d7c
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
+import org.supurdueper.robot2025.IntakeCommand;
 
 public class RobotContainer {
-    final Climber climber;
-    final Elevator elevator;
-    final Wrist wrist;
-    final Lights lights;
-    final Funnel funnel;
-    final FunnelTilt funneltilt;
-    final AlgaeScore algaescore;
-    final CoralScore coralscore;
-    final CageGrabber cagegrabber;
 
     private final CommandXboxController joystick = new CommandXboxController(0);
     private final CommandXboxController joystick2 = new CommandXboxController(1);
@@ -79,29 +61,15 @@ public class RobotContainer {
     private final AutoChooser autoChooser = new AutoChooser();
 
     public RobotContainer() {
-<<<<<<< HEAD
-
-        cagegrabber = new CageGrabber();
-        coralscore = new CoralScore();
-        algaescore = new AlgaeScore();
-        climber = new Climber();
-        funnel = new Funnel();
-        funneltilt = new FunnelTilt();
-        wrist = new Wrist();
-        elevator = new Elevator();
-        lights = new Lights();
-
-=======
         algaeScore = new AlgaeScore();
         cageGrabber = new CageGrabber();
         climber = new Climber();
         coralScore = new CoralScore();
-        elevator = new Elevator();
+        // elevator = new Elevator();
         funnel = new Funnel();
         funnelTilt = new FunnelTilt();
         driver = new Driver();
         drivetrain = TunerConstants.createDrivetrain();
->>>>>>> 3a2b718afdde7751fdd6fb0f5dceee38b32c6d7c
         autoFactory = drivetrain.createAutoFactory();
         autoRoutines = new AutoRoutines(autoFactory);
 
@@ -112,7 +80,46 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        joystick.leftBumper().whileTrue(funnel.intake().alongWith(coralscore.loadCoral()));
+        //One Driver Controls
+            //The along with will be putting the wrist at the propper angle
+        joystick.a().onTrue((elevator.l1()).alongWith(null));
+        joystick.b().onTrue((elevator.l2()).alongWith());
+        joystick.x().onTrue((elevator.l3()).alongWith());
+        joystick.y().onTrue((elevator.l4()).alongWith());
+
+        joystick.rightTrigger().onTrue(coralScore.ScoreCoral());
+        // Fix this later, joystick.rightBumper().onTrue(IntakeCommand());
+        joystick.leftTrigger().onTrue(algaeScore.scoreNet());
+        joystick.leftBumper().onTrue(algaeScore.scoreProcessor());
+
+        //null is net angle
+        joystick.povUp().onTrue((elevator.net()).alongWith(null));
+        //null is processor angle
+        joystick.povDown().onTrue((elevator.processor()).alongWith(null));
+
+    
+
+
+
+
+
+        //Two driver Controls
+        /* 
+
+        // Operator
+        joystick2.a().onTrue((elevator.l1()).alongWith(null));
+        joystick2.b().onTrue((elevator.l2()).alongWith());
+        joystick2.x().onTrue((elevator.l3()).alongWith());
+        joystick2.y().onTrue((elevator.l4()).alongWith());
+
+        //Driver
+
+
+        */
+
+
+
+    
     }
 
     public Command getAutonomousCommand() {

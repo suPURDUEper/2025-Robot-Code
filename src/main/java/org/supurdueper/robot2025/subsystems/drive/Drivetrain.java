@@ -7,7 +7,6 @@ import choreo.auto.AutoFactory;
 import choreo.trajectory.SwerveSample;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import dev.doglog.DogLog;
@@ -24,9 +23,7 @@ import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import java.util.function.Supplier;
-
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.subsystems.drive.generated.DriveTelemetry;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;

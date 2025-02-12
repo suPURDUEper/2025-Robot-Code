@@ -1,19 +1,15 @@
 package org.supurdueper.robot2025.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
+import static org.supurdueper.robot2025.state.RobotStates.*;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentricFacingAngle;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-
+import java.util.function.Supplier;
 import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.Driver;
-import static org.supurdueper.robot2025.state.RobotStates.*;
-
-import java.util.function.Supplier;
-
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
 
 public class DriveStates {
@@ -43,24 +39,20 @@ public class DriveStates {
 
     private Command normalTeleopDrive() {
         return drivetrain.applyRequest(() -> driveFieldCentric
-                .withVelocityX(
-                        driver.getDriveFwdPositive() * MaxSpeed)
+                .withVelocityX(driver.getDriveFwdPositive() * MaxSpeed)
                 .withVelocityY(driver.getDriveLeftPositive() * MaxSpeed)
-                .withRotationalRate(driver.getDriveCCWPositive()
-                        * MaxAngularRate));
+                .withRotationalRate(driver.getDriveCCWPositive() * MaxAngularRate));
     }
 
     private Command driveFacingReef() {
         return drivetrain.applyRequest(() -> fieldCentricFacingReef
-                .withVelocityX(
-                        driver.getDriveFwdPositive() * MaxSpeed)
+                .withVelocityX(driver.getDriveFwdPositive() * MaxSpeed)
                 .withVelocityY(driver.getDriveLeftPositive() * MaxSpeed));
     }
 
     private Command driveFacingAngle(Supplier<Rotation2d> angle) {
         return drivetrain.applyRequest(() -> fieldCentricFacingAngle
-                .withVelocityX(
-                        driver.getDriveFwdPositive() * MaxSpeed)
+                .withVelocityX(driver.getDriveFwdPositive() * MaxSpeed)
                 .withVelocityY(driver.getDriveLeftPositive() * MaxSpeed)
                 .withTargetDirection(angle.get()));
     }
@@ -72,5 +64,4 @@ public class DriveStates {
     private Command driveFacingNet() {
         return driveFacingAngle(() -> Rotation2d.k180deg);
     }
-
 }

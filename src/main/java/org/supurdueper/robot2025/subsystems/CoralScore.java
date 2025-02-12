@@ -23,16 +23,20 @@ public class CoralScore extends TalonFXSubsystem {
         configureMotors();
     }
 
-    public boolean scoredCoral() {
-        return !coralScoreBB.get();
-    }
-
     public boolean hasCoral() {
         return coralScoreBB.get();
     }
 
+    private boolean scoredCoral() {
+        return !coralScoreBB.get();
+    }
+
     private void score() {
         runVoltage(Constants.CoralScoreConstants.scoreVoltage);
+    }
+
+    private void load() {
+        runVoltage(Constants.CoralScoreConstants.loadVoltage);
     }
 
     private void runForward() {
@@ -43,8 +47,16 @@ public class CoralScore extends TalonFXSubsystem {
         runVoltage(Constants.CoralScoreConstants.backupVoltage);
     }
 
+    public Command runForwards() {
+        return Commands.runEnd(this::score, this::stop);
+    }
+
     public Command ScoreCoral() {
         return Commands.runEnd(this::score, this::stop).until(this::scoredCoral);
+    }
+
+    public Command LoadCoral() {
+        return Commands.runEnd(this::load, this::stop).until(this::hasCoral);
     }
 
     /* In case L4 needs a diffrent speed than l2 and l3

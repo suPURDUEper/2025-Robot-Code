@@ -15,11 +15,8 @@ import org.supurdueper.robot2025.Constants;
 
 public class Funnel extends TalonFXSubsystem {
 
-    CoralScore coralScore;
-
     /** Creates a new CoralIntake. */
     public Funnel() {
-        coralScore = new CoralScore();
         configureMotors();
     }
 
@@ -57,7 +54,7 @@ public class Funnel extends TalonFXSubsystem {
     @Override
     public CurrentLimitsConfigs currentLimits() {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'currentLimits'");
+        return Constants.CoralScoreConstants.kCurrentLimit;
     }
 
     @Override

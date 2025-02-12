@@ -16,6 +16,7 @@ package org.supurdueper.robot2025;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
@@ -39,13 +40,13 @@ public final class Constants {
     public final class DIOport {
 
         // Intake
-        public static final int intakeBreakbeam = 0;
+        public static final int intakeBreakbeam = 5;
         // Coral score
-        public static final int scoreBreakbeam1 = 0;
-        public static final int scoreBreakbeam2 = 0;
+        public static final int scoreBreakbeam1 = 6;
+        public static final int scoreBreakbeam2 = 2;
         // Climber
-        public static final int climberBreakbeam1 = 0;
-        public static final int climberBreakbeam2 = 0;
+        public static final int climberBreakbeam1 = 3;
+        public static final int climberBreakbeam2 = 4;
     }
 
     public static final class AlgaeScoreConstants {
@@ -128,6 +129,8 @@ public final class Constants {
                 new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
         public static final Voltage scoreVoltage = Volts.of(12);
         public static final Voltage backupVoltage = Volts.of(-2);
+        public static final DebounceType kDebounceTime = null;
+        public static final Voltage loadVoltage = null;
     }
 
     public final class FunnelTiltConstants {
