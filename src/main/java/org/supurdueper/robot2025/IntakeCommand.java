@@ -5,48 +5,38 @@
 package org.supurdueper.robot2025;
 
 import edu.wpi.first.wpilibj2.command.Command;
-
-import static org.supurdueper.robot2025.state.RobotStates.hasCoral;
-
 import org.supurdueper.robot2025.subsystems.CoralScore;
 import org.supurdueper.robot2025.subsystems.Funnel;
 
-
 public class IntakeCommand extends Command {
 
-  private CoralScore coralScore;
-  private Funnel funnel;
-  private boolean hasCoral;
-  private Command loadCoral;
-  private Command runFunnel;
-  private Command stopFunnel;
-  private Command stopLoad;
+    private CoralScore coralScore;
+    private Funnel funnel;
+    private boolean hasCoral;
+    private Command loadCoral;
+    private Command runFunnel;
+    private Command stopFunnel;
+    private Command stopLoad;
 
-  public IntakeCommand(CoralScore coralScore, Funnel funnel) {
-    hasCoral = coralScore.hasCoral();
-    loadCoral = coralScore.LoadCoral();
-    runFunnel = funnel.intake();
-  }
+    public IntakeCommand(CoralScore coralScore, Funnel funnel) {
+        hasCoral = coralScore.hasCoral();
+        loadCoral = coralScore.LoadCoral();
+        runFunnel = funnel.intake();
+    }
 
-  @Override
-  public void initialize() {
+    @Override
+    public void initialize() {}
 
-  }
+    @Override
+    public void execute() {
+        coralScore.LoadCoral().alongWith(funnel.intake());
+    }
 
-  @Override
-  public void execute() {
-    coralScore.LoadCoral().alongWith(funnel.intake());
+    @Override
+    public void end(boolean interupted) {}
 
-  }
-
-  @Override
-  public void end(boolean interupted) {
-    
-
-  }
-
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }

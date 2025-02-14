@@ -13,16 +13,21 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import org.supurdueper.lib.CurrentStallFilter;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Constants;
 
 public class Climber extends PositionSubsystem {
 
+    CurrentStallFilter homingDetector;
+
     public Climber() {
         configureMotors();
+        homingDetector = new CurrentStallFilter(motor.getStatorCurrent(), kHomingCurrent);
     }
 
     @Override
@@ -32,7 +37,15 @@ public class Climber extends PositionSubsystem {
 
     @Override
     public Slot0Configs pidGains() {
-        return new Slot0Configs();
+        return new Slot0Configs()
+                .withGravityType(GravityTypeValue.Arm_Cosine)
+                // Idk what gravity type to use but this makes the most curent sense.
+                .withKI(ki)
+                .withKD(kd)
+                .withKS(ks)
+                .withKV(kv)
+                .withKA(ka)
+                .withKG(kg);
     }
 
     @Override

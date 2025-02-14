@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.Supplier;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
+import org.supurdueper.robot2025.Robot;
 import org.supurdueper.robot2025.subsystems.drive.generated.DriveTelemetry;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants.TunerSwerveDrivetrain;
@@ -70,7 +71,8 @@ public class Drivetrain extends TunerSwerveDrivetrain implements SupurdueperSubs
             startSimThread();
         }
         registerTelemetry(telemetry::telemeterize);
-        driveStates = new DriveStates();
+        driveStates = new DriveStates(this);
+        Robot.add(this);
     }
 
     /**
@@ -96,7 +98,8 @@ public class Drivetrain extends TunerSwerveDrivetrain implements SupurdueperSubs
             startSimThread();
         }
         registerTelemetry(telemetry::telemeterize);
-        driveStates = new DriveStates();
+        driveStates = new DriveStates(this);
+        Robot.add(this);
     }
 
     /**
@@ -130,7 +133,8 @@ public class Drivetrain extends TunerSwerveDrivetrain implements SupurdueperSubs
             startSimThread();
         }
         registerTelemetry(telemetry::telemeterize);
-        driveStates = new DriveStates();
+        driveStates = new DriveStates(this);
+        Robot.add(this);
     }
 
     /**

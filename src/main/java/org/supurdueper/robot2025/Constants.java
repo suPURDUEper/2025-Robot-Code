@@ -28,7 +28,7 @@ public final class Constants {
 
     public static final class DriverConstants {
         public static final int kControllerPort = 0;
-        public static final double kDeadzone = 0.001;
+        public static final double kDeadzone = 0.1;
         public static final ExpCurve kLeftStickCurve = new ExpCurve(2.0, 0, 6, kDeadzone);
         public static final ExpCurve kRightStickCurve = new ExpCurve(2.0, 0, 12, kDeadzone);
         public static final ExpCurve kTriggerCurve = new ExpCurve(1, 0, 1, kDeadzone);

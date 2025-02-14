@@ -6,7 +6,6 @@ package org.supurdueper.robot2025;
 
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
-import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -30,7 +29,7 @@ public class Robot extends SupurdueperRobot {
                 .withCaptureDs(true)
                 .withNtPublish(true)
                 .withCaptureNt(true));
-        DogLog.setPdh(new PowerDistribution());
+        // DogLog.setPdh(new PowerDistribution());
         // Record metadata
         DogLog.log("ProjectName", BuildConstants.MAVEN_NAME);
         DogLog.log("BuildDate", BuildConstants.BUILD_DATE);

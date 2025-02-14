@@ -24,17 +24,17 @@ public class DriveStates {
     private final FieldCentricFacingReef fieldCentricFacingReef = new FieldCentricFacingReef();
     private final FieldCentricFacingAngle fieldCentricFacingAngle = new FieldCentricFacingAngle();
 
-    public DriveStates() {
-        this.drivetrain = RobotContainer.getDrivetrain();
+    public DriveStates(Drivetrain drivetrain) {
+        this.drivetrain = drivetrain;
         this.driver = RobotContainer.getDriver();
     }
 
     public void bindCommands() {
         drivetrain.setDefaultCommand(normalTeleopDrive());
-        actionReef.onTrue(driveFacingReef());
-        actionNet.onTrue(driveFacingNet());
-        actionProcessor.onTrue(driveFacingProcessor());
-        actionIntake.or(actionHome, actionClimbPrep, actionScore).onTrue(normalTeleopDrive());
+        // actionReef.onTrue(driveFacingReef());
+        // actionNet.onTrue(driveFacingNet());
+        // actionProcessor.onTrue(driveFacingProcessor());
+        // actionIntake.or(actionHome, actionClimbPrep, actionScore).onTrue(normalTeleopDrive());
     }
 
     private Command normalTeleopDrive() {

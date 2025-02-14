@@ -4,10 +4,13 @@
 
 package org.supurdueper.robot2025.subsystems;
 
+import static org.supurdueper.robot2025.Constants.WristConstants.*;
+
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
@@ -27,7 +30,15 @@ public class Wrist extends PositionSubsystem {
 
     @Override
     public Slot0Configs pidGains() {
-        return new Slot0Configs();
+        return new Slot0Configs()
+                .withGravityType(GravityTypeValue.Elevator_Static)
+                .withKP(kp)
+                .withKI(ki)
+                .withKD(kd)
+                .withKS(ks)
+                .withKV(kv)
+                .withKA(ka)
+                .withKG(kg);
     }
 
     @Override
