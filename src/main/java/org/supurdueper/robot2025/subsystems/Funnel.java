@@ -9,11 +9,13 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Constants;
+import org.supurdueper.robot2025.state.RobotStates;
 
-public class Funnel extends TalonFXSubsystem {
+public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
 
     /** Creates a new CoralIntake. */
     public Funnel() {
@@ -34,7 +36,7 @@ public class Funnel extends TalonFXSubsystem {
     }
 
     public Command intake() {
-        return Commands.runEnd(null, null, null);
+        return Commands.runEnd(this::run, this::stop);
     }
 
     public Command unjam() {
@@ -65,5 +67,11 @@ public class Funnel extends TalonFXSubsystem {
     @Override
     public boolean brakeMode() {
         return true;
+    }
+
+    @Override
+    public void bindCommands() {
+        RobotStates.actionIntake.onTrue(intake());
+        RobotStates.actionUnjamIntake.onTrue(unjam());
     }
 }

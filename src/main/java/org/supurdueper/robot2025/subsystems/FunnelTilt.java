@@ -9,13 +9,15 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
+import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Constants;
 
-public class FunnelTilt extends PositionSubsystem {
+public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsystem {
 
     public FunnelTilt() {
         configureMotors();
@@ -28,7 +30,15 @@ public class FunnelTilt extends PositionSubsystem {
 
     @Override
     public Slot0Configs pidGains() {
-        return new Slot0Configs();
+        return new Slot0Configs()
+                .withGravityType(GravityTypeValue.Elevator_Static)
+                .withKP(kp)
+                .withKI(ki)
+                .withKD(kd)
+                .withKS(ks)
+                .withKV(kv)
+                .withKA(ka)
+                .withKG(kg);
     }
 
     @Override
@@ -93,5 +103,11 @@ public class FunnelTilt extends PositionSubsystem {
     public boolean brakeMode() {
         // TODO Auto-generated method stub
         return true;
+    }
+
+    @Override
+    public void bindCommands() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'bindCommands'");
     }
 }

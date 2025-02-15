@@ -9,11 +9,13 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Constants;
+import org.supurdueper.robot2025.state.RobotStates;
 
-public class CoralScore extends TalonFXSubsystem {
+public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem {
 
     private DigitalInput coralScoreBB;
     public boolean hasCoral;
@@ -55,7 +57,7 @@ public class CoralScore extends TalonFXSubsystem {
         return Commands.runEnd(this::score, this::stop).until(this::scoredCoral);
     }
 
-    public Command LoadCoral() {
+    public Command loadCoral() {
         return Commands.runEnd(this::load, this::stop).until(this::hasCoral);
     }
 
@@ -76,10 +78,6 @@ public class CoralScore extends TalonFXSubsystem {
     private void scoreL1() {
         runVoltage(Constants.CoralScoreConstants.scoreL1Voltage);
     } */
-
-    public Command loadCoral() {
-        return Commands.runEnd(this::runForward, this::stop).until(this::hasCoral);
-    }
 
     public Command unJam() {
         return Commands.runEnd(this::runBackwards, this::stop);
@@ -115,5 +113,11 @@ public class CoralScore extends TalonFXSubsystem {
     @Override
     public boolean brakeMode() {
         return true;
+    }
+
+    @Override
+    public void bindCommands() {
+        // TODO Auto-generated method stub
+        RobotStates.actionIntake.onTrue(loadCoral());
     }
 }
