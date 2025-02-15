@@ -64,4 +64,9 @@ public class CageGrabber extends TalonFXSubsystem {
     public boolean brakeMode() {
         return true;
     }
+
+    @Override
+    public boolean followerInverted() {
+        return false;
+    }
 }

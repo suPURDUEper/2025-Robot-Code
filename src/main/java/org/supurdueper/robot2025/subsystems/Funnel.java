@@ -74,4 +74,9 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
         RobotStates.actionIntake.onTrue(intake());
         RobotStates.actionUnjamIntake.onTrue(unjam());
     }
+
+    @Override
+    public boolean followerInverted() {
+        return false;
+    }
 }

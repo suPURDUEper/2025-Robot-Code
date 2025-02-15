@@ -23,38 +23,41 @@ public abstract class TalonFXSubsystem extends SubsystemBase {
     public TalonFX motor;
     public TalonFX followerMotor;
     public TalonFXConfiguration config;
-
-    public TalonFXSubsystem() {
-        MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs()
-                .withInverted(inverted() ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive)
-                .withNeutralMode(brakeMode() ? NeutralModeValue.Brake : NeutralModeValue.Coast);
-        config = TalonFXFactory.getDefaultConfig()
-                .withCurrentLimits(currentLimits())
-                .withMotorOutput(motorOutputConfigs);
-    }
-
-    protected void runVoltage(Voltage volts) {
-        motor.setControl(voltageRequest.withOutput(volts));
-    }
-
-    protected void runCurrent(Current amps) {
-        motor.setControl(torqueRequest.withOutput(amps));
-    }
-
-    protected void stop() {
-        motor.setControl(stopRequest);
-    }
-
-    protected void configureMotors() {
-        motor = TalonFXFactory.createConfigTalon(canIdLeader(), config);
-        if (canIdFollower() != null) {
-            followerMotor = TalonFXFactory.createConfigTalon(canIdFollower(), config);
+    private boolean invertFollower;
+    
+        public TalonFXSubsystem() {
+            MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs()
+                    .withInverted(inverted() ? InvertedValue.CounterClockwise_Positive : InvertedValue.Clockwise_Positive)
+                    .withNeutralMode(brakeMode() ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+            config = TalonFXFactory.getDefaultConfig()
+                    .withCurrentLimits(currentLimits())
+                    .withMotorOutput(motorOutputConfigs);
+        }
+    
+        protected void runVoltage(Voltage volts) {
+            motor.setControl(voltageRequest.withOutput(volts));
+        }
+    
+        protected void runCurrent(Current amps) {
+            motor.setControl(torqueRequest.withOutput(amps));
+        }
+    
+        protected void stop() {
+            motor.setControl(stopRequest);
+        }
+    
+        protected void configureMotors() {
+            motor = TalonFXFactory.createConfigTalon(canIdLeader(), config);
+            if (canIdFollower() != null) {
+                followerMotor = TalonFXFactory.createPermanentFollowerTalon(canIdFollower(), motor, invertFollower);
         }
     }
 
     public abstract CanId canIdLeader();
 
     public abstract CanId canIdFollower();
+
+    public abstract boolean followerInverted();
 
     public abstract CurrentLimitsConfigs currentLimits();
 

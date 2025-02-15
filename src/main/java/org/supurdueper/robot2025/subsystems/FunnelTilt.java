@@ -110,4 +110,9 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'bindCommands'");
     }
+
+    @Override
+    public boolean followerInverted() {
+        return false;
+    }
 }

@@ -109,4 +109,9 @@ public class Climber extends PositionSubsystem {
     public boolean brakeMode() {
         return true;
     }
+
+    @Override
+    public boolean followerInverted() {
+        return true;
+    }
 }

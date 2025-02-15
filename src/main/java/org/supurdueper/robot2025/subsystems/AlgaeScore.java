@@ -93,4 +93,9 @@ public class AlgaeScore extends TalonFXSubsystem {
     public boolean brakeMode() {
         return true;
     }
+
+    @Override
+    public boolean followerInverted() {
+        return false;
+    }
 }

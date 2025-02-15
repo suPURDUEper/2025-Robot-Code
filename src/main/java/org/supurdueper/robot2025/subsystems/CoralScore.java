@@ -120,4 +120,11 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
         // TODO Auto-generated method stub
         RobotStates.actionIntake.onTrue(loadCoral());
     }
+
+    @Override
+    public boolean followerInverted() {
+        return false;
+    }
+
+    
 }
