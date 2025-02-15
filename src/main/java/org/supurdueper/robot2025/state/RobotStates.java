@@ -24,11 +24,12 @@ public final class RobotStates {
 
     // Actions
     public static final Trigger actionScore = Trigger.kFalse;
-    public static final Trigger actionIntake = Trigger.kFalse;
+    public static final Trigger actionIntake = driver.intake_RT.and(teleop).or(auto.and());
+    public static final Trigger actionUnjamIntake = driver.unjam_RB.and(teleop).or(auto.and());
     public static final Trigger actionL1 = driver.l1_A.and(teleop).or(auto.and());
-    public static final Trigger actionL2 = Trigger.kFalse;
-    public static final Trigger actionL3 = Trigger.kFalse;
-    public static final Trigger actionL4 = Trigger.kFalse;
+    public static final Trigger actionL2 = driver.l2_B.and(teleop).or(auto.and());
+    public static final Trigger actionL3 = driver.l3_X.and(teleop).or(auto.and());
+    public static final Trigger actionL4 = driver.l4_Y.and(teleop).or(auto.and());
     public static final Trigger actionReef = actionL2.or(actionL3).or(actionL4);
     public static final Trigger actionNet = Trigger.kFalse;
     public static final Trigger actionProcessor = Trigger.kFalse;
