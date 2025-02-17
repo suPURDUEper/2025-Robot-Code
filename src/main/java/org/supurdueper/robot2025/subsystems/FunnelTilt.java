@@ -1,37 +1,69 @@
 package org.supurdueper.robot2025.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
-import static org.supurdueper.robot2025.Constants.ElevatorConstants.*;
+import static org.supurdueper.robot2025.Constants.FunnelTiltConstants.*;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Constants;
+import org.supurdueper.robot2025.Robot;
 
 public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsystem {
 
+    private final PositionVoltage noMagicMotion = new PositionVoltage(0);
+    private DutyCycleEncoder absEncoder;
+
     public FunnelTilt() {
+        absEncoder = new DutyCycleEncoder(1);
+        config = config.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(kSensorToMechanismRatio));
         configureMotors();
+        Robot.add(this);
+        motor.setPosition(getAbsEncoder());
+    }
+
+    public Angle getAbsEncoder() {
+        return Rotations.of(absEncoder.get() * (48.0 / 80.0)).minus(kAbsEncoderOffset);
+    }
+
+    @Override
+    public Command goToPosition(Angle rotations) {
+        return Commands.run(() -> motor.setControl(noMagicMotion.withPosition(rotations)));
     }
 
     @Override
     public void periodic() {
         super.periodic();
+        double wristPosition = getPosition().in(Units.Degrees);
+        double wristTarget = getSetpoint().in(Units.Degrees);
+
+        SmartDashboard.putNumber("FunnelTilt/Position", wristPosition);
+        SmartDashboard.putNumber("FunnelTilt/AbsEncoder", getAbsEncoder().in(Degrees));
+        SmartDashboard.putNumber("FunnelTilt/Target", wristTarget);
     }
 
     @Override
     public Slot0Configs pidGains() {
         return new Slot0Configs()
-                .withGravityType(GravityTypeValue.Elevator_Static)
+                .withGravityType(GravityTypeValue.Arm_Cosine)
                 .withKP(kp)
                 .withKI(ki)
                 .withKD(kd)
@@ -43,17 +75,21 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
 
     @Override
     public MotionMagicConfigs motionMagicConfig() {
-        return new MotionMagicConfigs();
+        return new MotionMagicConfigs().withMotionMagicExpo_kV(profileKv).withMotionMagicExpo_kA(profileKa);
     }
 
     @Override
     public SoftwareLimitSwitchConfigs softLimitConfig() {
-        return new SoftwareLimitSwitchConfigs();
+        return new SoftwareLimitSwitchConfigs()
+                .withForwardSoftLimitThreshold(kForwardSoftLimit)
+                .withForwardSoftLimitEnable(true)
+                .withReverseSoftLimitThreshold(kReverseSoftLimit)
+                .withReverseSoftLimitEnable(true);
     }
 
     @Override
     public Angle positionTolerance() {
-        return Constants.ClimberConstants.kPositionTolerance;
+        return Constants.FunnelTiltConstants.kPositionTolerance;
     }
 
     @Override
@@ -80,7 +116,7 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
 
     @Override
     public CanId canIdLeader() {
-        return CanId.CANCODER_FUNNEL_TILT;
+        return CanId.TALONFX_FUNNEL_TILT;
     }
 
     @Override
@@ -90,8 +126,7 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
 
     @Override
     public CurrentLimitsConfigs currentLimits() {
-        // TODO Auto-generated method stub
-        return Constants.CoralScoreConstants.kCurrentLimit;
+        return Constants.FunnelTiltConstants.kCurrentLimit;
     }
 
     @Override
@@ -101,15 +136,11 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
 
     @Override
     public boolean brakeMode() {
-        // TODO Auto-generated method stub
-        return true;
+        return false;
     }
 
     @Override
-    public void bindCommands() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'bindCommands'");
-    }
+    public void bindCommands() {}
 
     @Override
     public boolean followerInverted() {

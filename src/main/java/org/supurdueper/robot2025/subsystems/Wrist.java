@@ -16,6 +16,7 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -23,6 +24,8 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
@@ -32,6 +35,7 @@ import org.supurdueper.robot2025.Robot;
 public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
 
     private final CANcoder wristCancoder;
+    private final PositionVoltage noMagicMotion = new PositionVoltage(0);
 
     public Wrist() {
         super();
@@ -50,10 +54,17 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
     }
 
     @Override
+    public Command goToPosition(Angle rotations) {
+        return Commands.run(() -> motor.setControl(noMagicMotion.withPosition(rotations)));
+    }
+
+    @Override
     public void periodic() {
         super.periodic();
         double wristPosition = getPosition().in(Units.Degrees);
+        double wristTarget = getSetpoint().in(Units.Degrees);
         SmartDashboard.putNumber("Wrist/Position", wristPosition);
+        SmartDashboard.putNumber("Wrist/Target", wristTarget);
     }
 
     @Override

@@ -10,7 +10,7 @@ public class TestController extends Gamepad {
     public TestController() {
         super(
                 3,
-                new ExpCurve(1, 0, 0.5, kDeadzone),
+                new ExpCurve(1, 0, 0.2, kDeadzone),
                 0.12,
                 new ExpCurve(1, 0, 0.5, kDeadzone),
                 0.12,

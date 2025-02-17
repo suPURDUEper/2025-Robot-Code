@@ -62,15 +62,15 @@ public final class Constants {
     }
 
     public final class ElevatorConstants {
-        public static final double kp = 0;
+        public static final double kp = 1;
         public static final double ki = 0;
         public static final double kd = 0;
-        public static final double ks = 0;
-        public static final double kv = 0;
-        public static final double ka = 0;
-        public static final double kg = 0;
-        public static final double profileKv = 0;
-        public static final double profileKa = 0;
+        public static final double ks = 0.04;
+        public static final double kv = 0.24817726596;
+        public static final double ka = 0.00185553096;
+        public static final double kg = 0.38;
+        public static final double profileKv = 2;
+        public static final double profileKa = 0.001;
         public static final Current kStatorCurrentLimit = Amps.of(80);
         public static final Current kSupplyCurrentLimit = Amps.of(40);
         public static final double kInchesPerRotation = (12.0 / 72.0) * Math.PI * 1.744 * 2;
@@ -88,13 +88,13 @@ public final class Constants {
     }
 
     public final class WristConstants {
-        public static final double kp = 0;
+        public static final double kp = 200.0;
         public static final double ki = 0;
-        public static final double kd = 0;
+        public static final double kd = 8.0;
         public static final double ks = 0;
-        public static final double kv = 0;
+        public static final double kv = 16.8;
         public static final double ka = 0;
-        public static final double kg = 0;
+        public static final double kg = 0.12;
         public static final double profileKv = 0;
         public static final double profileKa = 0;
         public static final Current kStatorCurrentLimit = Amps.of(80);
@@ -142,8 +142,23 @@ public final class Constants {
     }
 
     public final class FunnelTiltConstants {
+        public static final double kp = 0;
+        public static final double ki = 0;
+        public static final double kd = 0;
+        public static final double ks = 0;
+        public static final double kv = 0;
+        public static final double ka = 0;
+        public static final double kg = 0;
+        public static final double profileKv = 0;
+        public static final double profileKa = 0;
+        public static final Angle kForwardSoftLimit = Degrees.of(110);
+        public static final Angle kReverseSoftLimit = Degrees.of(50);
+        public static final Angle kPositionTolerance = Degrees.of(1);
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
+        public static final double kSensorToMechanismRatio = 27.0 / 1.0 * 42.0 / 12.0;
+        public static final double kAbsEncoderRatio = 48.0 / 80.0;
+        public static final Angle kAbsEncoderOffset = Degrees.of(101.485065);
     }
 
     public static boolean tuningMode = true;

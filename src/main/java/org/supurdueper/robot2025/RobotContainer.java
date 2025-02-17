@@ -4,6 +4,8 @@
 
 package org.supurdueper.robot2025;
 
+import static edu.wpi.first.units.Units.Degrees;
+
 import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,6 +19,7 @@ import org.supurdueper.robot2025.subsystems.CageGrabber;
 import org.supurdueper.robot2025.subsystems.CoralScore;
 import org.supurdueper.robot2025.subsystems.Elevator;
 import org.supurdueper.robot2025.subsystems.Funnel;
+import org.supurdueper.robot2025.subsystems.FunnelTilt;
 import org.supurdueper.robot2025.subsystems.Wrist;
 import org.supurdueper.robot2025.subsystems.drive.Drivetrain;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
@@ -47,8 +50,8 @@ public class RobotContainer {
     @Getter
     private static Funnel funnel;
 
-    // @Getter
-    // private static FunnelTilt funnelTilt;
+    @Getter
+    private static FunnelTilt funnelTilt;
 
     @Getter
     private static Driver driver;
@@ -69,7 +72,7 @@ public class RobotContainer {
         elevator = new Elevator();
         wrist = new Wrist();
         funnel = new Funnel();
-        // funnelTilt = new FunnelTilt();
+        funnelTilt = new FunnelTilt();
         driver = new Driver();
         testController = new TestController();
         drivetrain = TunerConstants.createDrivetrain();
@@ -83,12 +86,15 @@ public class RobotContainer {
     }
 
     public void configureBindings() {
-        elevator.setDefaultCommand(elevator.setVoltage(testController::getManualElevatorVoltage));
+        testController.leftStickY.whileTrue(elevator.setVoltage(testController::getManualElevatorVoltage));
+        testController.A.whileTrue(wrist.goToPosition(Degrees.of(55)));
+        testController.X.whileTrue(wrist.goToPosition(Degrees.of(80)));
+        testController.Y.whileTrue(wrist.goToPosition(Degrees.of(105)));
         wrist.setDefaultCommand(wrist.setVoltage(testController::getManualWristVoltage));
-        testController.A.whileTrue(funnel.intake());
-        testController.B.whileTrue(coralScore.runForwards());
-        testController.X.whileTrue(algaeScore.intake());
-        testController.Y.whileTrue(algaeScore.scoreNet());
+        // testController.A.whileTrue(funnel.intake());
+        // testController.B.whileTrue(coralScore.runForwards());
+        // testController.X.whileTrue(algaeScore.intake());
+        // testController.Y.whileTrue(algaeScore.scoreNet());
         testController.rightBumper.whileTrue(cageGrabber.runForwards());
     }
 

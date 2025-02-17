@@ -13,6 +13,7 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -26,11 +27,11 @@ import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Robot;
-import org.supurdueper.robot2025.state.RobotStates;
 
 public class Elevator extends PositionSubsystem implements SupurdueperSubsystem {
 
     CurrentStallFilter homingDetector;
+    PositionVoltage pidTuning = new PositionVoltage(0);
 
     public Elevator() {
         configureMotors();
@@ -67,6 +68,16 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         return goToHeight(kBottomHeight).withName("Elevator.Bottom");
     }
 
+    public Command goToHeightTuning(Distance height) {
+        return Commands.run(() -> motor.setControl(pidTuning.withPosition(heightToMotorRotations(height))));
+    }
+
+    // Temporary until we figure out why magic motion isn't working
+    @Override
+    public Command goToPosition(Angle motorRotations) {
+        return Commands.run(() -> motor.setControl(pidTuning.withPosition(motorRotations)));
+    }
+
     public Command goToHeight(Distance height) {
         return goToPosition(heightToMotorRotations(height));
     }
@@ -83,13 +94,13 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
 
     @Override
     public void bindCommands() {
-        RobotStates.actionL1.onTrue(l1());
-        RobotStates.actionL2.onTrue(l2());
-        RobotStates.actionL3.onTrue(l3());
-        RobotStates.actionL4.onTrue(l4());
-        RobotStates.actionProcessor.onTrue(processor());
-        RobotStates.actionNet.onTrue(net());
-        RobotStates.actionScore.onFalse(home());
+        // RobotStates.actionL1.onTrue(l1());
+        // RobotStates.actionL2.onTrue(l2());
+        // RobotStates.actionL3.onTrue(l3());
+        // RobotStates.actionL4.onTrue(l4());
+        // RobotStates.actionProcessor.onTrue(processor());
+        // RobotStates.actionNet.onTrue(net());
+        // RobotStates.actionScore.onFalse(home());
     }
 
     @Override
