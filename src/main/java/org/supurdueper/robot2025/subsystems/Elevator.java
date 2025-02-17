@@ -21,11 +21,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import java.util.function.DoubleSupplier;
 import org.supurdueper.lib.CurrentStallFilter;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
+import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.RobotStates;
+import org.supurdueper.robot2025.state.TestController;
 
 public class Elevator extends PositionSubsystem implements SupurdueperSubsystem {
 
@@ -78,6 +81,10 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
                 .withName("Elevator.Zero");
     }
 
+    public Command setVoltage(DoubleSupplier voltage) {
+        return Commands.run(() -> runVoltage(Volts.of(voltage.getAsDouble())), this);
+    }
+
     @Override
     public void bindCommands() {
         RobotStates.actionL1.onTrue(l1());
@@ -87,6 +94,8 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         RobotStates.actionProcessor.onTrue(processor());
         RobotStates.actionNet.onTrue(net());
         RobotStates.actionScore.onFalse(home());
+        TestController testController = RobotContainer.getTestController();
+        RobotStates.actionManualElevator.onTrue(setVoltage(testController::getManualElevator));
     }
 
     @Override
@@ -194,5 +203,11 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
                         // state in
                         // WPILog with this subsystem's name ("shooter")
                         this));
+    }
+
+    @Override
+    public boolean followerInverted() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'followerInverted'");
     }
 }

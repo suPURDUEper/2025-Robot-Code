@@ -23,6 +23,7 @@ public abstract class TalonFXSubsystem extends SubsystemBase {
     public TalonFX motor;
     public TalonFX followerMotor;
     public TalonFXConfiguration config;
+    private boolean invertFollower;
 
     public TalonFXSubsystem() {
         MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs()
@@ -48,13 +49,15 @@ public abstract class TalonFXSubsystem extends SubsystemBase {
     protected void configureMotors() {
         motor = TalonFXFactory.createConfigTalon(canIdLeader(), config);
         if (canIdFollower() != null) {
-            followerMotor = TalonFXFactory.createConfigTalon(canIdFollower(), config);
+            followerMotor = TalonFXFactory.createPermanentFollowerTalon(canIdFollower(), motor, invertFollower);
         }
     }
 
     public abstract CanId canIdLeader();
 
     public abstract CanId canIdFollower();
+
+    public abstract boolean followerInverted();
 
     public abstract CurrentLimitsConfigs currentLimits();
 
