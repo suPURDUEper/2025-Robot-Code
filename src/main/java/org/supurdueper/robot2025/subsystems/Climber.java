@@ -18,10 +18,11 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.supurdueper.lib.CurrentStallFilter;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
+import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Constants;
 
-public class Climber extends PositionSubsystem {
+public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
 
     CurrentStallFilter homingDetector;
 
@@ -108,5 +109,11 @@ public class Climber extends PositionSubsystem {
     @Override
     public boolean brakeMode() {
         return true;
+    }
+
+    @Override
+    public void bindCommands() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'bindCommands'");
     }
 }
