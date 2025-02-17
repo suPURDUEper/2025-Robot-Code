@@ -1,20 +1,28 @@
 package org.supurdueper.robot2025.state;
 
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.supurdueper.lib.gamepad.Gamepad;
 import org.supurdueper.lib.utils.ExpCurve;
-import org.supurdueper.lib.utils.Util;
 
 public class TestController extends Gamepad {
 
-    public Trigger manualElevator;
+    private static double kDeadzone = 0.12;
 
     public TestController() {
-        super(2, new ExpCurve(), 0.12, new ExpCurve(), 0.12, new ExpCurve(), 0.12);
-        manualElevator = Util.teleop.and(rightStickX);
+        super(
+                3,
+                new ExpCurve(1, 0, 0.5, kDeadzone),
+                0.12,
+                new ExpCurve(1, 0, 0.5, kDeadzone),
+                0.12,
+                new ExpCurve(1, 0, 0.5, kDeadzone),
+                kDeadzone);
     }
 
-    public double getManualElevator() {
-        return rightStickCurve.calculate(getRightY());
+    public double getManualElevatorVoltage() {
+        return leftStickCurve.calculate(getLeftY()) * 12;
+    }
+
+    public double getManualWristVoltage() {
+        return rightStickCurve.calculate(getRightY()) * 12;
     }
 }

@@ -21,14 +21,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import java.util.function.DoubleSupplier;
 import org.supurdueper.lib.CurrentStallFilter;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
-import org.supurdueper.robot2025.RobotContainer;
+import org.supurdueper.robot2025.Robot;
 import org.supurdueper.robot2025.state.RobotStates;
-import org.supurdueper.robot2025.state.TestController;
 
 public class Elevator extends PositionSubsystem implements SupurdueperSubsystem {
 
@@ -37,6 +35,8 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
     public Elevator() {
         configureMotors();
         homingDetector = new CurrentStallFilter(motor.getStatorCurrent(), kHomingCurrent);
+        Robot.add(this);
+        motor.setPosition(0);
     }
 
     public Command l1() {
@@ -81,10 +81,6 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
                 .withName("Elevator.Zero");
     }
 
-    public Command setVoltage(DoubleSupplier voltage) {
-        return Commands.run(() -> runVoltage(Volts.of(voltage.getAsDouble())), this);
-    }
-
     @Override
     public void bindCommands() {
         RobotStates.actionL1.onTrue(l1());
@@ -94,8 +90,6 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         RobotStates.actionProcessor.onTrue(processor());
         RobotStates.actionNet.onTrue(net());
         RobotStates.actionScore.onFalse(home());
-        TestController testController = RobotContainer.getTestController();
-        RobotStates.actionManualElevator.onTrue(setVoltage(testController::getManualElevator));
     }
 
     @Override
@@ -105,7 +99,7 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         // Log out to Glass for debugging
         double elevatorPosition = motorRotationToHeight(getPosition()).in(Units.Inches);
         double elevatorSetpoint = motorRotationToHeight(getSetpoint()).in(Units.Inches);
-        SmartDashboard.putNumber("Elevator/Position (Motor)", elevatorPosition);
+        SmartDashboard.putNumber("Elevator/Position", elevatorPosition);
         SmartDashboard.putNumber("Elevator/Target Position", elevatorSetpoint);
         SmartDashboard.putBoolean("Elevator/At Position", atPosition());
     }
@@ -207,7 +201,6 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
 
     @Override
     public boolean followerInverted() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'followerInverted'");
+        return false;
     }
 }

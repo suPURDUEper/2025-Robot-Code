@@ -1,5 +1,7 @@
 package org.supurdueper.lib.subsystems;
 
+import static edu.wpi.first.units.Units.Volts;
+
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -11,7 +13,10 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import java.util.function.DoubleSupplier;
 import org.supurdueper.lib.TalonFXFactory;
 import org.supurdueper.robot2025.CanId;
 
@@ -32,6 +37,10 @@ public abstract class TalonFXSubsystem extends SubsystemBase {
         config = TalonFXFactory.getDefaultConfig()
                 .withCurrentLimits(currentLimits())
                 .withMotorOutput(motorOutputConfigs);
+    }
+
+    public Command setVoltage(DoubleSupplier voltage) {
+        return Commands.run(() -> runVoltage(Volts.of(voltage.getAsDouble())), this);
     }
 
     protected void runVoltage(Voltage volts) {

@@ -37,7 +37,6 @@ public final class RobotStates {
     public static final Trigger actionHome = driver.home_fA.and(teleop);
     public static final Trigger actionClimbPrep = Trigger.kFalse;
     public static final Trigger actionClimb = Trigger.kFalse;
-    public static final Trigger actionManualElevator = test.manualElevator.and(teleop);
 
     private RobotStates() {
         throw new IllegalStateException("Utility class");

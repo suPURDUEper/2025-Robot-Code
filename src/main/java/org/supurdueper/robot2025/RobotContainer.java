@@ -12,7 +12,12 @@ import lombok.Getter;
 import org.supurdueper.robot2025.autos.AutoRoutines;
 import org.supurdueper.robot2025.state.Driver;
 import org.supurdueper.robot2025.state.TestController;
+import org.supurdueper.robot2025.subsystems.AlgaeScore;
+import org.supurdueper.robot2025.subsystems.CageGrabber;
+import org.supurdueper.robot2025.subsystems.CoralScore;
 import org.supurdueper.robot2025.subsystems.Elevator;
+import org.supurdueper.robot2025.subsystems.Funnel;
+import org.supurdueper.robot2025.subsystems.Wrist;
 import org.supurdueper.robot2025.subsystems.drive.Drivetrain;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
 
@@ -21,23 +26,26 @@ public class RobotContainer {
     @Getter
     private static Drivetrain drivetrain;
 
-    // @Getter
-    // private static AlgaeScore algaeScore;
+    @Getter
+    private static AlgaeScore algaeScore;
 
-    // @Getter
-    // private static CageGrabber cageGrabber;
+    @Getter
+    private static CageGrabber cageGrabber;
 
     // @Getter
     // private static Climber climber;
 
-    // @Getter
-    // private static CoralScore coralScore;
+    @Getter
+    private static CoralScore coralScore;
 
     @Getter
     private static Elevator elevator;
 
-    // @Getter
-    // private static Funnel funnel;
+    @Getter
+    private static Wrist wrist;
+
+    @Getter
+    private static Funnel funnel;
 
     // @Getter
     // private static FunnelTilt funnelTilt;
@@ -54,12 +62,13 @@ public class RobotContainer {
     private final AutoChooser autoChooser = new AutoChooser();
 
     public RobotContainer() {
-        // algaeScore = new AlgaeScore();
-        // cageGrabber = new CageGrabber();
+        algaeScore = new AlgaeScore();
+        cageGrabber = new CageGrabber();
         // climber = new Climber();
-        // coralScore = new CoralScore();
+        coralScore = new CoralScore();
         elevator = new Elevator();
-        // funnel = new Funnel();
+        wrist = new Wrist();
+        funnel = new Funnel();
         // funnelTilt = new FunnelTilt();
         driver = new Driver();
         testController = new TestController();
@@ -73,7 +82,15 @@ public class RobotContainer {
         configureBindings();
     }
 
-    private void configureBindings() {}
+    public void configureBindings() {
+        elevator.setDefaultCommand(elevator.setVoltage(testController::getManualElevatorVoltage));
+        wrist.setDefaultCommand(wrist.setVoltage(testController::getManualWristVoltage));
+        testController.A.whileTrue(funnel.intake());
+        testController.B.whileTrue(coralScore.runForwards());
+        testController.X.whileTrue(algaeScore.intake());
+        testController.Y.whileTrue(algaeScore.scoreNet());
+        testController.rightBumper.whileTrue(cageGrabber.runForwards());
+    }
 
     public Command getAutonomousCommand() {
         /* Run the path selected from the auto chooser */

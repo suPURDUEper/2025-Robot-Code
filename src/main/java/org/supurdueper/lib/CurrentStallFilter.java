@@ -1,5 +1,7 @@
 package org.supurdueper.lib;
 
+import static edu.wpi.first.units.Units.Amps;
+
 import com.ctre.phoenix6.StatusSignal;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
@@ -18,6 +20,7 @@ public class CurrentStallFilter {
     public CurrentStallFilter(StatusSignal<Current> currentSignal, Current threshold) {
         this.currentSignal = currentSignal;
         this.threshold = threshold;
+        this.filteredCurrent = Amps.of(0);
         currentFilter = LinearFilter.movingAverage(5);
         currentDebouncer = new Debouncer(0.33, DebounceType.kRising);
     }

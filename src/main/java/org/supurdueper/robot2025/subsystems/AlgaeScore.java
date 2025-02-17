@@ -86,7 +86,7 @@ public class AlgaeScore extends TalonFXSubsystem {
 
     @Override
     public boolean inverted() {
-        return false;
+        return true;
     }
 
     @Override

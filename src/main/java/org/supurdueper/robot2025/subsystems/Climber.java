@@ -116,6 +116,7 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'bindCommands'");
     }
+
     public boolean followerInverted() {
         return true;
     }

@@ -4,9 +4,13 @@
       "LiveWindow": {
         ".status": {
           "open": true
-        }
+        },
+        "open": true
       },
       "SmartDashboard": {
+        "Elevator": {
+          "open": true
+        },
         "MapleArenaSimulation": {
           "open": true
         },
@@ -17,12 +21,20 @@
           "RootSpeed": {
             "open": true
           }
-        }
+        },
+        "Tuning": {
+          "open": true
+        },
+        "Wrist": {
+          "open": true
+        },
+        "open": true
       }
     },
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Pose": "Field2d",
+      "/SmartDashboard/Alerts": "Alerts",
       "/SmartDashboard/Auto Chooser": "String Chooser",
       "/SmartDashboard/Choreo Alerts": "Alerts",
       "/SmartDashboard/Module 0": "Mechanism2d",
@@ -34,10 +46,12 @@
   "NetworkTables Info": {
     "Connections": {
       "open": true
-    }
+    },
+    "visible": true
   },
   "NetworkTables Settings": {
     "mode": "Client (NT3)",
-    "serverTeam": "7457"
+    "serverTeam": "7457",
+    "visible": false
   }
 }

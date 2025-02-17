@@ -31,16 +31,16 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
         runVoltage(Constants.FunnelConstants.kIntakeVoltage);
     }
 
-    private void runreverse() {
+    private void runReverse() {
         runVoltage(Constants.FunnelConstants.kUnjamVoltage);
     }
 
     public Command intake() {
-        return Commands.runEnd(this::run, this::stop);
+        return Commands.runEnd(this::run, this::stop, this);
     }
 
     public Command unjam() {
-        return Commands.run(() -> runVoltage(Volts.of(-10)));
+        return Commands.runEnd(this::runReverse, this::stop, this);
     }
 
     @Override
@@ -55,13 +55,12 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
 
     @Override
     public CurrentLimitsConfigs currentLimits() {
-        // TODO Auto-generated method stub
         return Constants.CoralScoreConstants.kCurrentLimit;
     }
 
     @Override
     public boolean inverted() {
-        return false;
+        return true;
     }
 
     @Override

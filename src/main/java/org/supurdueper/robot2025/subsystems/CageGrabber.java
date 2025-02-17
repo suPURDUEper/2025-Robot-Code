@@ -30,6 +30,10 @@ public class CageGrabber extends TalonFXSubsystem {
         runVoltage(Constants.CageGrabberConstants.kGrabVolrage);
     }
 
+    public Command runForwards() {
+        return Commands.runEnd(this::grab, this::stop, this);
+    }
+
     public Command grabCage() {
         return Commands.runEnd(this::grab, this::stop, this).until(this::hasCage);
     }
@@ -57,7 +61,7 @@ public class CageGrabber extends TalonFXSubsystem {
 
     @Override
     public boolean inverted() {
-        return false;
+        return true;
     }
 
     @Override

@@ -53,7 +53,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
         return Commands.runEnd(this::score, this::stop);
     }
 
-    public Command ScoreCoral() {
+    public Command scoreCoral() {
         return Commands.runEnd(this::score, this::stop).until(this::scoredCoral);
     }
 
@@ -107,7 +107,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
 
     @Override
     public boolean inverted() {
-        return false;
+        return true;
     }
 
     @Override

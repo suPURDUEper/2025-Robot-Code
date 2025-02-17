@@ -24,26 +24,26 @@ public abstract class Gamepad extends SubsystemBase {
     public static final Trigger kFalse = new Trigger(() -> false);
 
     private CommandXboxController xboxController;
-    protected Trigger A = kFalse;
-    protected Trigger B = kFalse;
-    protected Trigger X = kFalse;
-    protected Trigger Y = kFalse;
-    protected Trigger leftBumper = kFalse;
-    protected Trigger rightBumper = kFalse;
-    protected Trigger leftTrigger = kFalse;
-    protected Trigger rightTrigger = kFalse;
-    protected Trigger leftStickClick = kFalse;
-    protected Trigger rightStickClick = kFalse;
-    protected Trigger start = kFalse;
-    protected Trigger select = kFalse;
-    protected Trigger upDpad = kFalse;
-    protected Trigger downDpad = kFalse;
-    protected Trigger leftDpad = kFalse;
-    protected Trigger rightDpad = kFalse;
-    protected Trigger leftStickY = kFalse;
-    protected Trigger leftStickX = kFalse;
-    protected Trigger rightStickY = kFalse;
-    protected Trigger rightStickX = kFalse;
+    public Trigger A = kFalse;
+    public Trigger B = kFalse;
+    public Trigger X = kFalse;
+    public Trigger Y = kFalse;
+    public Trigger leftBumper = kFalse;
+    public Trigger rightBumper = kFalse;
+    public Trigger leftTrigger = kFalse;
+    public Trigger rightTrigger = kFalse;
+    public Trigger leftStickClick = kFalse;
+    public Trigger rightStickClick = kFalse;
+    public Trigger start = kFalse;
+    public Trigger select = kFalse;
+    public Trigger upDpad = kFalse;
+    public Trigger downDpad = kFalse;
+    public Trigger leftDpad = kFalse;
+    public Trigger rightDpad = kFalse;
+    public Trigger leftStickY = kFalse;
+    public Trigger leftStickX = kFalse;
+    public Trigger rightStickY = kFalse;
+    public Trigger rightStickX = kFalse;
 
     // Setup function bumper and trigger buttons
     public Trigger noBumpers = rightBumper.negate().and(leftBumper.negate());

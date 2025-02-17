@@ -73,7 +73,7 @@ public final class Constants {
         public static final double profileKa = 0;
         public static final Current kStatorCurrentLimit = Amps.of(80);
         public static final Current kSupplyCurrentLimit = Amps.of(40);
-        public static final double kInchesPerRotation = 72 / 12 * Math.PI * 1.744;
+        public static final double kInchesPerRotation = (12.0 / 72.0) * Math.PI * 1.744 * 2;
         public static final Distance kForwardSoftLimit = Inches.of(55);
         public static final Distance kReverseSoftLimit = Inches.of(0);
         public static final Distance kPositionTolerance = Inches.of(0.5);
@@ -98,11 +98,19 @@ public final class Constants {
         public static final double profileKv = 0;
         public static final double profileKa = 0;
         public static final Current kStatorCurrentLimit = Amps.of(80);
-        public static final Angle kForwardSoftLimit = Degrees.of(55);
-        public static final Angle kReverseSoftLimit = Degrees.of(0);
-        public static final Angle kPositionTolerance = Degrees.of(0.25);
+        public static final Angle kForwardSoftLimit = Degrees.of(110);
+        public static final Angle kReverseSoftLimit = Degrees.of(50);
+        public static final Angle kPositionTolerance = Degrees.of(1);
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
+        public static final double kDegreesPerRotation = 0;
+        public static final Angle kCancoderMagnetOffset = Degrees.of(190);
+        public static final Angle kL1Angle = Degrees.of(1);
+        public static final Angle kL2Angle = Degrees.of(1);
+        public static final Angle kL3Angle = kL2Angle;
+        public static final Angle kL4Angle = Degrees.of(1);
+        public static final Angle kProcessorAngle = Degrees.of(1);
+        public static final Angle kNetAngle = Degrees.of(1);
     }
 
     public final class ClimberConstants {
@@ -113,15 +121,15 @@ public final class Constants {
 
     public final class CageGrabberConstants {
         public static final CurrentLimitsConfigs kCurrentLimit =
-                new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
+                new CurrentLimitsConfigs().withStatorCurrentLimit(80).withStatorCurrentLimitEnable(true);
         public static final Voltage kGrabVolrage = Volts.of(12);
     }
 
     public final class FunnelConstants {
         public static final CurrentLimitsConfigs funnelCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
-        public static final Voltage kIntakeVoltage = null;
-        public static final Voltage kUnjamVoltage = null;
+        public static final Voltage kIntakeVoltage = Volts.of(12);
+        public static final Voltage kUnjamVoltage = Volts.of(-6);
     }
 
     public final class CoralScoreConstants {

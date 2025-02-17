@@ -15,20 +15,21 @@ public enum CanId {
     CANCODER_STEER_FR(22, "canivore"),
     CANCODER_STEER_BL(23, "canivore"),
     CANCODER_STEER_BR(24, "canivore"),
+    PIGEON(25, "canivore"),
 
     // Elevator
-    TALONFX_ELEVATOR_LEADER(9, "canivore"),
-    TALONFX_ELEVATOR_FOLLOWER(10, "canivore"),
+    TALONFX_ELEVATOR_LEADER(9, "rio"),
+    TALONFX_ELEVATOR_FOLLOWER(10, "rio"),
 
     // Climber
-    TALONFX_CLIMBER_LEADER(11, "canivore"),
-    TALONFX_CLIMBER_FOLLOWER(12, "canivore"),
-    TALONFX_CLIMBER_GRAB(13, "canivore"),
+    TALONFX_CLIMBER_LEADER(11, "rio"),
+    TALONFX_CLIMBER_FOLLOWER(12, "rio"),
+    TALONFX_CLIMBER_GRAB(13, "rio"),
 
     // Funnel
-    TALONFX_FUNNEL(14, "canivore"),
-    TALONFX_FUNNEL_TILT(15, "canivore"),
-    CANCODER_FUNNEL_TILT(25, "canivore"),
+    TALONFX_FUNNEL(14, "rio"),
+    TALONFX_FUNNEL_TILT(15, "rio"),
+    CANCODER_FUNNEL_TILT(27, "rio"),
 
     // Wrist
     TALONFX_WRIST(16, "rio"),

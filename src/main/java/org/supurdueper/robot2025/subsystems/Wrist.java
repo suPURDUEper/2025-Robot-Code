@@ -4,51 +4,56 @@
 
 package org.supurdueper.robot2025.subsystems;
 
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
 import static org.supurdueper.robot2025.Constants.WristConstants.*;
 
-import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
-
-import edu.wpi.first.units.Measure;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
+import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
-import org.supurdueper.robot2025.Constants;
+import org.supurdueper.robot2025.Robot;
 
-public class Wrist extends PositionSubsystem {
+public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
 
     private final CANcoder wristCancoder;
 
     public Wrist() {
         super();
         wristCancoder = new CANcoder(CanId.CANCODER_WRIST.getDeviceNumber(), CanId.CANCODER_WRIST.getBus());
-        var fx_cfg = new TalonFXConfiguration();
-        fx_cfg.Feedback.FeedbackRemoteSensorID = wristCancoder.getDeviceID();
-        fx_cfg.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+        MagnetSensorConfigs cancoderConfig = new MagnetSensorConfigs()
+                .withMagnetOffset(kCancoderMagnetOffset)
+                .withAbsoluteSensorDiscontinuityPoint(0.5)
+                .withSensorDirection(SensorDirectionValue.Clockwise_Positive);
+        wristCancoder.getConfigurator().apply(new CANcoderConfiguration().withMagnetSensor(cancoderConfig));
+
         config = config.withFeedback(new FeedbackConfigs()
                 .withFeedbackRemoteSensorID(CanId.CANCODER_WRIST.getDeviceNumber())
                 .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder));
         configureMotors();
-    }
-//might be wrong about this
-    private Angle wristRotationToDegrees(Angle wristAngle) {
-        return Units.Degrees.of(wristAngle.in(Units.Degrees) * Constants.WristConstants.kDegreesPerRotation);
+        Robot.add(this);
     }
 
     @Override
     public void periodic() {
         super.periodic();
-        double wristPosition = wristRotationToDegrees(getPosition()).in(Units.Degrees);
+        double wristPosition = getPosition().in(Units.Degrees);
+        SmartDashboard.putNumber("Wrist/Position", wristPosition);
     }
 
     @Override
@@ -71,23 +76,43 @@ public class Wrist extends PositionSubsystem {
 
     @Override
     public SoftwareLimitSwitchConfigs softLimitConfig() {
-        return null;
+        return new SoftwareLimitSwitchConfigs()
+                .withForwardSoftLimitThreshold(kForwardSoftLimit)
+                .withForwardSoftLimitEnable(true)
+                .withReverseSoftLimitThreshold(kReverseSoftLimit)
+                .withReverseSoftLimitEnable(true);
     }
 
     @Override
     public Angle positionTolerance() {
-        return Constants.WristConstants.kPositionTolerance;
+        return kPositionTolerance;
     }
 
     @Override
     public SysIdRoutine sysIdConfig() {
-        return new SysIdRoutine(null, null);
+        return new SysIdRoutine(
+                // Empty config defaults to 1 volt/second ramp rate and 7 volt step voltage.
+                new SysIdRoutine.Config(
+                        Volts.of(1).per(Second),
+                        Volts.of(7),
+                        null,
+                        state -> SignalLogger.writeString("state", state.toString())),
+                new SysIdRoutine.Mechanism(
+                        // Tell SysId how to plumb the driving voltage to the motor(s).
+                        this::runVoltage,
+                        // Tell SysId how to record a frame of data for each motor on the mechanism
+                        // being
+                        // characterized.
+                        null, // Using the CTRE SignalLogger API instead
+                        // Tell SysId to make generated commands require this subsystem, suffix test
+                        // state in
+                        // WPILog with this subsystem's name ("shooter")
+                        this));
     }
 
     @Override
     public CanId canIdLeader() {
-        // TODO Auto-generated method stub
-        return CanId.CANCODER_FUNNEL_TILT;
+        return CanId.TALONFX_WRIST;
     }
 
     @Override
@@ -97,7 +122,7 @@ public class Wrist extends PositionSubsystem {
 
     @Override
     public CurrentLimitsConfigs currentLimits() {
-        return Constants.WristConstants.kCurrentLimit;
+        return kCurrentLimit;
     }
 
     @Override
@@ -114,4 +139,7 @@ public class Wrist extends PositionSubsystem {
     public boolean followerInverted() {
         return false;
     }
+
+    @Override
+    public void bindCommands() {}
 }
