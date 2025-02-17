@@ -11,7 +11,7 @@ public final class RobotStates {
     public static final Trigger teleop = new Trigger(DriverStation::isTeleop);
     public static final Trigger auto = new Trigger(DriverStation::isAutonomous);
     public static final Driver driver = RobotContainer.getDriver();
-    public static final TestController test;
+    public static final TestController test = RobotContainer.getTestController();
 
     // // Information
     // public static final Trigger hasBall = Trigger.kFalse;
@@ -37,6 +37,7 @@ public final class RobotStates {
     public static final Trigger actionHome = driver.home_fA.and(teleop);
     public static final Trigger actionClimbPrep = Trigger.kFalse;
     public static final Trigger actionClimb = Trigger.kFalse;
+    public static final Trigger actionManualElevator = test.manualElevator.and(teleop);
 
     private RobotStates() {
         throw new IllegalStateException("Utility class");

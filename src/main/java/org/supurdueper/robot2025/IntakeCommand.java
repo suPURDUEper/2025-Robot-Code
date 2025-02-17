@@ -20,7 +20,7 @@ public class IntakeCommand extends Command {
 
     public IntakeCommand(CoralScore coralScore, Funnel funnel) {
         hasCoral = coralScore.hasCoral();
-        loadCoral = coralScore.LoadCoral();
+        loadCoral = coralScore.loadCoral();
         runFunnel = funnel.intake();
     }
 
@@ -29,7 +29,7 @@ public class IntakeCommand extends Command {
 
     @Override
     public void execute() {
-        coralScore.LoadCoral().alongWith(funnel.intake());
+        coralScore.loadCoral().alongWith(funnel.intake());
     }
 
     @Override

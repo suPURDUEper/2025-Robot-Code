@@ -8,8 +8,6 @@ import static edu.wpi.first.units.Units.Second;
 import static edu.wpi.first.units.Units.Volts;
 import static org.supurdueper.robot2025.Constants.ElevatorConstants.*;
 
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -23,10 +21,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import java.util.function.DoubleSupplier;
 import org.supurdueper.lib.CurrentStallFilter;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
+import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.RobotStates;
 import org.supurdueper.robot2025.state.TestController;
 
@@ -85,8 +85,6 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         return Commands.run(() -> runVoltage(Volts.of(voltage.getAsDouble())), this);
     }
 
-
-
     @Override
     public void bindCommands() {
         RobotStates.actionL1.onTrue(l1());
@@ -96,7 +94,8 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         RobotStates.actionProcessor.onTrue(processor());
         RobotStates.actionNet.onTrue(net());
         RobotStates.actionScore.onFalse(home());
-
+        TestController testController = RobotContainer.getTestController();
+        RobotStates.actionManualElevator.onTrue(setVoltage(testController::getManualElevator));
     }
 
     @Override

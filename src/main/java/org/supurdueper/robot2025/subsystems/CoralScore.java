@@ -125,6 +125,4 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     public boolean followerInverted() {
         return false;
     }
-
-    
 }

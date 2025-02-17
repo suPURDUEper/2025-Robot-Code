@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import lombok.Getter;
 import org.supurdueper.robot2025.autos.AutoRoutines;
 import org.supurdueper.robot2025.state.Driver;
+import org.supurdueper.robot2025.state.TestController;
+import org.supurdueper.robot2025.subsystems.Elevator;
 import org.supurdueper.robot2025.subsystems.drive.Drivetrain;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
 
@@ -31,8 +33,8 @@ public class RobotContainer {
     // @Getter
     // private static CoralScore coralScore;
 
-    // @Getter
-    // private static Elevator elevator;
+    @Getter
+    private static Elevator elevator;
 
     // @Getter
     // private static Funnel funnel;
@@ -42,6 +44,9 @@ public class RobotContainer {
 
     @Getter
     private static Driver driver;
+
+    @Getter
+    private static TestController testController;
 
     /* Path follower */
     private final AutoFactory autoFactory;
@@ -53,10 +58,11 @@ public class RobotContainer {
         // cageGrabber = new CageGrabber();
         // climber = new Climber();
         // coralScore = new CoralScore();
-        // // elevator = new Elevator();
+        elevator = new Elevator();
         // funnel = new Funnel();
         // funnelTilt = new FunnelTilt();
         driver = new Driver();
+        testController = new TestController();
         drivetrain = TunerConstants.createDrivetrain();
         autoFactory = drivetrain.createAutoFactory();
         autoRoutines = new AutoRoutines(autoFactory);
