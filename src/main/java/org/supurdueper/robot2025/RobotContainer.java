@@ -4,12 +4,11 @@
 
 package org.supurdueper.robot2025;
 
-import static edu.wpi.first.units.Units.Degrees;
-
 import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import lombok.Getter;
 import org.supurdueper.robot2025.autos.AutoRoutines;
 import org.supurdueper.robot2025.state.Driver;
@@ -87,15 +86,11 @@ public class RobotContainer {
 
     public void configureBindings() {
         testController.leftStickY.whileTrue(elevator.setVoltage(testController::getManualElevatorVoltage));
-        testController.A.whileTrue(wrist.goToPosition(Degrees.of(55)));
-        testController.X.whileTrue(wrist.goToPosition(Degrees.of(80)));
-        testController.Y.whileTrue(wrist.goToPosition(Degrees.of(105)));
+        testController.X.whileTrue(funnelTilt.goToStartingPosition());
+        testController.Y.whileTrue(funnelTilt.goToIntakeAngle());
         wrist.setDefaultCommand(wrist.setVoltage(testController::getManualWristVoltage));
-        // testController.A.whileTrue(funnel.intake());
-        // testController.B.whileTrue(coralScore.runForwards());
-        // testController.X.whileTrue(algaeScore.intake());
-        // testController.Y.whileTrue(algaeScore.scoreNet());
-        testController.rightBumper.whileTrue(cageGrabber.runForwards());
+        testController.A.onTrue(Commands.deadline(coralScore.loadCoral(), funnel.intake()));
+        testController.B.onTrue(coralScore.scoreCoral());
     }
 
     public Command getAutonomousCommand() {

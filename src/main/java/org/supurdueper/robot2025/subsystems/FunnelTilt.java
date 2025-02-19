@@ -37,11 +37,18 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
         config = config.withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(kSensorToMechanismRatio));
         configureMotors();
         Robot.add(this);
-        motor.setPosition(getAbsEncoder());
     }
 
     public Angle getAbsEncoder() {
         return Rotations.of(absEncoder.get() * (48.0 / 80.0)).minus(kAbsEncoderOffset);
+    }
+
+    public Command goToIntakeAngle() {
+        return goToPosition(kIntakePosition);
+    }
+
+    public Command goToStartingPosition() {
+        return goToPosition(kStartPosition);
     }
 
     @Override
@@ -136,11 +143,13 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
 
     @Override
     public boolean brakeMode() {
-        return false;
+        return true;
     }
 
     @Override
-    public void bindCommands() {}
+    public void bindCommands() {
+        motor.setPosition(getAbsEncoder());
+    }
 
     @Override
     public boolean followerInverted() {

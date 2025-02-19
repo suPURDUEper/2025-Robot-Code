@@ -42,7 +42,7 @@ public final class Constants {
         // Intake
         public static final int intakeBreakbeam = 5;
         // Coral score
-        public static final int scoreBreakbeam1 = 6;
+        public static final int scoreBreakbeam1 = 0;
         public static final int scoreBreakbeam2 = 2;
         // Climber
         public static final int climberBreakbeam1 = 3;
@@ -80,9 +80,9 @@ public final class Constants {
         public static final Current kHomingCurrent = Amps.of(13);
         public static final Distance kBottomHeight = Inches.of(0);
         public static final Distance kL1Height = Inches.of(13);
-        public static final Distance kL2Height = Inches.of(13);
-        public static final Distance kL3Height = Inches.of(13);
-        public static final Distance kL4Height = Inches.of(13);
+        public static final Distance kL2Height = Inches.of(11.31);
+        public static final Distance kL3Height = Inches.of(27.61);
+        public static final Distance kL4Height = Inches.of(54.39);
         public static final Distance kProcessorHeight = Inches.of(13);
         public static final Distance kNetHeight = Inches.of(13);
     }
@@ -99,16 +99,18 @@ public final class Constants {
         public static final double profileKa = 0;
         public static final Current kStatorCurrentLimit = Amps.of(80);
         public static final Angle kForwardSoftLimit = Degrees.of(110);
+
         public static final Angle kReverseSoftLimit = Degrees.of(50);
         public static final Angle kPositionTolerance = Degrees.of(1);
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
         public static final double kDegreesPerRotation = 0;
         public static final Angle kCancoderMagnetOffset = Degrees.of(190);
-        public static final Angle kL1Angle = Degrees.of(1);
-        public static final Angle kL2Angle = Degrees.of(1);
+        public static final Angle kIntakeAngle = Degrees.of(84);
+        public static final Angle kL1Angle = Degrees.of(0);
+        public static final Angle kL2Angle = Degrees.of(66.78);
         public static final Angle kL3Angle = kL2Angle;
-        public static final Angle kL4Angle = Degrees.of(1);
+        public static final Angle kL4Angle = Degrees.of(49.57);
         public static final Angle kProcessorAngle = Degrees.of(1);
         public static final Angle kNetAngle = Degrees.of(1);
     }
@@ -134,15 +136,15 @@ public final class Constants {
 
     public final class CoralScoreConstants {
         public static final CurrentLimitsConfigs kCurrentLimit =
-                new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
+                new CurrentLimitsConfigs().withStatorCurrentLimit(40).withStatorCurrentLimitEnable(true);
         public static final Voltage scoreVoltage = Volts.of(12);
         public static final Voltage backupVoltage = Volts.of(-2);
         public static final DebounceType kDebounceTime = null;
-        public static final Voltage loadVoltage = null;
+        public static final Voltage loadVoltage = Volts.of(4);
     }
 
     public final class FunnelTiltConstants {
-        public static final double kp = 0;
+        public static final double kp = 75;
         public static final double ki = 0;
         public static final double kd = 0;
         public static final double ks = 0;
@@ -151,14 +153,17 @@ public final class Constants {
         public static final double kg = 0;
         public static final double profileKv = 0;
         public static final double profileKa = 0;
-        public static final Angle kForwardSoftLimit = Degrees.of(110);
-        public static final Angle kReverseSoftLimit = Degrees.of(50);
+        public static final Angle kForwardSoftLimit = Degrees.of(90);
+        public static final Angle kReverseSoftLimit = Degrees.of(-97);
         public static final Angle kPositionTolerance = Degrees.of(1);
         public static final CurrentLimitsConfigs kCurrentLimit =
-                new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
-        public static final double kSensorToMechanismRatio = 27.0 / 1.0 * 42.0 / 12.0;
+                new CurrentLimitsConfigs().withStatorCurrentLimit(40).withStatorCurrentLimitEnable(true);
+        public static final double kSensorToMechanismRatio = 27.0 / 1.0 * 44.0 / 14.0;
         public static final double kAbsEncoderRatio = 48.0 / 80.0;
         public static final Angle kAbsEncoderOffset = Degrees.of(101.485065);
+        public static final Angle kIntakePosition = Degrees.of(-10);
+        public static final Angle kStartPosition = Degrees.of(-90);
+        public static final Angle kClimbPosition = Degrees.of(90);
     }
 
     public static boolean tuningMode = true;

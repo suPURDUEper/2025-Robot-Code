@@ -26,11 +26,11 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     public boolean hasCoral() {
-        return coralScoreBB.get();
+        return !coralScoreBB.get();
     }
 
     private boolean scoredCoral() {
-        return !coralScoreBB.get();
+        return coralScoreBB.get();
     }
 
     private void score() {

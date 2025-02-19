@@ -13,6 +13,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -40,7 +41,12 @@ public abstract class TalonFXSubsystem extends SubsystemBase {
     }
 
     public Command setVoltage(DoubleSupplier voltage) {
-        return Commands.run(() -> runVoltage(Volts.of(voltage.getAsDouble())), this);
+        return Commands.run(
+                () -> {
+                    SmartDashboard.putNumber("FunnelTilt/VoltageRequested", voltage.getAsDouble());
+                    runVoltage(Volts.of(voltage.getAsDouble()));
+                },
+                this);
     }
 
     protected void runVoltage(Voltage volts) {
