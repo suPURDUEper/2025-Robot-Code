@@ -8,16 +8,10 @@
         "open": true
       },
       "SmartDashboard": {
-        "Auto Chooser": {
-          "open": true
-        },
         "CoralScore": {
           "open": true
         },
         "Elevator": {
-          "open": true
-        },
-        "FunnelTilt": {
           "open": true
         },
         "MapleArenaSimulation": {
@@ -32,9 +26,11 @@
           }
         },
         "Tuning": {
-          "FunnelTilt": {
+          "Wrist": {
             "open": true
-          },
+          }
+        },
+        "Wrist": {
           "open": true
         },
         "open": true
