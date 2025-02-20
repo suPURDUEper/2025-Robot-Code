@@ -58,6 +58,7 @@ public final class Constants {
         public static final Voltage kNetScoreVoltage = Volts.of(-12);
         public static final Time kNetScoreTime = Seconds.of(0.5);
         public static final Voltage kProcessorScoreVoltage = Volts.of(-12);
+        public static final Voltage kHoldVoltage = Volts.of(1);
         public static final Time kProcessorScoreTime = Seconds.of(0.5);
     }
 
@@ -130,7 +131,7 @@ public final class Constants {
     }
 
     public final class FunnelConstants {
-        public static final CurrentLimitsConfigs funnelCurrentLimit =
+        public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
         public static final Voltage kIntakeVoltage = Volts.of(12);
         public static final Voltage kUnjamVoltage = Volts.of(-6);

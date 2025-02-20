@@ -26,7 +26,7 @@ public final class RobotStates {
     // Actions
     public static final Trigger actionScore = driver.score_rb.and(teleop);
     public static final Trigger actionIntake = driver.intake_RT.and(teleop);
-    public static final Trigger actionUnjamIntake = driver.unjam_RB.and(teleop);
+    // public static final Trigger actionUnjamIntake = driver.unjam_RB.and(teleop);
     public static final Trigger actionL1 = driver.l1_A.and(teleop);
     public static final Trigger actionL2 = driver.l2_B.and(teleop);
     public static final Trigger actionL3 = driver.l3_X.and(teleop);

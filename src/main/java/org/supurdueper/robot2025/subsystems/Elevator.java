@@ -54,6 +54,18 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         currentHeight = ElevatorHeight.Home;
     }
 
+    @Override
+    public void bindCommands() {
+        RobotStates.actionL1.onTrue(l1());
+        RobotStates.actionL2.onTrue(l2());
+        RobotStates.actionL3.onTrue(l3());
+        RobotStates.actionL4.onTrue(l4());
+        RobotStates.actionProcessor.onTrue(processor());
+        RobotStates.actionNet.onTrue(net());
+        RobotStates.actionIntake.onTrue(intake());
+        RobotStates.actionScore.onFalse(Commands.waitSeconds((0.25)).andThen(home()));
+    }
+
     public Command l1() {
         currentHeight = ElevatorHeight.L1;
         return goToHeight(kL1Height).withName("Elevator.L1");
@@ -144,18 +156,6 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         return Commands.runEnd(() -> runVoltage(Volts.of(-2)), () -> motor.setPosition(0), this)
                 .until(() -> homingDetector.isStalled())
                 .withName("Elevator.Zero");
-    }
-
-    @Override
-    public void bindCommands() {
-        RobotStates.actionL1.onTrue(l1());
-        RobotStates.actionL2.onTrue(l2());
-        RobotStates.actionL3.onTrue(l3());
-        RobotStates.actionL4.onTrue(l4());
-        RobotStates.actionProcessor.onTrue(processor());
-        RobotStates.actionNet.onTrue(net());
-        RobotStates.actionIntake.onTrue(intake());
-        RobotStates.actionScore.onFalse(Commands.waitSeconds((0.25)).andThen(home()));
     }
 
     @Override

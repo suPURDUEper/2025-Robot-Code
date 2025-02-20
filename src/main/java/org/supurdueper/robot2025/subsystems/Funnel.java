@@ -4,7 +4,7 @@
 
 package org.supurdueper.robot2025.subsystems;
 
-import static edu.wpi.first.units.Units.*;
+import static org.supurdueper.robot2025.Constants.FunnelConstants.*;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,8 +12,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
 import org.supurdueper.robot2025.CanId;
-import org.supurdueper.robot2025.Constants;
-import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.RobotStates;
 
 public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
@@ -25,8 +23,7 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
 
     @Override
     public void bindCommands() {
-        RobotStates.actionIntake.onTrue(intake().until(RobotContainer.getCoralScore().coralLoaded()));
-        RobotStates.actionUnjamIntake.onTrue(unjam());
+        RobotStates.actionIntake.onTrue(intake().until(RobotStates.hasCoral));
     }
 
     @Override
@@ -35,11 +32,11 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
     }
 
     private void run() {
-        runVoltage(Constants.FunnelConstants.kIntakeVoltage);
+        runVoltage(kIntakeVoltage);
     }
 
     private void runReverse() {
-        runVoltage(Constants.FunnelConstants.kUnjamVoltage);
+        runVoltage(kUnjamVoltage);
     }
 
     public Command intake() {
@@ -62,7 +59,7 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
 
     @Override
     public CurrentLimitsConfigs currentLimits() {
-        return Constants.CoralScoreConstants.kCurrentLimit;
+        return kCurrentLimit;
     }
 
     @Override

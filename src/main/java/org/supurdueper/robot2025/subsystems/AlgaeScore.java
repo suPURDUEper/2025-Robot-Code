@@ -12,16 +12,25 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.supurdueper.lib.CurrentStallFilter;
+import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
 import org.supurdueper.robot2025.CanId;
+import org.supurdueper.robot2025.state.RobotStates;
 
-public class AlgaeScore extends TalonFXSubsystem {
+public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem{
 
     private CurrentStallFilter ballDetector;
 
     public AlgaeScore() {
         configureMotors();
         ballDetector = new CurrentStallFilter(motor.getStatorCurrent(), kHasBallCurrent);
+    }
+
+    @Override
+    public void bindCommands() {
+        RobotStates.actionL2.or(RobotStates.actionL3).onTrue(intake());
+        RobotStates.actionScore.and(RobotStates.atNet).onTrue(scoreNet());
+        RobotStates.actionScore.and(RobotStates.atProcessor).onTrue(scoreProcessor());
     }
 
     @Override
@@ -66,7 +75,9 @@ public class AlgaeScore extends TalonFXSubsystem {
     }
 
     private void hold() {
-        runCurrent(kHoldCurrent);
+        runVoltage(kHoldVoltage);
+        // Don't have Phoenix Pro on this motor
+        // runCurrent(kHoldCurrent);
     }
 
     @Override
