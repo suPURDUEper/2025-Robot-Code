@@ -26,6 +26,7 @@ import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Constants;
 import org.supurdueper.robot2025.Robot;
+import org.supurdueper.robot2025.state.RobotStates;
 
 public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsystem {
 
@@ -39,16 +40,23 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
         Robot.add(this);
     }
 
-    public Angle getAbsEncoder() {
-        return Rotations.of(absEncoder.get() * (48.0 / 80.0)).minus(kAbsEncoderOffset);
-    }
-
-    public Command goToIntakeAngle() {
+    public Command intake() {
         return goToPosition(kIntakePosition);
     }
 
-    public Command goToStartingPosition() {
+    public Command startingPosition() {
         return goToPosition(kStartPosition);
+    }
+
+    public Command climbPosition() {
+        return goToPosition(kClimbPosition);
+    }
+
+    @Override
+    public void bindCommands() {
+        motor.setPosition(getAbsEncoder());
+        RobotStates.actionClimbPrep.onTrue(climbPosition());
+        RobotStates.actionIntake.onTrue(intake());
     }
 
     @Override
@@ -56,15 +64,20 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
         return Commands.run(() -> motor.setControl(noMagicMotion.withPosition(rotations)));
     }
 
+    public Angle getAbsEncoder() {
+        return Rotations.of(absEncoder.get() * (48.0 / 80.0)).minus(kAbsEncoderOffset);
+    }
+
     @Override
     public void periodic() {
         super.periodic();
-        double wristPosition = getPosition().in(Units.Degrees);
-        double wristTarget = getSetpoint().in(Units.Degrees);
-
-        SmartDashboard.putNumber("FunnelTilt/Position", wristPosition);
-        SmartDashboard.putNumber("FunnelTilt/AbsEncoder", getAbsEncoder().in(Degrees));
-        SmartDashboard.putNumber("FunnelTilt/Target", wristTarget);
+        if (Constants.tuningMode) {
+            double wristPosition = getPosition().in(Units.Degrees);
+            double wristTarget = getSetpoint().in(Units.Degrees);
+            SmartDashboard.putNumber("FunnelTilt/Position", wristPosition);
+            SmartDashboard.putNumber("FunnelTilt/AbsEncoder", getAbsEncoder().in(Degrees));
+            SmartDashboard.putNumber("FunnelTilt/Target", wristTarget);
+        }
     }
 
     @Override
@@ -144,11 +157,6 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
     @Override
     public boolean brakeMode() {
         return true;
-    }
-
-    @Override
-    public void bindCommands() {
-        motor.setPosition(getAbsEncoder());
     }
 
     @Override

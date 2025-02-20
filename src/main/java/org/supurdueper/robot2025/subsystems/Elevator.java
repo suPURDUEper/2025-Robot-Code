@@ -5,6 +5,7 @@
 package org.supurdueper.robot2025.subsystems;
 
 import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 import static org.supurdueper.robot2025.Constants.ElevatorConstants.*;
 
@@ -21,55 +22,108 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import lombok.Getter;
+
 import org.supurdueper.lib.CurrentStallFilter;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Robot;
+import org.supurdueper.robot2025.state.RobotStates;
 
 public class Elevator extends PositionSubsystem implements SupurdueperSubsystem {
 
     CurrentStallFilter homingDetector;
     PositionVoltage pidTuning = new PositionVoltage(0);
 
+    public enum ElevatorHeight {
+        L1, L2, L3, L4, Net, Processor,
+        Intake, Home;
+    }
+
+    @Getter
+    private ElevatorHeight currentHeight;
+
     public Elevator() {
         configureMotors();
         homingDetector = new CurrentStallFilter(motor.getStatorCurrent(), kHomingCurrent);
         Robot.add(this);
         motor.setPosition(0);
+        currentHeight = ElevatorHeight.Home;
     }
 
     public Command l1() {
+        currentHeight = ElevatorHeight.L1;
         return goToHeight(kL1Height).withName("Elevator.L1");
     }
 
     public Command l2() {
+        currentHeight = ElevatorHeight.L2;
         return goToHeight(kL2Height).withName("Elevator.L2");
     }
 
     public Command l3() {
+        currentHeight = ElevatorHeight.L3;
         return goToHeight(kL3Height).withName("Elevator.L3");
     }
 
     public Command l4() {
+        currentHeight = ElevatorHeight.L4;
         return goToHeight(kL4Height).withName("Elevator.L4");
     }
 
     public Command net() {
+        currentHeight = ElevatorHeight.Net;
         return goToHeight(kNetHeight).withName("Elevator.Net");
     }
 
     public Command processor() {
+        currentHeight = ElevatorHeight.Processor;
         return goToHeight(kProcessorHeight).withName("Elevator.Processor");
     }
 
-    public Command home() {
-        return goToHeight(kBottomHeight).withName("Elevator.Bottom");
+    public Command intake() {
+        currentHeight = ElevatorHeight.Intake;
+        return goToHeight(kIntakeHeight).withName("Elevator.Intake");
     }
 
-    public Command goToHeightTuning(Distance height) {
-        return Commands.run(() -> motor.setControl(pidTuning.withPosition(heightToMotorRotations(height))));
+    public Command home() {
+        currentHeight = ElevatorHeight.Home;
+        return goToHeight(kBottomHeight).withName("Elevator.Home");
+    }
+
+    public Trigger atL1() {
+        return new Trigger(() -> currentHeight == ElevatorHeight.L1);
+    }
+
+    public Trigger atL2() {
+        return new Trigger(() -> currentHeight == ElevatorHeight.L2);
+    }
+
+    public Trigger atL3() {
+        return new Trigger(() -> currentHeight == ElevatorHeight.L3);
+    }
+
+    public Trigger atL4() {
+        return new Trigger(() -> currentHeight == ElevatorHeight.L4);
+    }
+
+    public Trigger atNet() {
+        return new Trigger(() -> currentHeight == ElevatorHeight.Net);
+    }
+
+    public Trigger atProcessor() {
+        return new Trigger(() -> currentHeight == ElevatorHeight.Processor);
+    }
+
+    public Trigger atIntake() {
+        return new Trigger(() -> currentHeight == ElevatorHeight.Intake);
+    }
+
+    public Trigger atHome() {
+        return new Trigger(() -> currentHeight == ElevatorHeight.Home);
     }
 
     // Temporary until we figure out why magic motion isn't working
@@ -94,13 +148,14 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
 
     @Override
     public void bindCommands() {
-        // RobotStates.actionL1.onTrue(l1());
-        // RobotStates.actionL2.onTrue(l2());
-        // RobotStates.actionL3.onTrue(l3());
-        // RobotStates.actionL4.onTrue(l4());
-        // RobotStates.actionProcessor.onTrue(processor());
-        // RobotStates.actionNet.onTrue(net());
-        // RobotStates.actionScore.onFalse(home());
+        RobotStates.actionL1.onTrue(l1());
+        RobotStates.actionL2.onTrue(l2());
+        RobotStates.actionL3.onTrue(l3());
+        RobotStates.actionL4.onTrue(l4());
+        RobotStates.actionProcessor.onTrue(processor());
+        RobotStates.actionNet.onTrue(net());
+        RobotStates.actionIntake.onTrue(intake());
+        RobotStates.actionScore.onFalse(Commands.waitSeconds((0.25)).andThen(home()));
     }
 
     @Override
@@ -123,10 +178,6 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         return Units.Rotations.of(height.in(Units.Inches) / kInchesPerRotation);
     }
 
-    /**
-     * ************************************************************************ PositionSubsystem setup
-     * ************************************************************************
-     */
     @Override
     public Slot0Configs pidGains() {
         return new Slot0Configs()
