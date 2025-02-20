@@ -14,14 +14,14 @@ public final class RobotStates {
     public static final TestController test = RobotContainer.getTestController();
 
     // // Information
-    // public static final Trigger hasBall = Trigger.kFalse;
-    // public static final Trigger hasCoral = Trigger.kFalse;
-    // public static final Trigger atL1 = Trigger.kFalse;
-    // public static final Trigger atL2 = Trigger.kFalse;
-    // public static final Trigger atL3 = Trigger.kFalse;
-    // public static final Trigger atL4 = Trigger.kFalse;
-    // public static final Trigger atNet = Trigger.kFalse;
-    // public static final Trigger atProcessor = Trigger.kFalse;
+    public static final Trigger hasBall = RobotContainer.getAlgaeScore().hasBallTrigger();
+    public static final Trigger hasCoral = RobotContainer.getCoralScore().coralLoaded();
+    public static final Trigger atL1 = RobotContainer.getElevator().atL1();
+    public static final Trigger atL2 = RobotContainer.getElevator().atL2(); 
+    public static final Trigger atL3 = RobotContainer.getElevator().atL3();
+    public static final Trigger atL4 = RobotContainer.getElevator().atL4();
+    public static final Trigger atNet = RobotContainer.getElevator().atNet();
+    public static final Trigger atProcessor = RobotContainer.getElevator().atProcessor();
 
     // Actions
     public static final Trigger actionScore = driver.score_rb.and(teleop);

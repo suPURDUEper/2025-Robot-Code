@@ -79,6 +79,7 @@ public final class Constants {
         public static final Distance kPositionTolerance = Inches.of(0.5);
         public static final Current kHomingCurrent = Amps.of(13);
         public static final Distance kBottomHeight = Inches.of(0);
+        public static final Distance kIntakeHeight = Inches.of(0);
         public static final Distance kL1Height = Inches.of(13);
         public static final Distance kL2Height = Inches.of(11.31);
         public static final Distance kL3Height = Inches.of(27.61);
@@ -106,6 +107,7 @@ public final class Constants {
                 new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
         public static final double kDegreesPerRotation = 0;
         public static final Angle kCancoderMagnetOffset = Degrees.of(190);
+        public static final Angle kHomeAngle = Degrees.of(84);
         public static final Angle kIntakeAngle = Degrees.of(84);
         public static final Angle kL1Angle = Degrees.of(0);
         public static final Angle kL2Angle = Degrees.of(66.78);
@@ -138,7 +140,11 @@ public final class Constants {
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(40).withStatorCurrentLimitEnable(true);
         public static final Voltage scoreVoltage = Volts.of(12);
+        public static final Voltage scoreL1Voltage = Volts.of(12);
+        public static final Voltage scoreL2L3Voltage = Volts.of(12);
+        public static final Voltage scoreL4Voltage = Volts.of(12);
         public static final Voltage backupVoltage = Volts.of(-2);
+        public static final Voltage unJamVoltage = Volts.of(-6);
         public static final DebounceType kDebounceTime = null;
         public static final Voltage loadVoltage = Volts.of(4);
     }

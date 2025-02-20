@@ -30,7 +30,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
+import org.supurdueper.robot2025.Constants;
 import org.supurdueper.robot2025.Robot;
+import org.supurdueper.robot2025.state.RobotStates;
 
 public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
 
@@ -53,6 +55,50 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
         Robot.add(this);
     }
 
+    public Command l1() {
+        return goToPosition(kL1Angle).withName("Wrist.L1");
+    }
+
+    public Command l2() {
+        return goToPosition(kL2Angle).withName("Wrist.L2");
+    }
+
+    public Command l3() {
+        return goToPosition(kL3Angle).withName("Wrist.L3");
+    }
+
+    public Command l4() {
+        return goToPosition(kL4Angle).withName("Wrist.L4");
+    }
+
+    public Command net() {
+        return goToPosition(kNetAngle).withName("Wrist.Net");
+    }
+
+    public Command processor() {
+        return goToPosition(kProcessorAngle).withName("Wrist.Processor");
+    }
+
+    public Command intake() {
+        return goToPosition(kIntakeAngle).withName("Wrist.Intake");
+    }
+
+    public Command home() {
+        return goToPosition(kHomeAngle).withName("Wrist.Home");
+    }
+
+    @Override
+    public void bindCommands() {
+        RobotStates.actionL1.onTrue(l1());
+        RobotStates.actionL2.onTrue(l2());
+        RobotStates.actionL3.onTrue(l3());
+        RobotStates.actionL4.onTrue(l4());
+        RobotStates.actionProcessor.onTrue(processor());
+        RobotStates.actionNet.onTrue(net());
+        RobotStates.actionIntake.onTrue(intake());
+        RobotStates.actionScore.onFalse(home());
+    }
+
     @Override
     public Command goToPosition(Angle rotations) {
         return Commands.run(() -> motor.setControl(noMagicMotion.withPosition(rotations)));
@@ -61,10 +107,12 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
     @Override
     public void periodic() {
         super.periodic();
-        double wristPosition = getPosition().in(Units.Degrees);
-        double wristTarget = getSetpoint().in(Units.Degrees);
-        SmartDashboard.putNumber("Wrist/Position", wristPosition);
-        SmartDashboard.putNumber("Wrist/Target", wristTarget);
+        if (Constants.tuningMode) {
+            double wristPosition = getPosition().in(Units.Degrees);
+            double wristTarget = getSetpoint().in(Units.Degrees);
+            SmartDashboard.putNumber("Wrist/Position", wristPosition);
+            SmartDashboard.putNumber("Wrist/Target", wristTarget);
+        }
     }
 
     @Override
@@ -150,7 +198,4 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
     public boolean followerInverted() {
         return false;
     }
-
-    @Override
-    public void bindCommands() {}
 }

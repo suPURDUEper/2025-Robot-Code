@@ -86,11 +86,11 @@ public class RobotContainer {
 
     public void configureBindings() {
         testController.leftStickY.whileTrue(elevator.setVoltage(testController::getManualElevatorVoltage));
-        testController.X.whileTrue(funnelTilt.goToStartingPosition());
-        testController.Y.whileTrue(funnelTilt.goToIntakeAngle());
+        testController.X.whileTrue(funnelTilt.startingPosition());
+        testController.Y.whileTrue(funnelTilt.intake());
         wrist.setDefaultCommand(wrist.setVoltage(testController::getManualWristVoltage));
         testController.A.onTrue(Commands.deadline(coralScore.loadCoral(), funnel.intake()));
-        testController.B.onTrue(coralScore.scoreCoral());
+        testController.B.onTrue(coralScore.l2L3());
     }
 
     public Command getAutonomousCommand() {

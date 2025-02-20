@@ -13,6 +13,7 @@ import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Constants;
+import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.RobotStates;
 
 public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
@@ -20,6 +21,12 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
     /** Creates a new CoralIntake. */
     public Funnel() {
         configureMotors();
+    }
+
+    @Override
+    public void bindCommands() {
+        RobotStates.actionIntake.onTrue(intake().until(RobotContainer.getCoralScore().coralLoaded()));
+        RobotStates.actionUnjamIntake.onTrue(unjam());
     }
 
     @Override
@@ -66,12 +73,6 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
     @Override
     public boolean brakeMode() {
         return true;
-    }
-
-    @Override
-    public void bindCommands() {
-        RobotStates.actionIntake.onTrue(intake());
-        RobotStates.actionUnjamIntake.onTrue(unjam());
     }
 
     @Override
