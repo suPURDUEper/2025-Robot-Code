@@ -5,10 +5,9 @@
 package org.supurdueper.robot2025.subsystems;
 
 import static org.supurdueper.robot2025.Constants.AlgaeScoreConstants.*;
-import static org.supurdueper.robot2025.state.RobotStates.hasBall;
-
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -40,28 +39,24 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
     public void periodic() {
         super.periodic();
         ballDetector.periodic();
-        SmartDashboard.putBoolean("AlgaeScore/HasBall", hasBall());
+        DogLog.log("AlgaeScore/HasBall", hasBall());
     }
 
     // Public methods
     public Command intake() {
-        return Commands.runEnd(this::runIntake, this::hold, this).until(hasBallTrigger());
+        return runEnd(this::runIntake, this::hold).until(this::hasBall);
     }
 
     public Command scoreNet() {
-        return Commands.runEnd(this::net, this::stop, this).withTimeout(kNetScoreTime);
+        return runEnd(this::net, this::stop).withTimeout(kNetScoreTime);
     }
 
     public Command scoreProcessor() {
-        return Commands.runEnd(this::processor, this::stop, this).withTimeout(kProcessorScoreTime);
-    }
-
-    public Trigger hasBallTrigger() {
-        return ballDetector.stallTrigger();
+        return runEnd(this::processor, this::stop).withTimeout(kProcessorScoreTime);
     }
 
     // Private methods
-    private boolean hasBall() {
+    public boolean hasBall() {
         return ballDetector.isStalled();
     }
 

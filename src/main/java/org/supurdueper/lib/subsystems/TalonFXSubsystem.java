@@ -39,7 +39,7 @@ public abstract class TalonFXSubsystem extends SubsystemBase {
     }
 
     public Command setVoltage(DoubleSupplier voltage) {
-        return Commands.run(() -> runVoltage(Volts.of(voltage.getAsDouble())), this);
+        return run(() -> runVoltage(Volts.of(voltage.getAsDouble())));
     }
 
     protected void runVoltage(Voltage volts) {

@@ -15,10 +15,11 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+
+import dev.doglog.DogLog;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -35,30 +36,6 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
 
     CurrentStallFilter homingDetector;
     PositionVoltage pidTuning = new PositionVoltage(0);
-
-    @Getter
-    Trigger atL1;
-
-    @Getter
-    Trigger atL2;
-
-    @Getter
-    Trigger atL3;
-
-    @Getter
-    Trigger atL4;
-
-    @Getter
-    Trigger atNet;
-
-    @Getter
-    Trigger atProcessor;
-
-    @Getter
-    Trigger atIntake;
-
-    @Getter
-    Trigger atHome;
 
     public enum ElevatorHeight {
         L1,
@@ -80,14 +57,6 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         Robot.add(this);
         motor.setPosition(0);
         currentHeight = ElevatorHeight.Home;
-        atL1 = new Trigger(this::atL1);
-        atL2 = new Trigger(this::atL2);
-        atL3 = new Trigger(this::atL3);
-        atL4 = new Trigger(this::atL4);
-        atNet = new Trigger(this::atNet);
-        atProcessor = new Trigger(this::atProcessor);
-        atIntake = new Trigger(this::atIntake);
-        atHome = new Trigger(this::atHome);
     }
 
     @Override
@@ -178,7 +147,7 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
     // Temporary until we figure out why magic motion isn't working
     @Override
     public Command goToPosition(Angle motorRotations) {
-        return Commands.run(() -> motor.setControl(pidTuning.withPosition(motorRotations)), this);
+        return run(() -> motor.setControl(pidTuning.withPosition(motorRotations)));
     }
 
     public Command goToHeight(Distance height) {
@@ -190,7 +159,7 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
     }
 
     public Command zero() {
-        return Commands.runEnd(() -> runVoltage(Volts.of(-2)), () -> motor.setPosition(0), this)
+        return runEnd(() -> runVoltage(Volts.of(-2)), () -> motor.setPosition(0))
                 .until(() -> homingDetector.isStalled())
                 .withName("Elevator.Zero");
     }
@@ -200,11 +169,10 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         super.periodic();
         homingDetector.periodic();
         // Log out to Glass for debugging
-        double elevatorPosition = motorRotationToHeight(getPosition()).in(Units.Inches);
-        double elevatorSetpoint = motorRotationToHeight(getSetpoint()).in(Units.Inches);
-        SmartDashboard.putNumber("Elevator/Position", elevatorPosition);
-        SmartDashboard.putNumber("Elevator/Target Position", elevatorSetpoint);
-        SmartDashboard.putBoolean("Elevator/At Position", atPosition());
+        DogLog.log("Elevator/Position",motorRotationToHeight(getPosition()).in(Units.Inches));
+        DogLog.log("Elevator/Target Position", motorRotationToHeight(getSetpoint()).in(Units.Inches));
+        DogLog.log("Elevator/At Position", atPosition());
+        DogLog.log("Elevator/State", currentHeight.toString());
     }
 
     private Distance motorRotationToHeight(Angle motorRotations) {

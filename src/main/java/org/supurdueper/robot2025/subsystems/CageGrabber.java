@@ -5,8 +5,9 @@
 package org.supurdueper.robot2025.subsystems;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+
+import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
@@ -31,17 +32,17 @@ public class CageGrabber extends TalonFXSubsystem {
     }
 
     public Command runForwards() {
-        return Commands.runEnd(this::grab, this::stop, this);
+        return runEnd(this::grab, this::stop);
     }
 
     public Command grabCage() {
-        return Commands.runEnd(this::grab, this::stop, this).until(this::hasCage);
+        return runEnd(this::grab, this::stop).until(this::hasCage);
     }
 
     @Override
     public void periodic() {
         super.periodic();
-        SmartDashboard.putBoolean("CageGrabber/HasCage", hasCage());
+        DogLog.log("CageGrabber/HasCage", hasCage());
     }
 
     @Override

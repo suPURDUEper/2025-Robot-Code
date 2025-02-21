@@ -42,7 +42,7 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
     }
 
     public Command stopCommand() {
-        return Commands.run(this::stop, this);
+        return run(this::stop);
     }
 
     @Override

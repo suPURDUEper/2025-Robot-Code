@@ -43,7 +43,7 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
     }
 
     public Command intake() {
-        return Commands.runEnd(this::run, this::stop, this);
+        return runEnd(this::run, this::stop);
     }
 
     public Command test() {
@@ -52,7 +52,7 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
     // trying to make the intake motors wait until everything is at position
 
     public Command unjam() {
-        return Commands.runEnd(this::runReverse, this::stop, this);
+        return runEnd(this::runReverse, this::stop);
     }
 
     @Override

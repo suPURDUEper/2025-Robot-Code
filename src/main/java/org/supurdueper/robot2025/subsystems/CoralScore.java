@@ -5,8 +5,9 @@
 package org.supurdueper.robot2025.subsystems;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+
+import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -28,10 +29,6 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
         Robot.add(this);
     }
 
-    public Trigger coralLoaded() {
-        return new Trigger(this::hasCoral);
-    }
-
     public boolean hasCoral() {
         return !coralScoreBB.get();
     }
@@ -41,7 +38,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     public Command loadCoral() {
-        return Commands.runEnd(this::load, this::stop, this).until(this::hasCoral);
+        return runEnd(this::load, this::stop).until(this::hasCoral);
     }
 
     private void load() {
@@ -49,7 +46,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     public Command l4() {
-        return Commands.runEnd(this::scoreL4, this::stop, this).until(this::scoredCoral);
+        return runEnd(this::scoreL4, this::stop).until(this::scoredCoral);
     }
 
     private void scoreL4() {
@@ -57,7 +54,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     public Command l2L3() {
-        return Commands.runEnd(this::scoreL2L3, this::stop, this);
+        return runEnd(this::scoreL2L3, this::stop);
     }
 
     private void scoreL2L3() {
@@ -65,7 +62,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     public Command l1() {
-        return Commands.runEnd(this::scoreL1, this::stop, this).until(this::scoredCoral);
+        return runEnd(this::scoreL1, this::stop).until(this::scoredCoral);
     }
 
     private void scoreL1() {
@@ -73,7 +70,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     public Command unJam() {
-        return Commands.runEnd(this::runBackwards, this::stop, this);
+        return runEnd(this::runBackwards, this::stop);
     }
 
     private void runBackwards() {
@@ -89,7 +86,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     @Override
     public void periodic() {
         super.periodic();
-        SmartDashboard.putBoolean("CoralScore/BreakBeam1", coralScoreBB.get());
+        DogLog.log("CoralScore/BreakBeam1", coralScoreBB.get());
     }
 
     @Override

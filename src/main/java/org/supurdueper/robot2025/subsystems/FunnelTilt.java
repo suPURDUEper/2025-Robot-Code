@@ -14,10 +14,11 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+
+import dev.doglog.DogLog;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -61,7 +62,7 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
 
     @Override
     public Command goToPosition(Angle rotations) {
-        return Commands.run(() -> motor.setControl(noMagicMotion.withPosition(rotations)));
+        return run(() -> motor.setControl(noMagicMotion.withPosition(rotations)));
     }
 
     public Angle getAbsEncoder() {
@@ -74,9 +75,9 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
         if (Constants.tuningMode) {
             double wristPosition = getPosition().in(Units.Degrees);
             double wristTarget = getSetpoint().in(Units.Degrees);
-            SmartDashboard.putNumber("FunnelTilt/Position", wristPosition);
-            SmartDashboard.putNumber("FunnelTilt/AbsEncoder", getAbsEncoder().in(Degrees));
-            SmartDashboard.putNumber("FunnelTilt/Target", wristTarget);
+            DogLog.log("FunnelTilt/Position", wristPosition);
+            DogLog.log("FunnelTilt/AbsEncoder", getAbsEncoder().in(Degrees));
+            DogLog.log("FunnelTilt/Target", wristTarget);
         }
     }
 

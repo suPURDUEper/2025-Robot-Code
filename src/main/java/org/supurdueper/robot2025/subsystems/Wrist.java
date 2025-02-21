@@ -21,16 +21,16 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+
+import dev.doglog.DogLog;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
-import org.supurdueper.robot2025.Constants;
 import org.supurdueper.robot2025.Robot;
 import org.supurdueper.robot2025.state.RobotStates;
 
@@ -102,18 +102,16 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
 
     @Override
     public Command goToPosition(Angle rotations) {
-        return Commands.run(() -> motor.setControl(noMagicMotion.withPosition(rotations)), this);
+        return run(() -> motor.setControl(noMagicMotion.withPosition(rotations)));
     }
 
     @Override
     public void periodic() {
         super.periodic();
-        if (Constants.tuningMode) {
-            double wristPosition = getPosition().in(Units.Degrees);
-            double wristTarget = getSetpoint().in(Units.Degrees);
-            SmartDashboard.putNumber("Wrist/Position", wristPosition);
-            SmartDashboard.putNumber("Wrist/Target", wristTarget);
-        }
+        double wristPosition = getPosition().in(Units.Degrees);
+        double wristTarget = getSetpoint().in(Units.Degrees);
+        DogLog.log("Wrist/Position", wristPosition);
+        DogLog.log("Wrist/Target", wristTarget);
     }
 
     @Override

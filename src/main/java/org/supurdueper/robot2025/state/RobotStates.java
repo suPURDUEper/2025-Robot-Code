@@ -14,14 +14,16 @@ public final class RobotStates {
     public static final TestController test = RobotContainer.getTestController();
 
     // // Information
-    public static final Trigger hasBall = RobotContainer.getAlgaeScore().hasBallTrigger();
-    public static final Trigger hasCoral = RobotContainer.getCoralScore().coralLoaded();
-    public static final Trigger atL1 = RobotContainer.getElevator().getAtL1();
-    public static final Trigger atL2 = RobotContainer.getElevator().getAtL2();
-    public static final Trigger atL3 = RobotContainer.getElevator().getAtL3();
-    public static final Trigger atL4 = RobotContainer.getElevator().getAtL4();
-    public static final Trigger atNet = RobotContainer.getElevator().getAtNet();
-    public static final Trigger atProcessor = RobotContainer.getElevator().getAtProcessor();
+    public static final Trigger atL1 = new Trigger(RobotContainer.getElevator()::atL1);
+    public static final Trigger atL2 = new Trigger(RobotContainer.getElevator()::atL2);
+    public static final Trigger atL3 = new Trigger(RobotContainer.getElevator()::atL3);
+    public static final Trigger atL4 = new Trigger(RobotContainer.getElevator()::atL4);
+    public static final Trigger atNet = new Trigger(RobotContainer.getElevator()::atNet);
+    public static final Trigger atProcessor = new Trigger(RobotContainer.getElevator()::atProcessor);
+    public static final Trigger atIntake = new Trigger(RobotContainer.getElevator()::atIntake);
+    public static final Trigger atHome = new Trigger(RobotContainer.getElevator()::atHome);
+    public static final Trigger hasBall = new Trigger(RobotContainer.getAlgaeScore()::hasBall);
+    public static final Trigger hasCoral = new Trigger(RobotContainer.getCoralScore()::hasCoral);
     public static final Trigger atPosition = RobotContainer.getFunnelTilt()
             .isAtPosition()
             .and(RobotContainer.getWrist().isAtPosition())
@@ -29,7 +31,7 @@ public final class RobotStates {
 
     // Actions
     public static final Trigger actionScore = driver.score_rb.and(teleop);
-    public static final Trigger actionIntake = driver.intake_LB.and(teleop);
+    public static final Trigger actionIntake = driver.intake_lb.and(teleop);
     // public static final Trigger actionUnjamIntake = driver.unjam_RB.and(teleop);
     public static final Trigger actionL1 = driver.l1_A.and(teleop);
     public static final Trigger actionL2 = driver.l2_B.and(teleop);
