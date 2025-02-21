@@ -5,6 +5,7 @@
 package org.supurdueper.robot2025.subsystems;
 
 import static org.supurdueper.robot2025.Constants.FunnelConstants.*;
+import static org.supurdueper.robot2025.state.RobotStates.atPosition;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
 import org.supurdueper.robot2025.CanId;
+import org.supurdueper.robot2025.Robot;
 import org.supurdueper.robot2025.state.RobotStates;
 
 public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
@@ -19,6 +21,7 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
     /** Creates a new CoralIntake. */
     public Funnel() {
         configureMotors();
+        Robot.add(this);
     }
 
     @Override
@@ -42,6 +45,11 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
     public Command intake() {
         return Commands.runEnd(this::run, this::stop, this);
     }
+
+    public Command test() {
+        return Commands.waitUntil(atPosition).andThen(runEnd(this::run, this::stop));
+    }
+    // trying to make the intake motors wait until everything is at position
 
     public Command unjam() {
         return Commands.runEnd(this::runReverse, this::stop, this);

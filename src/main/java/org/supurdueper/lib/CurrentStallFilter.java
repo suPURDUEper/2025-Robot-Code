@@ -21,13 +21,13 @@ public class CurrentStallFilter {
         this.currentSignal = currentSignal;
         this.threshold = threshold;
         this.filteredCurrent = Amps.of(0);
-        currentFilter = LinearFilter.movingAverage(5);
+        currentFilter = LinearFilter.movingAverage(3);
         currentDebouncer = new Debouncer(0.33, DebounceType.kRising);
     }
 
     public void periodic() {
         currentSignal.refresh();
-        currentFilter.calculate(currentSignal.getValueAsDouble());
+        filteredCurrent = Amps.of(currentFilter.calculate(currentSignal.getValueAsDouble()));
     }
 
     public boolean isStalled() {

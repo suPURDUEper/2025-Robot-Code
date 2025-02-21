@@ -15,6 +15,8 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.supurdueper.lib.CurrentStallFilter;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
@@ -29,6 +31,18 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
     public Climber() {
         configureMotors();
         homingDetector = new CurrentStallFilter(motor.getStatorCurrent(), kHomingCurrent);
+    }
+
+    public Command runFowards() {
+        return setVoltage(() -> 12);
+    }
+
+    public Command runBackwards() {
+        return setVoltage(() -> -12);
+    }
+
+    public Command stopCommand() {
+        return Commands.run(this::stop, this);
     }
 
     @Override
@@ -103,7 +117,7 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
 
     @Override
     public boolean inverted() {
-        return true;
+        return false;
     }
 
     @Override
@@ -111,12 +125,9 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
         return true;
     }
 
-    @Override
-    public void bindCommands() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'bindCommands'");
-    }
+    public void bindCommands() {}
 
+    @Override
     public boolean followerInverted() {
         return true;
     }

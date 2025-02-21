@@ -8,10 +8,13 @@
         "open": true
       },
       "SmartDashboard": {
+        "AlgaeScore": {
+          "open": true
+        },
         "CoralScore": {
           "open": true
         },
-        "Elevator": {
+        "FunnelTilt": {
           "open": true
         },
         "MapleArenaSimulation": {
@@ -24,6 +27,12 @@
           "RootSpeed": {
             "open": true
           }
+        },
+        "Module 2": {
+          "RootDirection": {
+            "open": true
+          },
+          "open": true
         },
         "Tuning": {
           "Wrist": {
@@ -51,7 +60,8 @@
   "NetworkTables Info": {
     "Connections": {
       "open": true
-    }
+    },
+    "visible": true
   },
   "NetworkTables Settings": {
     "mode": "Client (NT3)",

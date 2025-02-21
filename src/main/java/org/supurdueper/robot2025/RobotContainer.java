@@ -8,13 +8,13 @@ import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import lombok.Getter;
 import org.supurdueper.robot2025.autos.AutoRoutines;
 import org.supurdueper.robot2025.state.Driver;
 import org.supurdueper.robot2025.state.TestController;
 import org.supurdueper.robot2025.subsystems.AlgaeScore;
 import org.supurdueper.robot2025.subsystems.CageGrabber;
+import org.supurdueper.robot2025.subsystems.Climber;
 import org.supurdueper.robot2025.subsystems.CoralScore;
 import org.supurdueper.robot2025.subsystems.Elevator;
 import org.supurdueper.robot2025.subsystems.Funnel;
@@ -34,8 +34,8 @@ public class RobotContainer {
     @Getter
     private static CageGrabber cageGrabber;
 
-    // @Getter
-    // private static Climber climber;
+    @Getter
+    private static Climber climber;
 
     @Getter
     private static CoralScore coralScore;
@@ -66,7 +66,7 @@ public class RobotContainer {
     public RobotContainer() {
         algaeScore = new AlgaeScore();
         cageGrabber = new CageGrabber();
-        // climber = new Climber();
+        climber = new Climber();
         coralScore = new CoralScore();
         elevator = new Elevator();
         wrist = new Wrist();
@@ -85,12 +85,13 @@ public class RobotContainer {
     }
 
     public void configureBindings() {
-        testController.leftStickY.whileTrue(elevator.setVoltage(testController::getManualElevatorVoltage));
+        climber.setDefaultCommand(climber.setVoltage(testController::getManualElevatorVoltage));
         testController.X.whileTrue(funnelTilt.startingPosition());
         testController.Y.whileTrue(funnelTilt.intake());
         wrist.setDefaultCommand(wrist.setVoltage(testController::getManualWristVoltage));
-        testController.A.onTrue(Commands.deadline(coralScore.loadCoral(), funnel.intake()));
-        testController.B.onTrue(coralScore.l2L3());
+        // testController.A.onTrue(Commands.deadline(coralScore.loadCoral(), funnel.intake()));
+        // testController.B.onTrue(coralScore.l2L3());
+
     }
 
     public Command getAutonomousCommand() {

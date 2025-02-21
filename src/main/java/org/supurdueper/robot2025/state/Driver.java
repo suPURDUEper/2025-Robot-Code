@@ -14,11 +14,11 @@ public class Driver extends Gamepad {
     // etc.
     // // If triggers need any of the config values set them in the constructor
     // /* A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simulation */
-    public final Trigger fn = leftBumper;
+    public final Trigger fn = leftTrigger;
     public final Trigger noFn = fn.not();
 
     // // TODO: Finalize Buttons
-    public final Trigger intake_RT = rightTrigger.and(noFn, teleop);
+    public final Trigger intake_LB = leftBumper.and(noFn, teleop);
     public final Trigger l1_A = A.and(noFn, teleop);
     public final Trigger l2_B = B.and(noFn, teleop);
     public final Trigger l3_X = X.and(noFn, teleop);

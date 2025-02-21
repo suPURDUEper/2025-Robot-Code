@@ -5,6 +5,7 @@
 package org.supurdueper.robot2025.subsystems;
 
 import static org.supurdueper.robot2025.Constants.AlgaeScoreConstants.*;
+import static org.supurdueper.robot2025.state.RobotStates.hasBall;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,15 +16,17 @@ import org.supurdueper.lib.CurrentStallFilter;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
 import org.supurdueper.robot2025.CanId;
+import org.supurdueper.robot2025.Robot;
 import org.supurdueper.robot2025.state.RobotStates;
 
-public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem{
+public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem {
 
     private CurrentStallFilter ballDetector;
 
     public AlgaeScore() {
         configureMotors();
         ballDetector = new CurrentStallFilter(motor.getStatorCurrent(), kHasBallCurrent);
+        Robot.add(this);
     }
 
     @Override
@@ -42,7 +45,7 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
 
     // Public methods
     public Command intake() {
-        return Commands.runEnd(this::runIntake, this::hold, this).until(this::hasBall);
+        return Commands.runEnd(this::runIntake, this::hold, this).until(hasBallTrigger());
     }
 
     public Command scoreNet() {

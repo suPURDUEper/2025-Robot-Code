@@ -10,11 +10,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Constants;
+import org.supurdueper.robot2025.Robot;
 import org.supurdueper.robot2025.state.RobotStates;
 
 public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem {
@@ -25,6 +25,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     public CoralScore() {
         coralScoreBB = new DigitalInput(Constants.DIOport.scoreBreakbeam1);
         configureMotors();
+        Robot.add(this);
     }
 
     public Trigger coralLoaded() {
@@ -40,39 +41,39 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     public Command loadCoral() {
-        return Commands.runEnd(this::load, this::stop).until(this::hasCoral);
+        return Commands.runEnd(this::load, this::stop, this).until(this::hasCoral);
     }
 
     private void load() {
         runVoltage(Constants.CoralScoreConstants.loadVoltage);
     }
 
-    public Command l4( ) {
-        return Commands.runEnd(this::scoreL4, this::stop).until(this::scoredCoral);
+    public Command l4() {
+        return Commands.runEnd(this::scoreL4, this::stop, this).until(this::scoredCoral);
     }
 
     private void scoreL4() {
         runVoltage(Constants.CoralScoreConstants.scoreL4Voltage);
-    } 
+    }
 
-    public Command l2L3( ) {
-        return Commands.runEnd(this::scoreL2L3, this::stop).until(this::scoredCoral);
+    public Command l2L3() {
+        return Commands.runEnd(this::scoreL2L3, this::stop, this);
     }
 
     private void scoreL2L3() {
         runVoltage(Constants.CoralScoreConstants.scoreL2L3Voltage);
-    } 
+    }
 
-    public Command l1( ) {
-        return Commands.runEnd(this::scoreL1, this::stop).until(this::scoredCoral);
+    public Command l1() {
+        return Commands.runEnd(this::scoreL1, this::stop, this).until(this::scoredCoral);
     }
 
     private void scoreL1() {
         runVoltage(Constants.CoralScoreConstants.scoreL1Voltage);
-    } 
+    }
 
     public Command unJam() {
-        return Commands.runEnd(this::runBackwards, this::stop);
+        return Commands.runEnd(this::runBackwards, this::stop, this);
     }
 
     private void runBackwards() {
@@ -82,9 +83,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     @Override
     public void bindCommands() {
         RobotStates.actionIntake.onTrue(loadCoral());
-        RobotStates.actionScore.and(RobotStates.atL1).onTrue(l1());
-        RobotStates.actionScore.and(RobotStates.atL2.or(RobotStates.atL3)).onTrue(l2L3());
-        RobotStates.actionScore.and(RobotStates.atL4).onTrue(l4());
+        RobotStates.actionScore.onTrue(l2L3());
     }
 
     @Override

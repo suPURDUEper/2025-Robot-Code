@@ -96,12 +96,13 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
         RobotStates.actionProcessor.onTrue(processor());
         RobotStates.actionNet.onTrue(net());
         RobotStates.actionIntake.onTrue(intake());
+        RobotStates.actionHome.onTrue(home());
         RobotStates.actionScore.onFalse(home());
     }
 
     @Override
     public Command goToPosition(Angle rotations) {
-        return Commands.run(() -> motor.setControl(noMagicMotion.withPosition(rotations)));
+        return Commands.run(() -> motor.setControl(noMagicMotion.withPosition(rotations)), this);
     }
 
     @Override
