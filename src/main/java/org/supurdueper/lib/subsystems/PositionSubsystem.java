@@ -51,7 +51,7 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
     }
 
     public Command goToPosition(Angle rotations) {
-        return Commands.run(() -> setPosition(rotations), this);
+        return run(() -> setPosition(rotations));
     }
 
     public Command goToPositionBlocking(Angle rotations) {

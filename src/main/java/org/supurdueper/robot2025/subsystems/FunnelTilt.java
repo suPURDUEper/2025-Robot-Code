@@ -20,7 +20,6 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
@@ -42,15 +41,15 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
     }
 
     public Command intake() {
-        return goToPosition(kIntakePosition);
+        return goToPosition(kIntakePosition).withName("FunnelTilt.Intake");
     }
 
     public Command startingPosition() {
-        return goToPosition(kStartPosition);
+        return goToPosition(kStartPosition).withName("FunnelTilt.StartingPosition");
     }
 
     public Command climbPosition() {
-        return goToPosition(kClimbPosition);
+        return goToPosition(kClimbPosition).withName("FunnelTilt.ClimbPosition");
     }
 
     @Override

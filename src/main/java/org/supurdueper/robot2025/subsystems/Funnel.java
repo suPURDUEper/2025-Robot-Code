@@ -43,7 +43,7 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
     }
 
     public Command intake() {
-        return runEnd(this::run, this::stop);
+        return runEnd(this::run, this::stop).withName("Funnel.Intake");
     }
 
     public Command test() {
