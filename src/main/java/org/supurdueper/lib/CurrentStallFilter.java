@@ -22,7 +22,7 @@ public class CurrentStallFilter {
         this.threshold = threshold;
         this.filteredCurrent = Amps.of(0);
         currentFilter = LinearFilter.movingAverage(3);
-        currentDebouncer = new Debouncer(0.33, DebounceType.kRising);
+        currentDebouncer = new Debouncer(0.2, DebounceType.kRising);
     }
 
     public void periodic() {

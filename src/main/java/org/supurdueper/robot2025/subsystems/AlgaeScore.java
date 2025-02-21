@@ -9,6 +9,8 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
+
 import org.supurdueper.lib.CurrentStallFilter;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
@@ -28,7 +30,7 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
 
     @Override
     public void bindCommands() {
-        RobotStates.actionL2.or(RobotStates.actionL3).onTrue(intake());
+        RobotStates.atL2.or(RobotStates.atL3).whileTrue(intake());
         RobotStates.actionScore.and(RobotStates.atNet).onTrue(scoreNet());
         RobotStates.actionScore.and(RobotStates.atProcessor).onTrue(scoreProcessor());
     }
@@ -42,7 +44,18 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
 
     // Public methods
     public Command intake() {
-        return runEnd(this::runIntake, this::hold).until(this::hasBall);
+        return new FunctionalCommand(
+            () ->{}, 
+            this::runIntake, 
+            interrupted -> {
+                if (interrupted) {
+                    stop();
+                } else {
+                    hold();
+                }
+            }, 
+            this::hasBall, 
+            this);
     }
 
     public Command scoreNet() {
@@ -88,7 +101,7 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
 
     @Override
     public CurrentLimitsConfigs currentLimits() {
-        return new CurrentLimitsConfigs().withSupplyCurrentLimit(20).withSupplyCurrentLimitEnable(true);
+        return kAlgaeCurrentLimit;
     }
 
     @Override

@@ -22,7 +22,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     public boolean hasCoral;
 
     public CoralScore() {
-        coralScoreBB = new DigitalInput(Constants.DIOport.scoreBreakbeam1);
+        coralScoreBB = new DigitalInput(Constants.DIOPort.scoreBreakbeam1);
         configureMotors();
         Robot.add(this);
     }
@@ -99,7 +99,6 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
 
     @Override
     public CurrentLimitsConfigs currentLimits() {
-        // TODO Auto-generated method stub
         return Constants.CoralScoreConstants.kCurrentLimit;
     }
 

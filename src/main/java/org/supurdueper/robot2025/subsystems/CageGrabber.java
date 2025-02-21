@@ -18,7 +18,7 @@ public class CageGrabber extends TalonFXSubsystem {
     private DigitalInput cageSensor;
 
     public CageGrabber() {
-        cageSensor = new DigitalInput(Constants.DIOport.climberBreakbeam1);
+        cageSensor = new DigitalInput(Constants.DIOPort.climberBreakbeam1);
         configureMotors();
     }
 
