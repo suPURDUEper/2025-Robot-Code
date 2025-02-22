@@ -126,12 +126,12 @@ public final class Constants {
         public static final double kv = 0.0;
         public static final double ka = 0;
         public static final double kg = 0.0;
-        public static final CurrentLimitsConfigs kCurrentLimit =
-                new CurrentLimitsConfigs().withStatorCurrentLimit(120).withStatorCurrentLimitEnable(true);
         public static final double kHome = 0.0;
         public static final double kClearFunnel = 63.0;
         public static final double kClimb = 140.0;
         public static final double kPositionTolerance = 1.0;
+        public static final CurrentLimitsConfigs kCurrentLimit =
+                new CurrentLimitsConfigs().withStatorCurrentLimit(120).withStatorCurrentLimitEnable(true);
     }
 
     public final class CageGrabberConstants {
