@@ -30,7 +30,7 @@ public class DriveStates {
     }
 
     public void bindCommands() {
-        drivetrain.setDefaultCommand(normalTeleopDrive());
+        drivetrain.setDefaultCommand(driveFacingReef());
         // actionReef.onTrue(driveFacingReef());
         // actionNet.onTrue(driveFacingNet());
         // actionProcessor.onTrue(driveFacingProcessor());

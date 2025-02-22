@@ -27,6 +27,7 @@ public class FieldCentricFacingReef extends FieldCentricFacingAngle {
 
     public FieldCentricFacingReef() {
         this.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
+        this.HeadingController.setPID(10, 0, .75);
     }
 
     @Override
