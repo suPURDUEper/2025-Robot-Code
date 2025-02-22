@@ -54,6 +54,10 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
         return run(() -> setPosition(rotations));
     }
 
+    public Command goToPosition(double rotations) {
+        return run(() -> setPosition(rotations));
+    }
+
     public Command goToPositionBlocking(Angle rotations) {
         return goToPosition(rotations).andThen(Commands.waitUntil(this::atPosition));
     }
@@ -63,6 +67,10 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
     }
 
     protected void setPosition(Angle position) {
+        motor.setControl(positionRequest.withPosition(position));
+    }
+
+    protected void setPosition(double position) {
         motor.setControl(positionRequest.withPosition(position));
     }
 

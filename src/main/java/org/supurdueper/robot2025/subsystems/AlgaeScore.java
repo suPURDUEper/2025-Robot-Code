@@ -5,12 +5,11 @@
 package org.supurdueper.robot2025.subsystems;
 
 import static org.supurdueper.robot2025.Constants.AlgaeScoreConstants.*;
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-
 import org.supurdueper.lib.CurrentStallFilter;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
@@ -45,17 +44,17 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
     // Public methods
     public Command intake() {
         return new FunctionalCommand(
-            () ->{}, 
-            this::runIntake, 
-            interrupted -> {
-                if (interrupted) {
-                    stop();
-                } else {
-                    hold();
-                }
-            }, 
-            this::hasBall, 
-            this);
+                () -> {},
+                this::runIntake,
+                interrupted -> {
+                    if (interrupted) {
+                        stop();
+                    } else {
+                        hold();
+                    }
+                },
+                this::hasBall,
+                this);
     }
 
     public Command scoreNet() {

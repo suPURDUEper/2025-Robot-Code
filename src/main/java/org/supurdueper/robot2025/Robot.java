@@ -6,6 +6,7 @@ package org.supurdueper.robot2025;
 
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
+import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -47,6 +48,12 @@ public class Robot extends SupurdueperRobot {
             default:
                 DogLog.log("GitDirty", "Unknown");
                 break;
+        }
+
+        // Limelight port fowarding
+        for (int port = 5800; port <= 5809; port++) {
+            PortForwarder.add(port, "10.74.57.11", port);
+            PortForwarder.add(port + 100, "10.74.57.12", port);
         }
     }
 

@@ -8,6 +8,7 @@ import choreo.auto.AutoChooser;
 import choreo.auto.AutoFactory;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import lombok.Getter;
 import org.supurdueper.robot2025.autos.AutoRoutines;
 import org.supurdueper.robot2025.state.Driver;
@@ -86,9 +87,11 @@ public class RobotContainer {
 
     public void configureBindings() {
         climber.setDefaultCommand(climber.setVoltage(testController::getManualElevatorVoltage));
-        testController.X.whileTrue(funnelTilt.startingPosition());
-        testController.Y.whileTrue(funnelTilt.intake());
-        wrist.setDefaultCommand(wrist.setVoltage(testController::getManualWristVoltage));
+        testController.A.onTrue(climber.climbPrep());
+        testController.B.onTrue(climber.clearFunnel());
+        testController.Y.onTrue(climber.home());
+        testController.rightStickY.onTrue((wrist.setVoltage(testController::getManualWristVoltage)));
+        testController.start.onTrue(Commands.runOnce(() -> climber.zero(), climber));
         // testController.A.onTrue(Commands.deadline(coralScore.loadCoral(), funnel.intake()));
         // testController.B.onTrue(coralScore.l2L3());
 
@@ -96,6 +99,6 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         /* Run the path selected from the auto chooser */
-        return autoChooser.selectedCommand();
+        return AutoRoutines.resetPose();
     }
 }

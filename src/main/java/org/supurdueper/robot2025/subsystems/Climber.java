@@ -4,32 +4,42 @@
 
 package org.supurdueper.robot2025.subsystems;
 
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Volts;
-import static org.supurdueper.robot2025.Constants.ElevatorConstants.*;
+import static edu.wpi.first.units.Units.*;
+import static org.supurdueper.robot2025.Constants.ClimberConstants.*;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import org.supurdueper.lib.CurrentStallFilter;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
-import org.supurdueper.robot2025.Constants;
 
 public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
 
-    CurrentStallFilter homingDetector;
+    PositionVoltage pidTuning = new PositionVoltage(0);
 
     public Climber() {
         configureMotors();
-        homingDetector = new CurrentStallFilter(motor.getStatorCurrent(), kHomingCurrent);
+    }
+
+    public Command climbPrep() {
+        return goToPosition(kClimb);
+    }
+
+    public Command clearFunnel() {
+        return goToPosition(kClearFunnel);
+    }
+
+    public Command home() {
+        return goToPosition(kHome);
     }
 
     public Command runFowards() {
@@ -44,9 +54,25 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
         return run(this::stop);
     }
 
+    public void zero() {
+        motor.setPosition(0);
+    }
+
+    @Override
+    public Command goToPosition(Angle motorRotations) {
+        return run(() -> motor.setControl(pidTuning.withPosition(motorRotations)));
+    }
+
+    @Override
+    public Command goToPosition(double motorRotations) {
+        return run(() -> motor.setControl(pidTuning.withPosition(motorRotations)));
+    }
+
     @Override
     public void periodic() {
         super.periodic();
+        DogLog.log("Climber/Position", motor.getPosition().getValueAsDouble());
+        DogLog.log("Climber/Setpoint", motor.getClosedLoopReference().getValueAsDouble());
     }
 
     @Override
@@ -54,6 +80,7 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
         return new Slot0Configs()
                 .withGravityType(GravityTypeValue.Arm_Cosine)
                 // Idk what gravity type to use but this makes the most curent sense.
+                .withKP(kp)
                 .withKI(ki)
                 .withKD(kd)
                 .withKS(ks)
@@ -74,7 +101,7 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
 
     @Override
     public Angle positionTolerance() {
-        return Constants.ClimberConstants.kPositionTolerance;
+        return Rotations.of(kPositionTolerance);
     }
 
     @Override
@@ -111,7 +138,7 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
 
     @Override
     public CurrentLimitsConfigs currentLimits() {
-        return Constants.ClimberConstants.kCurrentLimit;
+        return kCurrentLimit;
     }
 
     @Override

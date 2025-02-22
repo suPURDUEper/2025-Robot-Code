@@ -3,6 +3,9 @@ package org.supurdueper.robot2025.state;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import lombok.Getter;
+import lombok.Setter;
+
 import org.supurdueper.robot2025.RobotContainer;
 
 public final class RobotStates {
@@ -12,6 +15,16 @@ public final class RobotStates {
     public static final Trigger auto = new Trigger(DriverStation::isAutonomous);
     public static final Driver driver = RobotContainer.getDriver();
     public static final TestController test = RobotContainer.getTestController();
+
+    // Autos
+    @Getter @Setter private static boolean autol4 = false;
+    @Getter @Setter private static boolean autoscore = false;
+    @Getter @Setter private static boolean autointake = false;
+
+    public static Trigger auto_l4 = new Trigger(() -> RobotStates.isAutol4()).and(auto);
+    public static Trigger auto_score = new Trigger(() -> RobotStates.isAutoscore()).and(auto);
+    public static Trigger auto_intake = new Trigger(() -> RobotStates.isAutointake()).and(auto);
+
 
     // // Information
     public static final Trigger atL1 = new Trigger(RobotContainer.getElevator()::atL1);

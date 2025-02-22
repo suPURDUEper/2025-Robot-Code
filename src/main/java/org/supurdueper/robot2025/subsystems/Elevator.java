@@ -15,7 +15,6 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.signals.GravityTypeValue;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -168,8 +167,9 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         super.periodic();
         homingDetector.periodic();
         // Log out to Glass for debugging
-        DogLog.log("Elevator/Position",motorRotationToHeight(getPosition()).in(Units.Inches));
-        DogLog.log("Elevator/Target Position", motorRotationToHeight(getSetpoint()).in(Units.Inches));
+        DogLog.log("Elevator/Position", motorRotationToHeight(getPosition()).in(Units.Inches));
+        DogLog.log(
+                "Elevator/Target Position", motorRotationToHeight(getSetpoint()).in(Units.Inches));
         DogLog.log("Elevator/At Position", atPosition());
         DogLog.log("Elevator/State", currentHeight.toString());
     }

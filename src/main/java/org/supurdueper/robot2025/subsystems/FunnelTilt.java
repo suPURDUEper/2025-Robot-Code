@@ -14,7 +14,6 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.signals.GravityTypeValue;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;

@@ -4,6 +4,11 @@
       "LiveWindow": {
         ".status": {
           "open": true
+        }
+      },
+      "Robot": {
+        "Climber": {
+          "open": true
         },
         "open": true
       },
@@ -12,6 +17,9 @@
           "open": true
         },
         "CoralScore": {
+          "open": true
+        },
+        "Elevator": {
           "open": true
         },
         "FunnelTilt": {
@@ -31,13 +39,13 @@
         "Module 2": {
           "RootDirection": {
             "open": true
-          },
-          "open": true
+          }
         },
         "Tuning": {
-          "Wrist": {
+          "Climber": {
             "open": true
-          }
+          },
+          "open": true
         },
         "Wrist": {
           "open": true
@@ -60,8 +68,7 @@
   "NetworkTables Info": {
     "Connections": {
       "open": true
-    },
-    "visible": true
+    }
   },
   "NetworkTables Settings": {
     "mode": "Client (NT3)",
@@ -214,6 +221,24 @@
                 1.0
               ],
               "id": "NT:/SmartDashboard/FunnelTilt/Target"
+            },
+            {
+              "color": [
+                0.3333333432674408,
+                0.658823549747467,
+                0.4078431725502014,
+                1.0
+              ],
+              "id": "NT:/Robot/Climber/Position"
+            },
+            {
+              "color": [
+                0.7686275243759155,
+                0.30588236451148987,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/Robot/Climber/Setpoint"
             }
           ]
         }
