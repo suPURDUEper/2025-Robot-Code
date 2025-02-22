@@ -21,7 +21,6 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;

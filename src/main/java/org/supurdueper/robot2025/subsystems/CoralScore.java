@@ -5,7 +5,6 @@
 package org.supurdueper.robot2025.subsystems;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;

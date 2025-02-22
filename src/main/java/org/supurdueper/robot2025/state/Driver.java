@@ -25,12 +25,9 @@ public class Driver extends Gamepad {
     public final Trigger l3_X = X.and(noFn, teleop);
     public final Trigger l4_Y = Y.and(noFn, teleop);
 
-    
     public final Trigger home_fA = A.and(fn, teleop);
     public final Trigger processor_fX = X.and(fn, teleop);
     public final Trigger net_fY = Y.and(fn, teleop);
-
-
 
     // // Drive Triggers
     // public final Trigger upReorient = upDpad.and(fn, teleop);
