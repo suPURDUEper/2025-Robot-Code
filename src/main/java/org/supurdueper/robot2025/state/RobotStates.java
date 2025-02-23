@@ -28,9 +28,9 @@ public final class RobotStates {
     @Setter
     private static boolean autointake = false;
 
-    public static Trigger auto_l4 = new Trigger(() -> RobotStates.isAutol4()).and(auto);
-    public static Trigger auto_score = new Trigger(() -> RobotStates.isAutoscore()).and(auto);
-    public static Trigger auto_intake = new Trigger(() -> RobotStates.isAutointake()).and(auto);
+    public static Trigger auto_l4 = new Trigger(RobotStates::isAutol4).and(auto);
+    public static Trigger auto_score = new Trigger(RobotStates::isAutoscore).and(auto);
+    public static Trigger auto_intake = new Trigger(RobotStates::isAutointake).and(auto);
 
     // // Information
     public static final Trigger atL1 = new Trigger(RobotContainer.getElevator()::atL1);
@@ -49,13 +49,13 @@ public final class RobotStates {
             .and(RobotContainer.getElevator().isAtPosition());
 
     // Actions
-    public static final Trigger actionScore = driver.score_rb.and(teleop);
-    public static final Trigger actionIntake = driver.intake_lb.and(teleop);
+    public static final Trigger actionScore = driver.score_rb.and(teleop).or(auto_score);
+    public static final Trigger actionIntake = driver.intake_lb.and(teleop.or(auto_intake));
     // public static final Trigger actionUnjamIntake = driver.unjam_RB.and(teleop);
     public static final Trigger actionL1 = driver.l1_A.and(teleop);
     public static final Trigger actionL2 = driver.l2_B.and(teleop);
     public static final Trigger actionL3 = driver.l3_X.and(teleop);
-    public static final Trigger actionL4 = driver.l4_Y.and(teleop);
+    public static final Trigger actionL4 = driver.l4_Y.and(teleop).or(auto_l4);
     public static final Trigger actionReef = actionL2.or(actionL3).or(actionL4);
     public static final Trigger actionNet = driver.net_fY.and(teleop);
     public static final Trigger actionProcessor = driver.processor_fX.and(teleop);

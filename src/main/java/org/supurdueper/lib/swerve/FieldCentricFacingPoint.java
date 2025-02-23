@@ -17,19 +17,31 @@ public class FieldCentricFacingPoint extends FieldCentricFacingAngle {
 
     Translation2d pointToFace;
 
-    public FieldCentricFacingPoint() {
-        this.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
-    }
-
     @Override
     public StatusCode apply(SwerveControlParameters parameters, SwerveModule<?, ?, ?>... modulesToApply) {
         this.TargetDirection =
                 pointToFace.minus(parameters.currentPose.getTranslation()).getAngle();
+        if (this.ForwardPerspective == ForwardPerspectiveValue.OperatorPerspective) {
+            // This is an angle from the frame of the reference of the field. Subtract
+            // the operator persepctive to counteract CTRE adding it later
+            this.TargetDirection = this.TargetDirection.minus(parameters.operatorForwardDirection);
+        }
         return super.apply(parameters, modulesToApply);
     }
 
+    @Override
+    public FieldCentricFacingAngle withTargetDirection(Rotation2d targetDirection) {
+        // Ignore this decorator, since we want to update this at 250hz in ::apply instead
+        // of 50hz in the main robot loop
+        return this;
+    }
+
+    public void setPointToFace(Translation2d point) {
+        pointToFace = point;
+    }
+
     public FieldCentricFacingAngle withPointToFace(Translation2d point) {
-        this.pointToFace = point;
+        setPointToFace(point);
         return this;
     }
 

@@ -26,7 +26,6 @@ public class FieldCentricFacingReef extends FieldCentricFacingAngle {
     });
 
     public FieldCentricFacingReef() {
-        this.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
         this.HeadingController.setPID(10, 0, .75);
     }
 
@@ -36,9 +35,13 @@ public class FieldCentricFacingReef extends FieldCentricFacingAngle {
         Rotation2d facingReefCenter =
                 reefCenter.minus(parameters.currentPose.getTranslation()).getAngle();
 
-        // Clamp the angle to one of the six directions of the reef
         TargetDirection =
                 Collections.min(reefAngles, Comparator.comparing(angle -> absDistanceRadians(angle, facingReefCenter)));
+        if (ForwardPerspective == ForwardPerspectiveValue.OperatorPerspective) {
+            // This is an angle from the frame of the reference of the field. Subtract
+            // the operator persepctive to counteract CTRE adding it later
+            TargetDirection = this.TargetDirection.minus(parameters.operatorForwardDirection);
+        }
         return super.apply(parameters, modulesToApply);
     }
 
