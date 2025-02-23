@@ -47,99 +47,90 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
     }
 
     @Getter
-    private ElevatorHeight currentHeight;
+    private ElevatorHeight currentHeightState;
 
     public Elevator() {
         configureMotors();
         homingDetector = new CurrentStallFilter(motor.getStatorCurrent(), kHomingCurrent);
         Robot.add(this);
         motor.setPosition(0);
-        currentHeight = ElevatorHeight.Home;
+        currentHeightState = ElevatorHeight.Home;
     }
 
     @Override
     public void bindCommands() {
-        RobotStates.actionL1.onTrue(l1());
-        RobotStates.actionL2.onTrue(l2());
-        RobotStates.actionL3.onTrue(l3());
-        RobotStates.actionL4.onTrue(l4());
-        RobotStates.actionProcessor.onTrue(processor());
-        RobotStates.actionNet.onTrue(net());
-        RobotStates.actionIntake.onTrue(intake());
-        RobotStates.actionHome.onTrue(home());
-        RobotStates.actionScore.onFalse(Commands.waitSeconds((0.25)).andThen(home()));
+        RobotStates.actionL1.onTrue(setHeight(ElevatorHeight.L1));
+        RobotStates.actionL2.onTrue(setHeight(ElevatorHeight.L2));
+        RobotStates.actionL3.onTrue(setHeight(ElevatorHeight.L3));
+        RobotStates.actionL4.onTrue(setHeight(ElevatorHeight.L4));
+        RobotStates.actionProcessor.onTrue(setHeight(ElevatorHeight.Processor));
+        RobotStates.actionNet.onTrue(setHeight(ElevatorHeight.Net));
+        RobotStates.actionIntake.onTrue(setHeight(ElevatorHeight.Intake));
+        RobotStates.actionHome.onTrue(setHeight(ElevatorHeight.Home));
+        RobotStates.actionScore.onFalse(Commands.waitSeconds((0.25)).andThen(setHeight(ElevatorHeight.Home)));
     }
 
-    public Command l1() {
-        currentHeight = ElevatorHeight.L1;
-        return goToHeight(kL1Height).withName("Elevator.L1");
-    }
-
-    public Command l2() {
-        currentHeight = ElevatorHeight.L2;
-        return goToHeight(kL2Height).withName("Elevator.L2");
-    }
-
-    public Command l3() {
-        currentHeight = ElevatorHeight.L3;
-        return goToHeight(kL3Height).withName("Elevator.L3");
-    }
-
-    public Command l4() {
-        currentHeight = ElevatorHeight.L4;
-        return goToHeight(kL4Height).withName("Elevator.L4");
-    }
-
-    public Command net() {
-        currentHeight = ElevatorHeight.Net;
-        return goToHeight(kNetHeight).withName("Elevator.Net");
-    }
-
-    public Command processor() {
-        currentHeight = ElevatorHeight.Processor;
-        return goToHeight(kProcessorHeight).withName("Elevator.Processor");
-    }
-
-    public Command intake() {
-        currentHeight = ElevatorHeight.Intake;
-        return goToHeight(kIntakeHeight).withName("Elevator.Intake");
-    }
-
-    public Command home() {
-        currentHeight = ElevatorHeight.Home;
-        return goToHeight(kBottomHeight).withName("Elevator.Home");
+    public Command setHeight(ElevatorHeight height) {
+        Distance setpoint;
+        switch (height) {
+            case L1:
+                setpoint = kL1Height;
+                break;
+            case L2:
+                setpoint = kL2Height;
+                break;
+            case L3:
+                setpoint = kL3Height;
+                break;
+            case L4:
+                setpoint = kL4Height;
+                break;
+            case Net:
+                setpoint = kNetHeight;
+                break;
+            case Processor:
+                setpoint = kProcessorHeight;
+                break;
+            case Intake:
+                setpoint = kIntakeHeight;
+                break;
+            case Home:
+            default:
+                setpoint = kBottomHeight;
+        }
+        return Commands.runOnce(() -> currentHeightState = height).alongWith(goToHeight(setpoint));
     }
 
     public boolean atL1() {
-        return currentHeight == ElevatorHeight.L1;
+        return currentHeightState.equals(ElevatorHeight.L1);
     }
 
     public boolean atL2() {
-        return currentHeight == ElevatorHeight.L2;
+        return currentHeightState.equals(ElevatorHeight.L2);
     }
 
     public boolean atL3() {
-        return currentHeight == ElevatorHeight.L3;
+        return currentHeightState.equals(ElevatorHeight.L3);
     }
 
     public boolean atL4() {
-        return currentHeight == ElevatorHeight.L4;
+        return currentHeightState.equals(ElevatorHeight.L4);
     }
 
     public boolean atNet() {
-        return currentHeight == ElevatorHeight.Net;
+        return currentHeightState.equals(ElevatorHeight.Net);
     }
 
     public boolean atProcessor() {
-        return currentHeight == ElevatorHeight.Processor;
+        return currentHeightState.equals(ElevatorHeight.Processor);
     }
 
     public boolean atIntake() {
-        return currentHeight == ElevatorHeight.Intake;
+        return currentHeightState.equals(ElevatorHeight.Intake);
     }
 
     public boolean atHome() {
-        return currentHeight == ElevatorHeight.Home;
+        return currentHeightState.equals(ElevatorHeight.Home);
     }
 
     // Temporary until we figure out why magic motion isn't working
@@ -171,7 +162,7 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         DogLog.log(
                 "Elevator/Target Position", motorRotationToHeight(getSetpoint()).in(Units.Inches));
         DogLog.log("Elevator/At Position", atPosition());
-        DogLog.log("Elevator/State", currentHeight.toString());
+        DogLog.log("Elevator/State", currentHeightState.toString());
     }
 
     private Distance motorRotationToHeight(Angle motorRotations) {

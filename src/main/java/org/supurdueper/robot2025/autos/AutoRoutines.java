@@ -17,8 +17,7 @@ public class AutoRoutines {
 
     public AutoRoutines(AutoFactory factory) {
         m_factory = factory;
-        factory.bind("L4", l4())
-        .bind("Intake", intake());
+        factory.bind("L4", l4()).bind("Intake", intake());
     }
 
     public Command l4() {
