@@ -20,6 +20,7 @@ import org.supurdueper.robot2025.subsystems.CoralScore;
 import org.supurdueper.robot2025.subsystems.Elevator;
 import org.supurdueper.robot2025.subsystems.Funnel;
 import org.supurdueper.robot2025.subsystems.FunnelTilt;
+import org.supurdueper.robot2025.subsystems.Vision;
 import org.supurdueper.robot2025.subsystems.Wrist;
 import org.supurdueper.robot2025.subsystems.drive.Drivetrain;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
@@ -54,6 +55,9 @@ public class RobotContainer {
     private static FunnelTilt funnelTilt;
 
     @Getter
+    private static Vision vision;
+
+    @Getter
     private static Driver driver;
 
     @Getter
@@ -76,6 +80,7 @@ public class RobotContainer {
         driver = new Driver();
         testController = new TestController();
         drivetrain = TunerConstants.createDrivetrain();
+        vision = new Vision();
         autoFactory = drivetrain.createAutoFactory();
         autoRoutines = new AutoRoutines(autoFactory);
 
@@ -87,18 +92,16 @@ public class RobotContainer {
 
     public void configureBindings() {
         climber.setDefaultCommand(climber.setVoltage(testController::getManualElevatorVoltage));
-        testController.A.onTrue(climber.climbPrep());
-        testController.B.onTrue(climber.clearFunnel());
         testController.Y.onTrue(climber.home());
         testController.rightStickY.onTrue((wrist.setVoltage(testController::getManualWristVoltage)));
         testController.start.onTrue(Commands.runOnce(() -> climber.zero(), climber));
-        // testController.A.onTrue(Commands.deadline(coralScore.loadCoral(), funnel.intake()));
+        testController.A.onTrue(funnelTilt.startingPosition());
         // testController.B.onTrue(coralScore.l2L3());
 
     }
 
     public Command getAutonomousCommand() {
         /* Run the path selected from the auto chooser */
-        return AutoRoutines.resetPose();
+        return AutoRoutines.resetPose().andThen(AutoRoutines.untangle());
     }
 }

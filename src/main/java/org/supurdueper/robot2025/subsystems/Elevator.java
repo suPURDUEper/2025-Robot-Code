@@ -134,10 +134,10 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
     }
 
     // Temporary until we figure out why magic motion isn't working
-    @Override
-    public Command goToPosition(Angle motorRotations) {
-        return run(() -> motor.setControl(pidTuning.withPosition(motorRotations)));
-    }
+    // @Override
+    // public Command goToPosition(Angle motorRotations) {
+    //     return run(() -> motor.setControl(pidTuning.withPosition(motorRotations)));
+    // }
 
     public Command goToHeight(Distance height) {
         return goToPosition(heightToMotorRotations(height));
@@ -147,8 +147,12 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         return goToPositionBlocking(heightToMotorRotations(height));
     }
 
+    public void zeroMotor() {
+        motor.setPosition(0);
+    }
+
     public Command zero() {
-        return runEnd(() -> runVoltage(Volts.of(-2)), () -> motor.setPosition(0))
+        return runEnd(() -> runVoltage(Volts.of(-2)), this::zeroMotor)
                 .until(() -> homingDetector.isStalled())
                 .withName("Elevator.Zero");
     }

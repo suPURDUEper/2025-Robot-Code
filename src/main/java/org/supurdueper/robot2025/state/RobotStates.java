@@ -37,6 +37,7 @@ public final class RobotStates {
     public static final Trigger atL2 = new Trigger(RobotContainer.getElevator()::atL2);
     public static final Trigger atL3 = new Trigger(RobotContainer.getElevator()::atL3);
     public static final Trigger atL4 = new Trigger(RobotContainer.getElevator()::atL4);
+    public static final Trigger atReef = atL2.or(atL3, atL4);
     public static final Trigger atNet = new Trigger(RobotContainer.getElevator()::atNet);
     public static final Trigger atProcessor = new Trigger(RobotContainer.getElevator()::atProcessor);
     public static final Trigger atIntake = new Trigger(RobotContainer.getElevator()::atIntake);
@@ -51,15 +52,15 @@ public final class RobotStates {
     // Actions
     public static final Trigger actionScore = driver.score_rb.and(teleop).or(auto_score);
     public static final Trigger actionIntake = driver.intake_lb.and(teleop.or(auto_intake));
-    // public static final Trigger actionUnjamIntake = driver.unjam_RB.and(teleop);
+    public static final Trigger actionUnjam = driver.start.and(teleop);
     public static final Trigger actionL1 = driver.l1_A.and(teleop);
     public static final Trigger actionL2 = driver.l2_B.and(teleop);
     public static final Trigger actionL3 = driver.l3_X.and(teleop);
     public static final Trigger actionL4 = driver.l4_Y.and(teleop).or(auto_l4);
     public static final Trigger actionReef = actionL2.or(actionL3).or(actionL4);
-    public static final Trigger actionNet = driver.net_fY.and(teleop);
-    public static final Trigger actionProcessor = driver.processor_fX.and(teleop);
-    public static final Trigger actionHome = driver.home_fA.and(teleop);
+    public static final Trigger actionNet = driver.net_lsc.and(teleop);
+    public static final Trigger actionProcessor = driver.processor_rsc.and(teleop);
+    public static final Trigger actionHome = Trigger.kFalse;
     public static final Trigger actionClimbPrep = Trigger.kFalse;
     public static final Trigger actionClimb = Trigger.kFalse;
 

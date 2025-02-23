@@ -27,6 +27,7 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
     @Override
     public void bindCommands() {
         RobotStates.actionIntake.onTrue(intake().until(RobotStates.hasCoral));
+        RobotStates.actionUnjam.whileTrue(unjam());
     }
 
     @Override

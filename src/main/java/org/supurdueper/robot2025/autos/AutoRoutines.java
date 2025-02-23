@@ -35,6 +35,15 @@ public class AutoRoutines {
                 Commands.runOnce(() -> RobotStates.setAutoscore(false)));
     }
 
+    public static Command untangle() {
+        return Commands.sequence(
+                Commands.runOnce(() -> RobotContainer.getClimber().zero()),
+                // Commands.runOnce(() -> RobotContainer.getElevator().zero()),
+                RobotContainer.getClimber().clearFunnel().withTimeout(1.5),
+                RobotContainer.getFunnelTilt().intake().withTimeout(2),
+                RobotContainer.getClimber().home());
+    }
+
     public static Command resetPose() {
         return Commands.runOnce(() -> RobotContainer.getDrivetrain()
                 .resetPose(new Pose2d(
@@ -63,7 +72,12 @@ public class AutoRoutines {
         chain(secondCoralToHp, hpToThirdCoral, 0.5);
 
         // Reset odometry and start the first trajectory
-        startToFirstCoral.active().onTrue(startToFirstCoral.resetOdometry().andThen(startToFirstCoral.cmd()));
+        startToFirstCoral
+                .active()
+                .onTrue(startToFirstCoral
+                        .resetOdometry()
+                        .andThen(startToFirstCoral.cmd())
+                        .alongWith(untangle()));
 
         return routine;
     }

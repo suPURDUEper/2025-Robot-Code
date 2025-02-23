@@ -8,11 +8,14 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Constants;
 import org.supurdueper.robot2025.Robot;
+import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.RobotStates;
 
 public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem {
@@ -78,6 +81,11 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     public void bindCommands() {
         RobotStates.actionIntake.onTrue(loadCoral());
         RobotStates.actionScore.onTrue(l2L3());
+        RobotStates.actionUnjam.whileTrue(unJam());
+        new Trigger(this::hasCoral)
+                .onTrue(Commands.runEnd(() -> RobotContainer.getDriver().rumble(1, 1), () -> RobotContainer.getDriver()
+                                .rumble(0, 0))
+                        .withTimeout(1.0));
     }
 
     @Override

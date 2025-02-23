@@ -322,7 +322,7 @@ public abstract class Gamepad extends SubsystemBase {
         ABS_GREATER;
     }
 
-    private void rumble(double leftIntensity, double rightIntensity) {
+    public void rumble(double leftIntensity, double rightIntensity) {
         rumbleController(leftIntensity, rightIntensity);
     }
 
