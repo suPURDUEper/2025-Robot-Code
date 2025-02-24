@@ -23,6 +23,7 @@ public class DriveStates {
     private final SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric();
     private final FieldCentricFacingReef fieldCentricFacingReef = new FieldCentricFacingReef();
     private final FieldCentricFacingAngle fieldCentricFacingAngle = new FieldCentricFacingAngle();
+    private final FieldCentricFacingAngle fieldCentricFacingHpStation = new FieldCentricFacingHpStation();
 
     public DriveStates(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
@@ -32,10 +33,12 @@ public class DriveStates {
     public void bindCommands() {
         drivetrain.setDefaultCommand(normalTeleopDrive());
         atReef.whileTrue(driveFacingReef());
-        // actionNet.onTrue(driveFacingNet());
-        // actionProcessor.onTrue(driveFacingProcessor());
-        // actionIntake.or(actionHome, actionClimbPrep, actionScore).onTrue(normalTeleopDrive());
+        atIntake.whileTrue(driveFacingHpStation());
+        atProcessor.whileTrue(driveFacingProcessor());
+        atNet.whileTrue(driveFacingNet());
     }
+        
+
 
     private Command normalTeleopDrive() {
         return drivetrain.applyRequest(() -> driveFieldCentric
@@ -46,6 +49,12 @@ public class DriveStates {
 
     private Command driveFacingReef() {
         return drivetrain.applyRequest(() -> fieldCentricFacingReef
+                .withVelocityX(driver.getDriveFwdPositive() * MaxSpeed)
+                .withVelocityY(driver.getDriveLeftPositive() * MaxSpeed));
+    }
+
+    private Command driveFacingHpStation() {
+        return drivetrain.applyRequest(() -> fieldCentricFacingHpStation
                 .withVelocityX(driver.getDriveFwdPositive() * MaxSpeed)
                 .withVelocityY(driver.getDriveLeftPositive() * MaxSpeed));
     }
