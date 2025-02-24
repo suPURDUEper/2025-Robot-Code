@@ -15,7 +15,6 @@ public class Driver extends Gamepad {
     // // If triggers need any of the config values set them in the constructor
     // /* A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simulation */
 
-    // // TODO: Finalize Buttons
     public final Trigger intake_lb = leftBumper;
     public final Trigger score_rb = rightBumper;
     public final Trigger l1_A = A;
@@ -24,28 +23,17 @@ public class Driver extends Gamepad {
     public final Trigger l4_Y = Y;
     public final Trigger processor_rsc = rightStickClick;
     public final Trigger net_lsc = leftStickClick;
-
-    // // Drive Triggers
-    // public final Trigger upReorient = upDpad.and(fn, teleop);
-    // public final Trigger leftReorient = leftDpad.and(fn, teleop);
-    // public final Trigger downReorient = downDpad.and(fn, teleop);
-    // public final Trigger rightReorient = rightDpad.and(fn, teleop);
+    public final Trigger leftAutoAlign_lt = leftTrigger;
+    public final Trigger rightAutoAlign_rt = rightTrigger;
 
     // /* Use the right stick to set a cardinal direction to aim at */
     public final Trigger driving;
     public final Trigger steer;
 
-    // public final Trigger snapSteer = Trigger.kFalse;
-
-    // public final Trigger fpv_rs = rightStickClick.and(teleop); // Remapped to
-    // Right back button
-
     // // DISABLED TRIGGERS
     // public final Trigger coastOn_dB = disabled.and(B);
     // public final Trigger coastOff_dA = disabled.and(A);
 
-    // // TEST TRIGGERS
-    // public final Trigger tuneElevator_tB = testMode.and(B);
     @Getter
     @Setter
     private boolean isSlowMode = false;

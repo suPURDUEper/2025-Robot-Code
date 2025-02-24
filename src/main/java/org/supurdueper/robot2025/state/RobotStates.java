@@ -60,6 +60,8 @@ public final class RobotStates {
     public static final Trigger actionReef = actionL2.or(actionL3).or(actionL4);
     public static final Trigger actionNet = driver.net_lsc.and(teleop);
     public static final Trigger actionProcessor = driver.processor_rsc.and(teleop);
+    public static final Trigger actionLeftAim = driver.leftAutoAlign_lt.and(teleop);
+    public static final Trigger actionRightAim = driver.rightAutoAlign_rt.and(teleop);
     public static final Trigger actionHome = Trigger.kFalse;
     public static final Trigger actionClimbPrep = Trigger.kFalse;
     public static final Trigger actionClimb = Trigger.kFalse;
