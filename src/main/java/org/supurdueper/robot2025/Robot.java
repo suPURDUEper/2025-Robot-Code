@@ -4,23 +4,36 @@
 
 package org.supurdueper.robot2025;
 
+import choreo.auto.AutoFactory;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.Threads;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.ironmaple.simulation.SimulatedArena;
 import org.supurdueper.BuildConstants;
 import org.supurdueper.lib.subsystems.SupurdueperRobot;
+import org.supurdueper.robot2025.autos.AutoRoutines;
 
 public class Robot extends SupurdueperRobot {
-    private Command m_autonomousCommand;
 
     private final RobotContainer m_robotContainer;
 
+    /* Path follower */
+    private final AutoFactory autoFactory;
+    private final AutoRoutines autoRoutines;
+    private final SendableChooser<Command> autoChooser;
+
     public Robot() {
         m_robotContainer = new RobotContainer();
+        autoFactory = RobotContainer.getDrivetrain().createAutoFactory();
+        autoRoutines = new AutoRoutines(autoFactory);
+        autoChooser = new SendableChooser<>();
+        autoChooser.addOption("Three Coral Right", autoRoutines.threeCoralAuto());
+        SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
     @Override
@@ -76,11 +89,7 @@ public class Robot extends SupurdueperRobot {
     @Override
     public void autonomousInit() {
         resetCommandsAndButtons();
-        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.schedule();
-        }
+        autoRoutines.threeCoralAuto().schedule();
     }
 
     @Override

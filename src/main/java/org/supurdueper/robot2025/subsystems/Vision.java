@@ -4,13 +4,12 @@
 
 package org.supurdueper.robot2025.subsystems;
 
+import static edu.wpi.first.units.Units.Meters;
+
 import dev.doglog.DogLog;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import static edu.wpi.first.units.Units.Meters;
-
 import org.supurdueper.lib.LimelightHelpers;
 import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.subsystems.drive.Drivetrain;
@@ -53,6 +52,8 @@ public class Vision extends SubsystemBase {
     }
 
     public static double getHorizonalOffsetFromTargetMeters(String limelightName) {
-        return LimelightHelpers.getTargetPose3d_RobotSpace(limelightName).getMeasureX().in(Meters);
+        return LimelightHelpers.getTargetPose3d_RobotSpace(limelightName)
+                .getMeasureX()
+                .in(Meters);
     }
 }

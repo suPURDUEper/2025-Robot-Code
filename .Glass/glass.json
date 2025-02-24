@@ -28,6 +28,9 @@
         "AlgaeScore": {
           "open": true
         },
+        "Auto Chooser": {
+          "open": true
+        },
         "CoralScore": {
           "open": true
         },
@@ -56,8 +59,7 @@
         "Tuning": {
           "Elevator": {
             "open": true
-          },
-          "open": true
+          }
         },
         "Wrist": {
           "open": true
@@ -71,10 +73,18 @@
       "/SmartDashboard/Alerts": "Alerts",
       "/SmartDashboard/Auto Chooser": "String Chooser",
       "/SmartDashboard/Choreo Alerts": "Alerts",
+      "/SmartDashboard/Configuration": "Alerts",
+      "/SmartDashboard/Encoders": "Alerts",
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/IMU": "Alerts",
+      "/SmartDashboard/JSON": "Alerts",
       "/SmartDashboard/Module 0": "Mechanism2d",
       "/SmartDashboard/Module 1": "Mechanism2d",
       "/SmartDashboard/Module 2": "Mechanism2d",
-      "/SmartDashboard/Module 3": "Mechanism2d"
+      "/SmartDashboard/Module 3": "Mechanism2d",
+      "/SmartDashboard/Motors": "Alerts",
+      "/SmartDashboard/Swerve Drive": "Alerts",
+      "/SmartDashboard/navX-Sensor[4]": "Gyro"
     }
   },
   "NetworkTables Info": {

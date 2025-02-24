@@ -16,13 +16,12 @@ public class FieldCentricFacingReef extends FieldCentricFacingAngle {
 
     Translation2d reefCenterBlue = FieldConstants.Reef.center;
     final List<Rotation2d> reefAngles = List.of(
-        Rotation2d.kZero,
-        new Rotation2d(Math.PI / 3),
-        new Rotation2d(2 * Math.PI / 3),
-        Rotation2d.kPi,
-        new Rotation2d(4 * Math.PI / 3),
-        new Rotation2d(5 * Math.PI / 3)
-    );
+            Rotation2d.kZero,
+            new Rotation2d(Math.PI / 3),
+            new Rotation2d(2 * Math.PI / 3),
+            Rotation2d.kPi,
+            new Rotation2d(4 * Math.PI / 3),
+            new Rotation2d(5 * Math.PI / 3));
 
     public FieldCentricFacingReef() {
         HeadingController.setPID(10, 0, .75);

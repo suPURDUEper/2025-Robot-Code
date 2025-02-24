@@ -21,7 +21,7 @@ public class CurrentStallFilter {
         this.currentSignal = currentSignal;
         this.threshold = threshold;
         this.filteredCurrent = Amps.of(0);
-        currentFilter = LinearFilter.movingAverage(3);
+        currentFilter = LinearFilter.movingAverage(7);
         currentDebouncer = new Debouncer(0.2, DebounceType.kRising);
     }
 

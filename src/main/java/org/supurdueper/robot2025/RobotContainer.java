@@ -4,13 +4,8 @@
 
 package org.supurdueper.robot2025;
 
-import choreo.auto.AutoChooser;
-import choreo.auto.AutoFactory;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import lombok.Getter;
-import org.supurdueper.robot2025.autos.AutoRoutines;
 import org.supurdueper.robot2025.state.Driver;
 import org.supurdueper.robot2025.state.TestController;
 import org.supurdueper.robot2025.subsystems.AlgaeScore;
@@ -63,11 +58,6 @@ public class RobotContainer {
     @Getter
     private static TestController testController;
 
-    /* Path follower */
-    private final AutoFactory autoFactory;
-    private final AutoRoutines autoRoutines;
-    private final AutoChooser autoChooser = new AutoChooser();
-
     public RobotContainer() {
         algaeScore = new AlgaeScore();
         cageGrabber = new CageGrabber();
@@ -81,11 +71,6 @@ public class RobotContainer {
         testController = new TestController();
         drivetrain = TunerConstants.createDrivetrain();
         vision = new Vision();
-        autoFactory = drivetrain.createAutoFactory();
-        autoRoutines = new AutoRoutines(autoFactory);
-
-        autoChooser.addRoutine("Three Coral Right", autoRoutines::threeCoralAuto);
-        SmartDashboard.putData("Auto Chooser", autoChooser);
 
         configureBindings();
     }
@@ -98,10 +83,5 @@ public class RobotContainer {
         testController.A.onTrue(funnelTilt.startingPosition());
         // testController.B.onTrue(coralScore.l2L3());
 
-    }
-
-    public Command getAutonomousCommand() {
-        /* Run the path selected from the auto chooser */
-        return AutoRoutines.resetPose().andThen(AutoRoutines.untangle());
     }
 }

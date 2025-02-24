@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import java.util.function.Supplier;
 import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.Driver;
+import org.supurdueper.robot2025.state.RobotStates;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
 
 public class DriveStates {
@@ -32,13 +33,11 @@ public class DriveStates {
 
     public void bindCommands() {
         drivetrain.setDefaultCommand(normalTeleopDrive());
-        atReef.whileTrue(driveFacingReef());
-        atIntake.whileTrue(driveFacingHpStation());
-        atProcessor.whileTrue(driveFacingProcessor());
-        atNet.whileTrue(driveFacingNet());
+        atReef.and(RobotStates.teleop).whileTrue(driveFacingReef());
+        atIntake.and(RobotStates.teleop).whileTrue(driveFacingHpStation());
+        // atProcessor.whileTrue(driveFacingProcessor());
+        // atNet.whileTrue(driveFacingNet());
     }
-        
-
 
     private Command normalTeleopDrive() {
         return drivetrain.applyRequest(() -> driveFieldCentric

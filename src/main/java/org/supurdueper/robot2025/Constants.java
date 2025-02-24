@@ -50,7 +50,7 @@ public final class Constants {
     }
 
     public static final class AlgaeScoreConstants {
-        public static final Current kHasBallCurrent = Amps.of(40);
+        public static final Current kHasBallCurrent = Amps.of(50);
         public static final CurrentLimitsConfigs kAlgaeCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(80).withStatorCurrentLimitEnable(true);
         public static final Voltage kIntakeVoltage = Volts.of(12);
@@ -100,7 +100,7 @@ public final class Constants {
         public static final double profileKv = 0;
         public static final double profileKa = 0;
         public static final Current kStatorCurrentLimit = Amps.of(80);
-        public static final Angle kForwardSoftLimit = Degrees.of(110);
+        public static final Angle kForwardSoftLimit = Degrees.of(115);
 
         public static final Angle kReverseSoftLimit = Degrees.of(43);
         public static final Angle kPositionTolerance = Degrees.of(1);
@@ -115,7 +115,7 @@ public final class Constants {
         public static final Angle kL3Angle = kL2Angle;
         public static final Angle kL4Angle = Degrees.of(43);
         public static final Angle kProcessorAngle = Degrees.of(43);
-        public static final Angle kNetAngle = Degrees.of(110);
+        public static final Angle kNetAngle = Degrees.of(115);
     }
 
     public final class ClimberConstants {

@@ -1,7 +1,6 @@
 package org.supurdueper.robot2025.autos;
 
 import choreo.auto.AutoFactory;
-import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,7 +16,6 @@ public class AutoRoutines {
 
     public AutoRoutines(AutoFactory factory) {
         m_factory = factory;
-        factory.bind("L4", l4()).bind("Intake", intake());
     }
 
     public Command l4() {
@@ -52,34 +50,16 @@ public class AutoRoutines {
                         Rotation2d.k180deg)));
     }
 
-    public AutoRoutine threeCoralAuto() {
-        String trajName = "Auto3Coral";
-        final AutoRoutine routine = m_factory.newRoutine("Three Coral Auto");
+    public Command threeCoralAuto() {
+        String trajName = "auto3coral";
+        Command startToFirstCoral = m_factory.trajectoryCmd(trajName, 0);
+        Command firstCoralToHp = m_factory.trajectoryCmd(trajName, 1);
+        Command hpToSecondCoral = m_factory.trajectoryCmd(trajName, 2);
+        Command secondCoralToHp = m_factory.trajectoryCmd(trajName, 3);
+        Command hpToThirdCoral = m_factory.trajectoryCmd(trajName, 4);
 
-        final AutoTrajectory startToFirstCoral = routine.trajectory(trajName, 0);
-        final AutoTrajectory firstCoralToHp = routine.trajectory(trajName, 1);
-        final AutoTrajectory hpToSecondCoral = routine.trajectory(trajName, 2);
-        final AutoTrajectory secondCoralToHp = routine.trajectory(trajName, 3);
-        final AutoTrajectory hpToThirdCoral = routine.trajectory(trajName, 4);
-
-        // Score when we finish any of the trajectories going to the reef
-        routine.anyDone(startToFirstCoral, hpToSecondCoral, hpToThirdCoral).onTrue(score());
-
-        // Setup chain with delays
-        chain(startToFirstCoral, firstCoralToHp, 1);
-        chain(firstCoralToHp, hpToSecondCoral, 0.5);
-        chain(hpToSecondCoral, secondCoralToHp, 1);
-        chain(secondCoralToHp, hpToThirdCoral, 0.5);
-
-        // Reset odometry and start the first trajectory
-        startToFirstCoral
-                .active()
-                .onTrue(startToFirstCoral
-                        .resetOdometry()
-                        .andThen(startToFirstCoral.cmd())
-                        .alongWith(untangle()));
-
-        return routine;
+        return Commands.sequence(
+                m_factory.resetOdometry(trajName), Commands.parallel(startToFirstCoral, untangle(), l4()));
     }
 
     public void chain(AutoTrajectory a, AutoTrajectory b, double delaySeconds) {
