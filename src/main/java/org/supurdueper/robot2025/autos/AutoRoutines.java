@@ -2,20 +2,25 @@ package org.supurdueper.robot2025.autos;
 
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoTrajectory;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import org.supurdueper.robot2025.FieldConstants;
 import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.RobotStates;
+import org.supurdueper.robot2025.subsystems.drive.Drivetrain;
 
 public class AutoRoutines {
     private final AutoFactory m_factory;
+    private final Drivetrain drivetrain;
 
     public AutoRoutines(AutoFactory factory) {
         m_factory = factory;
+        drivetrain = RobotContainer.getDrivetrain();
     }
 
     public Command l4() {
@@ -59,10 +64,28 @@ public class AutoRoutines {
         Command hpToThirdCoral = m_factory.trajectoryCmd(trajName, 4);
 
         return Commands.sequence(
-                m_factory.resetOdometry(trajName), Commands.parallel(startToFirstCoral, untangle(), l4()));
+                m_factory.resetOdometry(trajName),
+                new ScheduleCommand(untangle()),
+                Commands.deadline(startToFirstCoral, l4()),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                score(),
+                Commands.deadline(firstCoralToHp, intake()),
+                Commands.waitSeconds(0.5),
+                hpToSecondCoral,
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                Commands.waitSeconds(0.5),
+                secondCoralToHp,
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                Commands.waitSeconds(0.5),
+                hpToThirdCoral,
+                Commands.runOnce(() -> drivetrain.setControl(stop())));
     }
 
     public void chain(AutoTrajectory a, AutoTrajectory b, double delaySeconds) {
         a.doneDelayed(delaySeconds).onTrue(b.cmd());
+    }
+
+    public SwerveRequest stop() {
+        return new SwerveRequest.Idle();
     }
 }

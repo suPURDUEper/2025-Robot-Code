@@ -7,7 +7,6 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentricFacingAngle;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import java.util.function.Supplier;
 import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.Driver;
 import org.supurdueper.robot2025.state.RobotStates;
