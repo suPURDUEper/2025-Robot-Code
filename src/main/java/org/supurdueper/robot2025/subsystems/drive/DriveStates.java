@@ -35,8 +35,8 @@ public class DriveStates {
         drivetrain.setDefaultCommand(normalTeleopDrive());
         atReef.and(RobotStates.teleop).whileTrue(driveFacingReef());
         atIntake.and(RobotStates.teleop).whileTrue(driveFacingHpStation());
-        // atProcessor.whileTrue(driveFacingProcessor());
-        // atNet.whileTrue(driveFacingNet());
+        atProcessor.and(RobotStates.teleop).whileTrue(driveFacingProcessor());
+        atNet.and(RobotStates.teleop).whileTrue(driveFacingNet());
     }
 
     private Command normalTeleopDrive() {
@@ -58,18 +58,18 @@ public class DriveStates {
                 .withVelocityY(driver.getDriveLeftPositive() * MaxSpeed));
     }
 
-    private Command driveFacingAngle(Supplier<Rotation2d> angle) {
+    private Command driveFacingAngle(Rotation2d angle) {
         return drivetrain.applyRequest(() -> fieldCentricFacingAngle
                 .withVelocityX(driver.getDriveFwdPositive() * MaxSpeed)
                 .withVelocityY(driver.getDriveLeftPositive() * MaxSpeed)
-                .withTargetDirection(angle.get()));
+                .withTargetDirection(angle));
     }
 
     private Command driveFacingProcessor() {
-        return driveFacingAngle(() -> Rotation2d.kCCW_90deg);
+        return driveFacingAngle(Rotation2d.kCCW_90deg);
     }
 
     private Command driveFacingNet() {
-        return driveFacingAngle(() -> Rotation2d.k180deg);
+        return driveFacingAngle(Rotation2d.k180deg);
     }
 }

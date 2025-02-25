@@ -2,6 +2,7 @@ package org.supurdueper.robot2025.state;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import lombok.Getter;
 import lombok.Setter;
@@ -10,8 +11,8 @@ import org.supurdueper.robot2025.RobotContainer;
 public final class RobotStates {
 
     public static final Trigger sim = new Trigger(RobotBase::isSimulation);
-    public static final Trigger teleop = new Trigger(DriverStation::isTeleop);
-    public static final Trigger auto = new Trigger(DriverStation::isAutonomous);
+    public static final Trigger teleop = RobotModeTriggers.teleop();
+    public static final Trigger auto = RobotModeTriggers.autonomous();
     public static final Driver driver = RobotContainer.getDriver();
     public static final TestController test = RobotContainer.getTestController();
 
