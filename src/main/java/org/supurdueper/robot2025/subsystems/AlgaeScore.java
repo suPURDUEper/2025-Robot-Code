@@ -34,10 +34,10 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
         RobotStates.atL2.or(RobotStates.atL3).whileTrue(intake());
         RobotStates.actionScore.and(RobotStates.atNet).onTrue(scoreNet());
         RobotStates.actionScore.and(RobotStates.atProcessor).onTrue(scoreProcessor());
-        RobotStates.actionScore.and(
-            RobotStates.atNet.negate().and(
-            RobotStates.atProcessor.negate().and(
-            RobotStates.hasCoral.negate())))
+        RobotStates.actionScore
+                .and(RobotStates.atNet
+                        .negate()
+                        .and(RobotStates.atProcessor.negate().and(RobotStates.hasCoral.negate())))
                 .onTrue(scoreProcessor());
     }
 
@@ -65,15 +65,16 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     public Command scoreNet() {
-        return runEnd(this::net, this::stop).withTimeout(kNetScoreTime)
-        .alongWith(Commands.runOnce(() -> hasBall = false)
-        .withName("AlgaeScore.ScoreNet"));
+        return runEnd(this::net, this::stop)
+                .withTimeout(kNetScoreTime)
+                .alongWith(Commands.runOnce(() -> hasBall = false).withName("AlgaeScore.ScoreNet"));
     }
 
     public Command scoreProcessor() {
-        return runEnd(this::processor, this::stop).withTimeout(kProcessorScoreTime)
-        .alongWith(Commands.runOnce(() -> hasBall = false))
-        .withName("AlgaeScore.ScoreProcessor");
+        return runEnd(this::processor, this::stop)
+                .withTimeout(kProcessorScoreTime)
+                .alongWith(Commands.runOnce(() -> hasBall = false))
+                .withName("AlgaeScore.ScoreProcessor");
     }
 
     // Private methods
@@ -81,7 +82,7 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
         boolean gotBall = ballDetector.isStalled();
         if (gotBall) {
             hasBall = true;
-        } 
+        }
         return gotBall;
     }
 

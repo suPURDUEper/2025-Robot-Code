@@ -69,8 +69,7 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         RobotStates.hasCoral.onTrue(setHeight(ElevatorHeight.Home));
         RobotStates.actionHome.onTrue(setHeight(ElevatorHeight.Home));
         RobotStates.actionScore.onFalse(
-            Commands.waitSeconds(0.25).unless(this::atNet)
-            .andThen(setHeight(ElevatorHeight.Home)));
+                Commands.waitSeconds(0.25).unless(this::atNet).andThen(setHeight(ElevatorHeight.Home)));
     }
 
     public Command setHeight(ElevatorHeight height) {
@@ -101,7 +100,9 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
             default:
                 setpoint = kBottomHeight;
         }
-        return Commands.runOnce(() -> currentHeightState = height).alongWith(goToHeight(setpoint)).withName("Elevator." + height.name());
+        return Commands.runOnce(() -> currentHeightState = height)
+                .alongWith(goToHeight(setpoint))
+                .withName("Elevator." + height.name());
     }
 
     public boolean atL1() {

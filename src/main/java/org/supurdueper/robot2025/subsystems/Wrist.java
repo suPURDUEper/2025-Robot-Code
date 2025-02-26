@@ -90,7 +90,6 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
         return goToPosition(kClimbPrep).withName("Wrist.kClimbPrep");
     }
 
-
     @Override
     public void bindCommands() {
         RobotStates.actionL1.onTrue(l1());

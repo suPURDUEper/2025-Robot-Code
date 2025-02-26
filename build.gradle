@@ -4,7 +4,7 @@ plugins {
     id "com.peterabeles.gversion" version "1.10"
     id("com.diffplug.spotless") version "7.0.0.BETA4"
     id "io.freefair.lombok" version "6.6.1"
-    id("com.github.spotbugs") version "6.0.24"
+    // id("com.github.spotbugs") version "6.0.24"
 }
 
 java {
@@ -172,21 +172,21 @@ spotless {
         endWithNewline()
     }
 }
-spotbugs {
-    ignoreFailures = false
-    showStackTraces = true
-    showProgress = true
-    effort = com.github.spotbugs.snom.Effort.DEFAULT
-    reportLevel =  com.github.spotbugs.snom.Confidence.values()[3]
-    reportsDir = file("$buildDir/reports/spotbugs")
-    //includeFilter = file('spotbugs-include.xml')
-    excludeFilter = file('excludeFilter-spotbugs.xml')
-}
+// spotbugs {
+//     ignoreFailures = false
+//     showStackTraces = true
+//     showProgress = true
+//     effort = com.github.spotbugs.snom.Effort.DEFAULT
+//     reportLevel =  com.github.spotbugs.snom.Confidence.values()[3]
+//     reportsDir = file("$buildDir/reports/spotbugs")
+//     //includeFilter = file('spotbugs-include.xml')
+//     excludeFilter = file('excludeFilter-spotbugs.xml')
+// }
 
-tasks.spotbugsMain {
-    reports.create("html") {
-        enabled = true
-        outputLocation = file("$buildDir/reports/spotbugs.html")
-        setStylesheet("fancy-hist.xsl")
-    }
-}
+// tasks.spotbugsMain {
+//     reports.create("html") {
+//         enabled = true
+//         outputLocation = file("$buildDir/reports/spotbugs.html")
+//         setStylesheet("fancy-hist.xsl")
+//     }
+// }

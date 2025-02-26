@@ -18,7 +18,6 @@ public class Driver extends Gamepad {
     public final Trigger extraRight = rightStickClick;
     public final Trigger extraLeft = leftStickClick;
 
-
     // /* Use the right stick to set a cardinal direction to aim at */
     public final Trigger driving;
     public final Trigger steer;

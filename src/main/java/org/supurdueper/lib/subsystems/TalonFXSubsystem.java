@@ -11,7 +11,6 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Voltage;
@@ -39,15 +38,11 @@ public abstract class TalonFXSubsystem extends SubsystemBase {
                 .withMotorOutput(motorOutputConfigs);
     }
 
-    
-
     @Override
     public void periodic() {
         super.periodic();
         DogLog.log(getClass().getSimpleName() + "/Command", getCurrentCommand().getName());
     }
-
-
 
     public Command setVoltage(DoubleSupplier voltage) {
         return run(() -> runVoltage(Volts.of(voltage.getAsDouble())));

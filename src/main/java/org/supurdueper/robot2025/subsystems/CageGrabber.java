@@ -8,7 +8,6 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
-
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
 import org.supurdueper.robot2025.CanId;
@@ -20,7 +19,6 @@ public class CageGrabber extends TalonFXSubsystem implements SupurdueperSubsyste
 
     private DigitalInput cageSensorLeft;
     private DigitalInput cageSensorRight;
-
 
     public CageGrabber() {
         cageSensorLeft = new DigitalInput(Constants.DIOPort.climberBreakbeam1);
@@ -87,5 +85,4 @@ public class CageGrabber extends TalonFXSubsystem implements SupurdueperSubsyste
     public boolean followerInverted() {
         return false;
     }
-
 }

@@ -93,7 +93,6 @@ public final class Constants {
         public static final Distance kL4Height = Inches.of(56);
         public static final Distance kProcessorHeight = Inches.of(1);
         public static final Distance kNetHeight = Inches.of(55);
-        
     }
 
     public final class WristConstants {
