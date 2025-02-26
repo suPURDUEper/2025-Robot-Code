@@ -38,7 +38,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     public Command loadCoral() {
-        return runEnd(this::load, this::stop).until(this::hasCoral);
+        return runEnd(this::load, this::stop).until(this::hasCoral).withName("CoralScore.LoadCoral");
     }
 
     private void load() {
@@ -46,7 +46,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     public Command l4() {
-        return runEnd(this::scoreL4, this::stop).until(this::scoredCoral);
+        return runEnd(this::scoreL4, this::stop).until(this::scoredCoral).withName("CoralScore.L4");
     }
 
     private void scoreL4() {
@@ -54,7 +54,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     public Command l2L3() {
-        return runEnd(this::scoreL2L3, this::stop);
+        return runEnd(this::scoreL2L3, this::stop).withName("CoralScore.L2L3");
     }
 
     private void scoreL2L3() {
@@ -62,7 +62,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     public Command l1() {
-        return runEnd(this::scoreL1, this::stop).until(this::scoredCoral);
+        return runEnd(this::scoreL1, this::stop).until(this::scoredCoral).withName("CoralScore.L1");
     }
 
     private void scoreL1() {
@@ -70,7 +70,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     public Command unJam() {
-        return runEnd(this::runBackwards, this::stop);
+        return runEnd(this::runBackwards, this::stop).withName("CoralScore.UnJam");
     }
 
     private void runBackwards() {

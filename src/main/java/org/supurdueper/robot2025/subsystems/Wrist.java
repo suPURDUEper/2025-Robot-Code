@@ -86,6 +86,11 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
         return goToPosition(kHomeAngle).withName("Wrist.Home");
     }
 
+    public Command climbPrep() {
+        return goToPosition(kClimbPrep).withName("Wrist.kClimbPrep");
+    }
+
+
     @Override
     public void bindCommands() {
         RobotStates.actionL1.onTrue(l1());
@@ -97,6 +102,7 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
         RobotStates.actionIntake.onTrue(intake());
         RobotStates.actionHome.onTrue(home());
         RobotStates.actionScore.onFalse(home());
+        RobotStates.actionClimbPrep.onTrue(climbPrep());
     }
 
     @Override

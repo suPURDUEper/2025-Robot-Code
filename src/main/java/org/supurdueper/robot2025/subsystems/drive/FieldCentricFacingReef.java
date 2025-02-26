@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.supurdueper.lib.utils.AllianceFlip;
+import org.supurdueper.robot2025.Constants.DriveConstants;
 import org.supurdueper.robot2025.FieldConstants;
 
 public class FieldCentricFacingReef extends FieldCentricFacingAngle {
@@ -24,7 +25,7 @@ public class FieldCentricFacingReef extends FieldCentricFacingAngle {
             new Rotation2d(5 * Math.PI / 3));
 
     public FieldCentricFacingReef() {
-        HeadingController.setPID(10, 0, .75);
+        HeadingController.setPID(DriveConstants.headingKp, DriveConstants.headingKi, DriveConstants.headingKd);
     }
 
     @Override

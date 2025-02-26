@@ -37,6 +37,12 @@ public final class Constants {
         public static final double kTurboModeScalor = 1;
     }
 
+    public static final class DriveConstants {
+        public static final double headingKp = 10.0;
+        public static final double headingKi = 0;
+        public static final double headingKd = 0.75;
+    }
+
     public final class DIOPort {
 
         // Intake
@@ -87,6 +93,7 @@ public final class Constants {
         public static final Distance kL4Height = Inches.of(56);
         public static final Distance kProcessorHeight = Inches.of(1);
         public static final Distance kNetHeight = Inches.of(55);
+        
     }
 
     public final class WristConstants {
@@ -116,6 +123,7 @@ public final class Constants {
         public static final Angle kL4Angle = Degrees.of(43);
         public static final Angle kProcessorAngle = Degrees.of(43);
         public static final Angle kNetAngle = Degrees.of(115);
+        public static final Angle kClimbPrep = Degrees.of(43);
     }
 
     public final class ClimberConstants {

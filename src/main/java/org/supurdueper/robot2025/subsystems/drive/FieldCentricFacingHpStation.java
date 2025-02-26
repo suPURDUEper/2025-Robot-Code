@@ -7,6 +7,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentricFacingAngle;
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.supurdueper.lib.utils.AllianceFlip;
 import org.supurdueper.robot2025.FieldConstants;
+import org.supurdueper.robot2025.Constants.DriveConstants;
 
 public class FieldCentricFacingHpStation extends FieldCentricFacingAngle {
 
@@ -14,7 +15,7 @@ public class FieldCentricFacingHpStation extends FieldCentricFacingAngle {
     final Rotation2d rightStation = FieldConstants.CoralStation.rightCenterFace.getRotation();
 
     public FieldCentricFacingHpStation() {
-        HeadingController.setPID(10, 0, .75);
+        HeadingController.setPID(DriveConstants.headingKp, DriveConstants.headingKi, DriveConstants.headingKd);
     }
 
     @Override

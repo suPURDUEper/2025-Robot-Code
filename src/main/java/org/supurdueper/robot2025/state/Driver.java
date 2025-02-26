@@ -15,16 +15,9 @@ public class Driver extends Gamepad {
     // // If triggers need any of the config values set them in the constructor
     // /* A, B, X, Y, Left Bumper, Right Bumper = Buttons 1 to 6 in simulation */
 
-    public final Trigger intake_lb = leftBumper;
-    public final Trigger score_rb = rightBumper;
-    public final Trigger l1_A = A;
-    public final Trigger l2_B = B;
-    public final Trigger l3_X = X;
-    public final Trigger l4_Y = Y;
-    public final Trigger processor_rsc = rightStickClick;
-    public final Trigger net_lsc = leftStickClick;
-    public final Trigger leftAutoAlign_lt = leftTrigger;
-    public final Trigger rightAutoAlign_rt = rightTrigger;
+    public final Trigger extraRight = rightStickClick;
+    public final Trigger extraLeft = leftStickClick;
+
 
     // /* Use the right stick to set a cardinal direction to aim at */
     public final Trigger driving;

@@ -9,6 +9,7 @@ import static org.supurdueper.robot2025.Constants.AlgaeScoreConstants.*;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import org.supurdueper.lib.CurrentStallFilter;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
@@ -20,6 +21,7 @@ import org.supurdueper.robot2025.state.RobotStates;
 public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem {
 
     private CurrentStallFilter ballDetector;
+    private boolean hasBall;
 
     public AlgaeScore() {
         configureMotors();
@@ -32,6 +34,11 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
         RobotStates.atL2.or(RobotStates.atL3).whileTrue(intake());
         RobotStates.actionScore.and(RobotStates.atNet).onTrue(scoreNet());
         RobotStates.actionScore.and(RobotStates.atProcessor).onTrue(scoreProcessor());
+        RobotStates.actionScore.and(
+            RobotStates.atNet.negate().and(
+            RobotStates.atProcessor.negate().and(
+            RobotStates.hasCoral.negate())))
+                .onTrue(scoreProcessor());
     }
 
     @Override
@@ -53,21 +60,33 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
                         hold();
                     }
                 },
-                this::hasBall,
+                this::gotBall,
                 this);
     }
 
     public Command scoreNet() {
-        return runEnd(this::net, this::stop).withTimeout(kNetScoreTime);
+        return runEnd(this::net, this::stop).withTimeout(kNetScoreTime)
+        .alongWith(Commands.runOnce(() -> hasBall = false)
+        .withName("AlgaeScore.ScoreNet"));
     }
 
     public Command scoreProcessor() {
-        return runEnd(this::processor, this::stop).withTimeout(kProcessorScoreTime);
+        return runEnd(this::processor, this::stop).withTimeout(kProcessorScoreTime)
+        .alongWith(Commands.runOnce(() -> hasBall = false))
+        .withName("AlgaeScore.ScoreProcessor");
     }
 
     // Private methods
+    public boolean gotBall() {
+        boolean gotBall = ballDetector.isStalled();
+        if (gotBall) {
+            hasBall = true;
+        } 
+        return gotBall;
+    }
+
     public boolean hasBall() {
-        return ballDetector.isStalled();
+        return hasBall;
     }
 
     private void runIntake() {

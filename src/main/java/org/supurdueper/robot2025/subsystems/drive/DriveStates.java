@@ -3,10 +3,15 @@ package org.supurdueper.robot2025.subsystems.drive;
 import static edu.wpi.first.units.Units.*;
 import static org.supurdueper.robot2025.state.RobotStates.*;
 
+import org.supurdueper.lib.utils.AllianceFlip;
+import org.supurdueper.robot2025.Constants.DriveConstants;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentricFacingAngle;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+
 import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.Driver;
 import org.supurdueper.robot2025.state.RobotStates;
@@ -28,6 +33,7 @@ public class DriveStates {
     public DriveStates(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
         this.driver = RobotContainer.getDriver();
+        fieldCentricFacingAngle.HeadingController.setPID(DriveConstants.headingKp, DriveConstants.headingKi, DriveConstants.headingKd);
     }
 
     public void bindCommands() {
@@ -36,6 +42,7 @@ public class DriveStates {
         atIntake.and(RobotStates.teleop).whileTrue(driveFacingHpStation());
         atProcessor.and(RobotStates.teleop).whileTrue(driveFacingProcessor());
         atNet.and(RobotStates.teleop).whileTrue(driveFacingNet());
+        rezeroFieldHeading.onTrue(Commands.runOnce(() -> drivetrain.resetRotation(AllianceFlip.apply(Rotation2d.kZero))));
     }
 
     private Command normalTeleopDrive() {
