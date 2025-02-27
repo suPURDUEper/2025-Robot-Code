@@ -6,11 +6,17 @@
           "open": true
         }
       },
-      "Pose": {
-        "open": true
-      },
       "Robot": {
+        "CageGrabber": {
+          "open": true
+        },
         "Climber": {
+          "open": true
+        },
+        "CoralScore": {
+          "open": true
+        },
+        "DogLog": {
           "open": true
         },
         "Drive": {
@@ -63,8 +69,7 @@
         },
         "Wrist": {
           "open": true
-        },
-        "open": true
+        }
       }
     },
     "types": {
@@ -95,8 +100,7 @@
   },
   "NetworkTables Settings": {
     "mode": "Client (NT3)",
-    "serverTeam": "7457",
-    "visible": false
+    "serverTeam": "7457"
   },
   "Plots": {
     "Plot <0>": {

@@ -49,10 +49,10 @@ public final class Constants {
         public static final int intakeBreakbeam = 5;
         // Coral score
         public static final int scoreBreakbeam1 = 0;
-        public static final int scoreBreakbeam2 = 2;
+        public static final int scoreBreakbeam2 = -1;
         // Climber
-        public static final int climberBreakbeam1 = 3;
-        public static final int climberBreakbeam2 = 4;
+        public static final int climberBreakbeam1 = 2;
+        public static final int climberBreakbeam2 = 3;
     }
 
     public static final class AlgaeScoreConstants {
@@ -134,6 +134,7 @@ public final class Constants {
         public static final double ka = 0;
         public static final double kg = 0.0;
         public static final double kHome = 0.0;
+        public static final double kRetract = -35;
         public static final double kClearFunnel = 63.0;
         public static final double kClimb = 140.0;
         public static final double kPositionTolerance = 1.0;

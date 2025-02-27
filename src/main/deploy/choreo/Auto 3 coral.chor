@@ -5,7 +5,7 @@
  "variables":{
   "expressions":{},
   "poses":{
-   "Intake":{
+   "RightIntake":{
     "x":{
      "exp":"1.568638563156128 m",
      "val":1.568638563156128
@@ -19,7 +19,7 @@
      "val":0.9364135164428876
     }
    },
-   "PreIntake":{
+   "RightPreIntake":{
     "x":{
      "exp":"1.8109960556030273 m",
      "val":1.8109960556030271

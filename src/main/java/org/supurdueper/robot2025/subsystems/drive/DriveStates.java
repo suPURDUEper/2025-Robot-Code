@@ -72,10 +72,10 @@ public class DriveStates {
     }
 
     private Command driveFacingProcessor() {
-        return driveFacingAngle(Rotation2d.kCCW_90deg);
+        return driveFacingAngle(Rotation2d.kCW_90deg);
     }
 
     private Command driveFacingNet() {
-        return driveFacingAngle(Rotation2d.k180deg);
+        return driveFacingAngle(Rotation2d.kZero);
     }
 }

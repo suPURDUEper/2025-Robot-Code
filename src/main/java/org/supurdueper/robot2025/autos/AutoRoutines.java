@@ -43,7 +43,7 @@ public class AutoRoutines {
                 Commands.runOnce(() -> RobotContainer.getClimber().zero()),
                 // Commands.runOnce(() -> RobotContainer.getElevator().zero()),
                 RobotContainer.getClimber().clearFunnel().withTimeout(1.5),
-                RobotContainer.getFunnelTilt().intake().withTimeout(2),
+                RobotContainer.getFunnelTilt().intake().withTimeout(0.75),
                 RobotContainer.getClimber().home());
     }
 
@@ -70,15 +70,18 @@ public class AutoRoutines {
                 Commands.runOnce(() -> drivetrain.setControl(stop())),
                 score(),
                 Commands.deadline(firstCoralToHp, intake()),
-                Commands.waitSeconds(0.5),
-                hpToSecondCoral,
                 Commands.runOnce(() -> drivetrain.setControl(stop())),
-                Commands.waitSeconds(0.5),
-                secondCoralToHp,
+                Commands.waitUntil(RobotStates.hasCoral),
+                Commands.deadline(hpToSecondCoral, l4()),
                 Commands.runOnce(() -> drivetrain.setControl(stop())),
+                score(),
                 Commands.waitSeconds(0.5),
-                hpToThirdCoral,
-                Commands.runOnce(() -> drivetrain.setControl(stop())));
+                Commands.deadline(secondCoralToHp, intake()),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                Commands.waitUntil(RobotStates.hasCoral),
+                Commands.deadline(hpToThirdCoral, l4()),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                score());
     }
 
     public void chain(AutoTrajectory a, AutoTrajectory b, double delaySeconds) {

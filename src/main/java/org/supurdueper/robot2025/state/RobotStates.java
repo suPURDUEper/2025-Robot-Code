@@ -52,7 +52,7 @@ public final class RobotStates {
 
     // Actions
     public static final Trigger actionScore = driver.rightBumper.and(teleop).or(auto_score);
-    public static final Trigger actionIntake = driver.leftBumper.and(teleop.or(auto_intake));
+    public static final Trigger actionIntake = driver.leftBumper.and(teleop).or(auto_intake);
     public static final Trigger actionUnjam = driver.start.and(teleop);
     public static final Trigger actionL1 = driver.A.and(teleop);
     public static final Trigger actionL2 = driver.B.and(teleop);
@@ -65,7 +65,7 @@ public final class RobotStates {
     public static final Trigger actionRightAim = driver.rightTrigger.and(teleop);
     public static final Trigger actionHome = new Trigger(() -> false);
     public static final Trigger actionClimbPrep = driver.upDpad.and(teleop);
-    public static final Trigger actionClimb = driver.downDpad.and(teleop).or(hasCage);
+    public static final Trigger actionClimb = driver.downDpad.and(teleop);
     public static final Trigger rezeroFieldHeading = driver.select.and(teleop);
 
     private RobotStates() {

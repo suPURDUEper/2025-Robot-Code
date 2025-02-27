@@ -35,7 +35,8 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
 
     public void bindCommands() {
         RobotStates.actionClimbPrep.onTrue(climbPrep());
-        RobotStates.actionClimb.onTrue(home());
+        RobotStates.actionClimb.onTrue(retract());
+        RobotStates.hasCage.onTrue(retract());
     }
 
     public Command climbPrep() {
@@ -48,6 +49,10 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
 
     public Command home() {
         return goToPosition(kHome).withName("Climber.Home");
+    }
+
+    public Command retract() {
+        return goToPosition(kRetract).withName("Climber.Retract");
     }
 
     public Command runFowards() {

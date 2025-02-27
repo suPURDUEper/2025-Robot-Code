@@ -81,7 +81,7 @@ public class RobotContainer {
         // testController.rightStickY.onTrue((funnelTilt.setVoltage(testController::getManualWristVoltage)));
         testController.start.onTrue(Commands.runOnce(() -> climber.zero(), climber));
         testController.A.onTrue(funnelTilt.startingPosition());
-        driver.rightStickY.whileTrue(wrist.setVoltage(testController::getManualWristVoltage));
+        funnelTilt.setDefaultCommand(funnelTilt.setVoltage(testController::getManualWristVoltage));
         // testController.B.onTrue(coralScore.l2L3());
 
     }
