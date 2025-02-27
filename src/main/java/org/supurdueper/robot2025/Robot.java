@@ -37,7 +37,8 @@ public class Robot extends SupurdueperRobot {
         autoChooser = new SendableChooser<>();
         autoChooser.addOption("Three Coral Right", autoRoutines.threeCoralAutoRight());
         autoChooser.addOption("Three Coral Left", autoRoutines.threeCoralAutoLeft());
-        autoChooser.addOption("Nothing", Commands.none());
+        autoChooser.addOption("Clear Algae Right", autoRoutines.threeCoralClearAlgaeAutoRight());
+        autoChooser.addOption("Clear Algae Left", autoRoutines.threeCoralClearAlgaeAutoLeft());
         autoChooser.setDefaultOption("Nothing", Commands.none());
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
