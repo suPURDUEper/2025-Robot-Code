@@ -27,6 +27,10 @@ public class AutoRoutines {
         return Commands.runEnd(() -> RobotStates.setAutol4(true), () -> RobotStates.setAutol4(false));
     }
 
+    public Command l3() {
+        return Commands.runEnd(() -> RobotStates.setAutol4(true), () -> RobotStates.setAutol4(false));
+    }
+
     public Command intake() {
         return Commands.runEnd(() -> RobotStates.setAutointake(true), () -> RobotStates.setAutointake(false));
     }

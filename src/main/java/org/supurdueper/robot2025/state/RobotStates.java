@@ -28,7 +28,12 @@ public final class RobotStates {
     @Setter
     private static boolean autointake = false;
 
+    @Getter
+    @Setter
+    private static boolean autol3 = false;
+
     public static final Trigger auto_l4 = new Trigger(RobotStates::isAutol4).and(auto);
+    public static final Trigger auto_l3 = new Trigger(RobotStates::isAutol3).and(auto);
     public static final Trigger auto_score = new Trigger(RobotStates::isAutoscore).and(auto);
     public static final Trigger auto_intake = new Trigger(RobotStates::isAutointake).and(auto);
 
@@ -56,7 +61,7 @@ public final class RobotStates {
     public static final Trigger actionUnjam = driver.start.and(teleop);
     public static final Trigger actionL1 = driver.A.and(teleop);
     public static final Trigger actionL2 = driver.B.and(teleop);
-    public static final Trigger actionL3 = driver.X.and(teleop);
+    public static final Trigger actionL3 = driver.X.and(teleop).or(auto_l3);
     public static final Trigger actionL4 = driver.Y.and(teleop).or(auto_l4);
     public static final Trigger actionReef = actionL2.or(actionL3).or(actionL4);
     public static final Trigger actionNet = driver.extraLeft.and(teleop);
