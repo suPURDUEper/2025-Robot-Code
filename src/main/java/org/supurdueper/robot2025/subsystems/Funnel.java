@@ -53,7 +53,7 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
     // trying to make the intake motors wait until everything is at position
 
     public Command unjam() {
-        return runEnd(this::runReverse, this::stop);
+        return runEnd(this::runReverse, this::stop).withName("Funnel.Unjam");
     }
 
     @Override

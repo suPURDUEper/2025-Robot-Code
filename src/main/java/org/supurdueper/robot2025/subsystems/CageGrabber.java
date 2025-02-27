@@ -8,21 +8,32 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
+import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Constants;
+import org.supurdueper.robot2025.Robot;
+import org.supurdueper.robot2025.state.RobotStates;
 
-public class CageGrabber extends TalonFXSubsystem {
+public class CageGrabber extends TalonFXSubsystem implements SupurdueperSubsystem {
 
-    private DigitalInput cageSensor;
+    private DigitalInput cageSensorLeft;
+    private DigitalInput cageSensorRight;
 
     public CageGrabber() {
-        cageSensor = new DigitalInput(Constants.DIOPort.climberBreakbeam1);
+        cageSensorLeft = new DigitalInput(Constants.DIOPort.climberBreakbeam1);
+        cageSensorRight = new DigitalInput(Constants.DIOPort.climberBreakbeam2);
         configureMotors();
+        Robot.add(this);
     }
 
-    private boolean hasCage() {
-        return cageSensor.get();
+    @Override
+    public void bindCommands() {
+        RobotStates.actionClimbPrep.onTrue(grabCage());
+    }
+
+    public boolean hasCage() {
+        return cageSensorLeft.get() && cageSensorRight.get();
     }
 
     private void grab() {
@@ -34,12 +45,14 @@ public class CageGrabber extends TalonFXSubsystem {
     }
 
     public Command grabCage() {
-        return runEnd(this::grab, this::stop).until(this::hasCage);
+        return runEnd(this::grab, this::stop).until(this::hasCage).withName("CageGrabber.GrabCage");
     }
 
     @Override
     public void periodic() {
         super.periodic();
+        DogLog.log("CageGrabber/HasCageLeft", cageSensorLeft.get());
+        DogLog.log("CageGrabber/HasCageRight", cageSensorRight.get());
         DogLog.log("CageGrabber/HasCage", hasCage());
     }
 

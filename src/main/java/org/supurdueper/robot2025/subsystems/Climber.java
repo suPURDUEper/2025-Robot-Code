@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
+import org.supurdueper.robot2025.Robot;
 import org.supurdueper.robot2025.state.RobotStates;
 
 public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
@@ -29,18 +30,24 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
 
     public Climber() {
         configureMotors();
+        Robot.add(this);
+    }
+
+    public void bindCommands() {
+        RobotStates.actionClimbPrep.onTrue(climbPrep());
+        RobotStates.actionClimb.onTrue(home());
     }
 
     public Command climbPrep() {
-        return goToPosition(kClimb);
+        return goToPosition(kClimb).withName("Climber.ClimbPrep");
     }
 
     public Command clearFunnel() {
-        return goToPosition(kClearFunnel);
+        return goToPosition(kClearFunnel).withName("Climber.ClearFunnel");
     }
 
     public Command home() {
-        return goToPosition(kHome);
+        return goToPosition(kHome).withName("Climber.Home");
     }
 
     public Command runFowards() {
@@ -52,7 +59,7 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
     }
 
     public Command stopCommand() {
-        return run(this::stop);
+        return run(this::stop).withName("Climber.Stop");
     }
 
     public void zero() {
@@ -150,11 +157,6 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
     @Override
     public boolean brakeMode() {
         return true;
-    }
-
-    public void bindCommands() {
-        RobotStates.actionClimbPrep.onTrue(climbPrep());
-        RobotStates.actionClimb.onTrue(home());
     }
 
     @Override
