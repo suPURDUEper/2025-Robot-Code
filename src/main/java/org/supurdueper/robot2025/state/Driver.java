@@ -25,6 +25,8 @@ public class Driver extends Gamepad {
     public final Trigger net_lsc = leftStickClick;
     public final Trigger leftAutoAlign_lt = leftTrigger;
     public final Trigger rightAutoAlign_rt = rightTrigger;
+    public final Trigger climbPrep_dUp = upDpad;
+    public final Trigger climb_dDown = downDpad;
 
     // /* Use the right stick to set a cardinal direction to aim at */
     public final Trigger driving;

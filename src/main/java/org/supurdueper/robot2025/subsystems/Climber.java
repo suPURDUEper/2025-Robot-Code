@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
+import org.supurdueper.robot2025.state.RobotStates;
 
 public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
 
@@ -151,7 +152,10 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
         return true;
     }
 
-    public void bindCommands() {}
+    public void bindCommands() {
+        RobotStates.actionClimbPrep.onTrue(climbPrep());
+        RobotStates.actionClimb.onTrue(home());
+    }
 
     @Override
     public boolean followerInverted() {

@@ -63,8 +63,8 @@ public final class RobotStates {
     public static final Trigger actionLeftAim = driver.leftAutoAlign_lt.and(teleop);
     public static final Trigger actionRightAim = driver.rightAutoAlign_rt.and(teleop);
     public static final Trigger actionHome = Trigger.kFalse;
-    public static final Trigger actionClimbPrep = Trigger.kFalse;
-    public static final Trigger actionClimb = Trigger.kFalse;
+    public static final Trigger actionClimbPrep = driver.climbPrep_dUp.and(teleop);
+    public static final Trigger actionClimb = driver.climb_dDown.and(teleop);
 
     private RobotStates() {
         throw new IllegalStateException("Utility class");

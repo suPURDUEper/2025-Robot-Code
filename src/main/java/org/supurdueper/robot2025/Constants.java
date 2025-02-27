@@ -82,8 +82,8 @@ public final class Constants {
         public static final Distance kBottomHeight = Inches.of(0);
         public static final Distance kIntakeHeight = Inches.of(0);
         public static final Distance kL1Height = Inches.of(1);
-        public static final Distance kL2Height = Inches.of(10.31);
-        public static final Distance kL3Height = Inches.of(26);
+        public static final Distance kL2Height = Inches.of(10.8);
+        public static final Distance kL3Height = Inches.of(27);
         public static final Distance kL4Height = Inches.of(56);
         public static final Distance kProcessorHeight = Inches.of(1);
         public static final Distance kNetHeight = Inches.of(55);
@@ -151,8 +151,8 @@ public final class Constants {
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(40).withStatorCurrentLimitEnable(true);
         public static final Voltage scoreVoltage = Volts.of(12);
-        public static final Voltage scoreL1Voltage = Volts.of(12);
-        public static final Voltage scoreL2L3Voltage = Volts.of(12);
+        public static final Voltage scoreL1Voltage = Volts.of(8);
+        public static final Voltage scoreL2L3Voltage = Volts.of(6);
         public static final Voltage scoreL4Voltage = Volts.of(12);
         public static final Voltage backupVoltage = Volts.of(-2);
         public static final Voltage unJamVoltage = Volts.of(-6);
