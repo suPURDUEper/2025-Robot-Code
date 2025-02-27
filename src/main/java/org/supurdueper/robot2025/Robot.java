@@ -35,8 +35,10 @@ public class Robot extends SupurdueperRobot {
         autoFactory = RobotContainer.getDrivetrain().createAutoFactory();
         autoRoutines = new AutoRoutines(autoFactory);
         autoChooser = new SendableChooser<>();
-        autoChooser.addOption("Three Coral Right", autoRoutines.threeCoralAuto());
+        autoChooser.addOption("Three Coral Right", autoRoutines.threeCoralAutoRight());
+        autoChooser.addOption("Three Coral Left", autoRoutines.threeCoralAutoLeft());
         autoChooser.addOption("Nothing", Commands.none());
+        autoChooser.setDefaultOption("Nothing", Commands.none());
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
         choreoAutoChooser = new AutoChooser();

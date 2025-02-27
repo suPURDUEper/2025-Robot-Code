@@ -17,6 +17,8 @@ import org.supurdueper.robot2025.subsystems.drive.Drivetrain;
 public class AutoRoutines {
     private final AutoFactory m_factory;
     private final Drivetrain drivetrain;
+    private final String trajNameR = "auto3coralRight";
+    private final String trajNameL = "auto3coralLeft";
 
     public AutoRoutines(AutoFactory factory) {
         m_factory = factory;
@@ -24,10 +26,6 @@ public class AutoRoutines {
     }
 
     public Command l4() {
-        return Commands.runEnd(() -> RobotStates.setAutol4(true), () -> RobotStates.setAutol4(false));
-    }
-
-    public Command l3() {
         return Commands.runEnd(() -> RobotStates.setAutol4(true), () -> RobotStates.setAutol4(false));
     }
 
@@ -59,16 +57,45 @@ public class AutoRoutines {
                         Rotation2d.k180deg)));
     }
 
-    public Command threeCoralAuto() {
-        String trajName = "auto3coral";
-        Command startToFirstCoral = m_factory.trajectoryCmd(trajName, 0);
-        Command firstCoralToHp = m_factory.trajectoryCmd(trajName, 1);
-        Command hpToSecondCoral = m_factory.trajectoryCmd(trajName, 2);
-        Command secondCoralToHp = m_factory.trajectoryCmd(trajName, 3);
-        Command hpToThirdCoral = m_factory.trajectoryCmd(trajName, 4);
+    public Command threeCoralAutoRight() {
+        
+        Command startToFirstCoral = m_factory.trajectoryCmd(trajNameR, 0);
+        Command firstCoralToHp = m_factory.trajectoryCmd(trajNameR, 1);
+        Command hpToSecondCoral = m_factory.trajectoryCmd(trajNameR, 2);
+        Command secondCoralToHp = m_factory.trajectoryCmd(trajNameR, 3);
+        Command hpToThirdCoral = m_factory.trajectoryCmd(trajNameR, 4);
 
         return Commands.sequence(
-                m_factory.resetOdometry(trajName),
+                m_factory.resetOdometry(trajNameR),
+                new ScheduleCommand(untangle()),
+                Commands.deadline(startToFirstCoral, l4()),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                score(),
+                Commands.deadline(firstCoralToHp, intake()),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                Commands.waitUntil(RobotStates.hasCoral),
+                Commands.deadline(hpToSecondCoral, l4()),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                score(),
+                Commands.waitSeconds(0.5),
+                Commands.deadline(secondCoralToHp, intake()),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                Commands.waitUntil(RobotStates.hasCoral),
+                Commands.deadline(hpToThirdCoral, l4()),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                score());
+    }
+
+    public Command threeCoralAutoLeft() {
+        
+        Command startToFirstCoral = m_factory.trajectoryCmd(trajNameL, 0);
+        Command firstCoralToHp = m_factory.trajectoryCmd(trajNameL, 1);
+        Command hpToSecondCoral = m_factory.trajectoryCmd(trajNameL, 2);
+        Command secondCoralToHp = m_factory.trajectoryCmd(trajNameL, 3);
+        Command hpToThirdCoral = m_factory.trajectoryCmd(trajNameL, 4);
+
+        return Commands.sequence(
+                m_factory.resetOdometry(trajNameL),
                 new ScheduleCommand(untangle()),
                 Commands.deadline(startToFirstCoral, l4()),
                 Commands.runOnce(() -> drivetrain.setControl(stop())),
