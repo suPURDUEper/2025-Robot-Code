@@ -55,115 +55,120 @@ public class Drivetrain extends TunerSwerveDrivetrain implements SupurdueperSubs
     private DriveTelemetry telemetry = new DriveTelemetry();
 
     private DriveStates driveStates;
-
-    /**
-     * Constructs a CTRE SwerveDrivetrain using the specified constants.
-     *
-     * <p>This constructs the underlying hardware devices, so users should not construct the devices themselves. If they
-     * need the devices, they can access them through getters in the classes.
-     *
-     * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
-     * @param modules Constants for each specific module
-     */
-    public Drivetrain(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... modules) {
-        super(drivetrainConstants, MapleSimSwerveDrivetrain.regulateModuleConstantsForSimulation(modules));
-        if (Utils.isSimulation()) {
-            startSimThread();
+        private SwerveRequest stopRequest = new SwerveRequest.Idle();
+    
+        /**
+         * Constructs a CTRE SwerveDrivetrain using the specified constants.
+         *
+         * <p>This constructs the underlying hardware devices, so users should not construct the devices themselves. If they
+         * need the devices, they can access them through getters in the classes.
+         *
+         * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
+         * @param modules Constants for each specific module
+         */
+        public Drivetrain(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... modules) {
+            super(drivetrainConstants, MapleSimSwerveDrivetrain.regulateModuleConstantsForSimulation(modules));
+            if (Utils.isSimulation()) {
+                startSimThread();
+            }
+            registerTelemetry(telemetry::telemeterize);
+            driveStates = new DriveStates(this);
+            Robot.add(this);
         }
-        registerTelemetry(telemetry::telemeterize);
-        driveStates = new DriveStates(this);
-        Robot.add(this);
-    }
-
-    /**
-     * Constructs a CTRE SwerveDrivetrain using the specified constants.
-     *
-     * <p>This constructs the underlying hardware devices, so users should not construct the devices themselves. If they
-     * need the devices, they can access them through getters in the classes.
-     *
-     * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
-     * @param odometryUpdateFrequency The frequency to run the odometry loop. If unspecified or set to 0 Hz, this is 250
-     *     Hz on CAN FD, and 100 Hz on CAN 2.0.
-     * @param modules Constants for each specific module
-     */
-    public Drivetrain(
-            SwerveDrivetrainConstants drivetrainConstants,
-            double odometryUpdateFrequency,
-            SwerveModuleConstants<?, ?, ?>... modules) {
-        super(
-                drivetrainConstants,
-                odometryUpdateFrequency,
-                MapleSimSwerveDrivetrain.regulateModuleConstantsForSimulation(modules));
-        if (Utils.isSimulation()) {
-            startSimThread();
+    
+        /**
+         * Constructs a CTRE SwerveDrivetrain using the specified constants.
+         *
+         * <p>This constructs the underlying hardware devices, so users should not construct the devices themselves. If they
+         * need the devices, they can access them through getters in the classes.
+         *
+         * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
+         * @param odometryUpdateFrequency The frequency to run the odometry loop. If unspecified or set to 0 Hz, this is 250
+         *     Hz on CAN FD, and 100 Hz on CAN 2.0.
+         * @param modules Constants for each specific module
+         */
+        public Drivetrain(
+                SwerveDrivetrainConstants drivetrainConstants,
+                double odometryUpdateFrequency,
+                SwerveModuleConstants<?, ?, ?>... modules) {
+            super(
+                    drivetrainConstants,
+                    odometryUpdateFrequency,
+                    MapleSimSwerveDrivetrain.regulateModuleConstantsForSimulation(modules));
+            if (Utils.isSimulation()) {
+                startSimThread();
+            }
+            registerTelemetry(telemetry::telemeterize);
+            driveStates = new DriveStates(this);
+            Robot.add(this);
         }
-        registerTelemetry(telemetry::telemeterize);
-        driveStates = new DriveStates(this);
-        Robot.add(this);
-    }
-
-    /**
-     * Constructs a CTRE SwerveDrivetrain using the specified constants.
-     *
-     * <p>This constructs the underlying hardware devices, so users should not construct the devices themselves. If they
-     * need the devices, they can access them through getters in the classes.
-     *
-     * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
-     * @param odometryUpdateFrequency The frequency to run the odometry loop. If unspecified or set to 0 Hz, this is 250
-     *     Hz on CAN FD, and 100 Hz on CAN 2.0.
-     * @param odometryStandardDeviation The standard deviation for odometry calculation in the form [x, y, theta]ᵀ, with
-     *     units in meters and radians
-     * @param visionStandardDeviation The standard deviation for vision calculation in the form [x, y, theta]ᵀ, with
-     *     units in meters and radians
-     * @param modules Constants for each specific module
-     */
-    public Drivetrain(
-            SwerveDrivetrainConstants drivetrainConstants,
-            double odometryUpdateFrequency,
-            Matrix<N3, N1> odometryStandardDeviation,
-            Matrix<N3, N1> visionStandardDeviation,
-            SwerveModuleConstants<?, ?, ?>... modules) {
-        super(
-                drivetrainConstants,
-                odometryUpdateFrequency,
-                odometryStandardDeviation,
-                visionStandardDeviation,
-                MapleSimSwerveDrivetrain.regulateModuleConstantsForSimulation(modules));
-        if (Utils.isSimulation()) {
-            startSimThread();
+    
+        /**
+         * Constructs a CTRE SwerveDrivetrain using the specified constants.
+         *
+         * <p>This constructs the underlying hardware devices, so users should not construct the devices themselves. If they
+         * need the devices, they can access them through getters in the classes.
+         *
+         * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
+         * @param odometryUpdateFrequency The frequency to run the odometry loop. If unspecified or set to 0 Hz, this is 250
+         *     Hz on CAN FD, and 100 Hz on CAN 2.0.
+         * @param odometryStandardDeviation The standard deviation for odometry calculation in the form [x, y, theta]ᵀ, with
+         *     units in meters and radians
+         * @param visionStandardDeviation The standard deviation for vision calculation in the form [x, y, theta]ᵀ, with
+         *     units in meters and radians
+         * @param modules Constants for each specific module
+         */
+        public Drivetrain(
+                SwerveDrivetrainConstants drivetrainConstants,
+                double odometryUpdateFrequency,
+                Matrix<N3, N1> odometryStandardDeviation,
+                Matrix<N3, N1> visionStandardDeviation,
+                SwerveModuleConstants<?, ?, ?>... modules) {
+            super(
+                    drivetrainConstants,
+                    odometryUpdateFrequency,
+                    odometryStandardDeviation,
+                    visionStandardDeviation,
+                    MapleSimSwerveDrivetrain.regulateModuleConstantsForSimulation(modules));
+            if (Utils.isSimulation()) {
+                startSimThread();
+            }
+            registerTelemetry(telemetry::telemeterize);
+            driveStates = new DriveStates(this);
+            Robot.add(this);
         }
-        registerTelemetry(telemetry::telemeterize);
-        driveStates = new DriveStates(this);
-        Robot.add(this);
-    }
-
-    /**
-     * Creates a new auto factory for this drivetrain.
-     *
-     * @return AutoFactory for this drivetrain
-     */
-    public AutoFactory createAutoFactory() {
-        return createAutoFactory((sample, isStart) -> {});
-    }
-
-    /**
-     * Creates a new auto factory for this drivetrain with the given trajectory logger.
-     *
-     * @param trajLogger Logger for the trajectory
-     * @return AutoFactory for this drivetrain
-     */
-    public AutoFactory createAutoFactory(TrajectoryLogger<SwerveSample> trajLogger) {
-        return new AutoFactory(() -> getState().Pose, this::resetPose, this::followPath, true, this, trajLogger);
-    }
-
-    /**
-     * Returns a command that applies the specified control request to this swerve drivetrain.
-     *
-     * @param request Function returning the request to apply
-     * @return Command to run
-     */
-    public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
-        return run(() -> this.setControl(requestSupplier.get()));
+    
+        /**
+         * Creates a new auto factory for this drivetrain.
+         *
+         * @return AutoFactory for this drivetrain
+         */
+        public AutoFactory createAutoFactory() {
+            return createAutoFactory((sample, isStart) -> {});
+        }
+    
+        /**
+         * Creates a new auto factory for this drivetrain with the given trajectory logger.
+         *
+         * @param trajLogger Logger for the trajectory
+         * @return AutoFactory for this drivetrain
+         */
+        public AutoFactory createAutoFactory(TrajectoryLogger<SwerveSample> trajLogger) {
+            return new AutoFactory(() -> getState().Pose, this::resetPose, this::followPath, true, this, trajLogger);
+        }
+    
+        /**
+         * Returns a command that applies the specified control request to this swerve drivetrain.
+         *
+         * @param request Function returning the request to apply
+         * @return Command to run
+         */
+        public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
+            return run(() -> this.setControl(requestSupplier.get()));
+        }
+    
+        public Command stop() {
+            return runOnce(() -> setControl(stopRequest));
     }
 
     /**
@@ -187,6 +192,7 @@ public class Drivetrain extends TunerSwerveDrivetrain implements SupurdueperSubs
                 .withWheelForceFeedforwardsX(sample.moduleForcesX())
                 .withWheelForceFeedforwardsY(sample.moduleForcesY()));
     }
+    
 
     @Override
     public void periodic() {

@@ -62,7 +62,7 @@ public final class Constants {
         public static final Voltage kIntakeVoltage = Volts.of(12);
         public static final Current kHoldCurrent = Amps.of(8);
         public static final Voltage kNetScoreVoltage = Volts.of(-12);
-        public static final Time kNetScoreTime = Seconds.of(0.5);
+        public static final Time kNetScoreTime = Seconds.of(1.5);
         public static final Voltage kProcessorScoreVoltage = Volts.of(-12);
         public static final Voltage kHoldVoltage = Volts.of(2);
         public static final Time kProcessorScoreTime = Seconds.of(0.5);
