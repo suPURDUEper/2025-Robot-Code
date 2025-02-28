@@ -17,8 +17,8 @@ import org.supurdueper.robot2025.subsystems.drive.Drivetrain;
 public class AutoRoutines {
     private final AutoFactory m_factory;
     private final Drivetrain drivetrain;
-    private final String rightTrajName = "auto3coralRight";
-    private final String leftTrajName = "auto3coralLeft";
+    private final String rightTrajName = "auto3coralright";
+    private final String leftTrajName = "auto3coralleft";
 
     public AutoRoutines(AutoFactory factory) {
         m_factory = factory;
@@ -74,15 +74,15 @@ public class AutoRoutines {
     }
 
     public Command threeCoralClearAlgaeAutoRight() {
-        return threeCoralAuto(rightTrajName);
+        return threeCoralClearBall(rightTrajName);
     }
 
     public Command threeCoralClearAlgaeAutoLeft() {
-        return threeCoralAuto(leftTrajName);
+        return threeCoralClearBall(leftTrajName);
     }
 
     public Command threeCoralAuto(String trajName) {
-        
+
         Command startToFirstCoral = m_factory.trajectoryCmd(trajName, 0);
         Command firstCoralToHp = m_factory.trajectoryCmd(trajName, 1);
         Command hpToSecondCoral = m_factory.trajectoryCmd(trajName, 2);
@@ -111,12 +111,13 @@ public class AutoRoutines {
     }
 
     public Command threeCoralClearBall(String trajName) {
-        
+
         Command startToFirstCoral = m_factory.trajectoryCmd(trajName, 0);
         Command firstCoralToHp = m_factory.trajectoryCmd(trajName, 1);
         Command hpToSecondCoral = m_factory.trajectoryCmd(trajName, 2);
         Command secondCoralToHp = m_factory.trajectoryCmd(trajName, 3);
         Command hpToThirdCoral = m_factory.trajectoryCmd(trajName, 4);
+        Command thirdCoralBackwards = m_factory.trajectoryCmd(trajName, 5);
 
         return Commands.sequence(
                 m_factory.resetOdometry(trajName),
@@ -124,7 +125,9 @@ public class AutoRoutines {
                 Commands.deadline(startToFirstCoral, l3()),
                 Commands.runOnce(() -> drivetrain.setControl(stop())),
                 score(),
-                Commands.deadline(firstCoralToHp, Commands.waitSeconds(0.25).andThen(score()).andThen(intake())),
+                Commands.deadline(
+                        firstCoralToHp,
+                        Commands.waitSeconds(0.25).andThen(score()).andThen(intake())),
                 Commands.runOnce(() -> drivetrain.setControl(stop())),
                 Commands.waitUntil(RobotStates.hasCoral),
                 Commands.deadline(hpToSecondCoral, l4()),
@@ -136,7 +139,8 @@ public class AutoRoutines {
                 Commands.waitUntil(RobotStates.hasCoral),
                 Commands.deadline(hpToThirdCoral, l2()),
                 Commands.runOnce(() -> drivetrain.setControl(stop())),
-                score());
+                score(),
+                thirdCoralBackwards);
     }
 
     public void chain(AutoTrajectory a, AutoTrajectory b, double delaySeconds) {

@@ -151,7 +151,7 @@ public final class Constants {
     public final class FunnelConstants {
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(40).withStatorCurrentLimitEnable(true);
-        public static final Voltage kIntakeVoltage = Volts.of(9);
+        public static final Voltage kIntakeVoltage = Volts.of(7);
         public static final Voltage kUnjamVoltage = Volts.of(-4);
     }
 
