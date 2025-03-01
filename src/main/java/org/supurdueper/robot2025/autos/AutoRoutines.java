@@ -150,4 +150,16 @@ public class AutoRoutines {
     public SwerveRequest stop() {
         return new SwerveRequest.Idle();
     }
+
+    public Command nothing(String trajName) {
+        return Commands.sequence(m_factory.resetOdometry(trajName), new ScheduleCommand(untangle()));
+    }
+
+    public Command nothingRight() {
+        return nothing(rightTrajName);
+    }
+
+    public Command nothingLeft() {
+        return nothing(leftTrajName);
+    }
 }
