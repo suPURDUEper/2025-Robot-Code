@@ -92,6 +92,7 @@ public class AutoRoutines {
         return Commands.sequence(
                 m_factory.resetOdometry(trajName),
                 new ScheduleCommand(untangle()),
+                Commands.waitSeconds(0.1),
                 Commands.deadline(startToFirstCoral, l4()),
                 Commands.runOnce(() -> drivetrain.setControl(stop())),
                 score(),
@@ -122,6 +123,7 @@ public class AutoRoutines {
         return Commands.sequence(
                 m_factory.resetOdometry(trajName),
                 new ScheduleCommand(untangle()),
+                Commands.waitSeconds(0.1),
                 Commands.deadline(startToFirstCoral, l3()),
                 Commands.runOnce(() -> drivetrain.setControl(stop())),
                 score(),
