@@ -31,6 +31,7 @@ import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Robot;
+import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.RobotStates;
 
 public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
@@ -67,7 +68,11 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
     }
 
     public Command l4() {
-        return goToPosition(kL4Angle).withName("Wrist.L4");
+        return Commands.waitSeconds(0.25)
+                .andThen(Commands.waitUntil(RobotContainer.getElevator().isAtPosition())
+                        .withTimeout(2))
+                .andThen(goToPosition(kL4Angle))
+                .withName("Wrist.L4");
     }
 
     public Command net() {

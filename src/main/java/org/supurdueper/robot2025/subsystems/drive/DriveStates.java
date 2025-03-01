@@ -41,6 +41,7 @@ public class DriveStates {
         atIntake.and(RobotStates.teleop).whileTrue(driveFacingHpStation());
         atProcessor.and(RobotStates.teleop).whileTrue(driveFacingProcessor());
         atNet.and(RobotStates.teleop).whileTrue(driveFacingNet());
+        actionClimbPrep.onTrue(normalTeleopDrive());
         rezeroFieldHeading.onTrue(
                 Commands.runOnce(() -> drivetrain.resetRotation(AllianceFlip.apply(Rotation2d.kZero))));
     }
