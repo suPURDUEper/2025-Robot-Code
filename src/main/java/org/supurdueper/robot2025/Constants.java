@@ -188,6 +188,7 @@ public final class Constants {
         public static final Angle kAbsEncoderOffset = Degrees.of(101.485065);
         public static final Angle kIntakePosition = Degrees.of(-20.5);
         public static final Angle kStartPosition = Degrees.of(-90);
+        public static final Angle kL1Position = Degrees.of(45);
         public static final Angle kClimbPosition = Degrees.of(90);
     }
 

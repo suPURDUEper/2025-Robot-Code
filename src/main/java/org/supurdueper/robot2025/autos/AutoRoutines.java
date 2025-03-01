@@ -127,11 +127,7 @@ public class AutoRoutines {
                 Commands.deadline(startToFirstCoral, l3()),
                 Commands.runOnce(() -> drivetrain.setControl(stop())),
                 score(),
-                Commands.deadline(
-                        firstCoralToHp,
-                        Commands.waitSeconds(1)
-                                .andThen(RobotContainer.getAlgaeScore().scoreProcessor()),
-                        intake()),
+                Commands.deadline(firstCoralToHp, Commands.waitSeconds(1).andThen(score()), intake()),
                 Commands.runOnce(() -> drivetrain.setControl(stop())),
                 Commands.waitUntil(RobotStates.hasCoral),
                 Commands.deadline(hpToSecondCoral, l4()),

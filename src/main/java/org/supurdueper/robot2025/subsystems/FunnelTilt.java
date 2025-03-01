@@ -43,6 +43,10 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
         return goToPosition(kIntakePosition).withName("FunnelTilt.Intake");
     }
 
+    public Command l1() {
+        return goToPosition(kL1Position).withName("FunnelTilt.l1");
+    }
+
     public Command startingPosition() {
         return goToPosition(kStartPosition).withName("FunnelTilt.StartingPosition");
     }
@@ -56,6 +60,8 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
         motor.setPosition(getAbsEncoder());
         RobotStates.actionClimbPrep.onTrue(climbPosition());
         RobotStates.actionIntake.onTrue(intake());
+        RobotStates.actionL1.onTrue(intake());
+        RobotStates.actionScore.and(RobotStates.atL1).onTrue(l1());
     }
 
     @Override

@@ -28,6 +28,7 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
     public void bindCommands() {
         RobotStates.actionIntake.onTrue(intake().until(RobotStates.hasCoral));
         RobotStates.actionUnjam.whileTrue(unjam());
+        RobotStates.actionL1.onTrue(stopCommand());
     }
 
     @Override
@@ -49,6 +50,10 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
 
     public Command test() {
         return Commands.waitUntil(atPosition).andThen(runEnd(this::run, this::stop));
+    }
+
+    public Command stopCommand() {
+        return Commands.runOnce(this::stop);
     }
     // trying to make the intake motors wait until everything is at position
 
