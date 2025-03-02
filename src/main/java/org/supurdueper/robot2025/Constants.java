@@ -89,7 +89,7 @@ public final class Constants {
         public static final Distance kIntakeHeight = Inches.of(0);
         public static final Distance kL1Height = Inches.of(1);
         public static final Distance kL2Height = Inches.of(10.8);
-        public static final Distance kL3Height = Inches.of(26.5);
+        public static final Distance kL3Height = Inches.of(26.75);
         public static final Distance kL4Height = Inches.of(56);
         public static final Distance kProcessorHeight = Inches.of(1);
         public static final Distance kNetHeight = Inches.of(55);
