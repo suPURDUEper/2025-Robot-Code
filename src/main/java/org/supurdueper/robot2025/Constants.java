@@ -186,7 +186,7 @@ public final class Constants {
         public static final double kSensorToMechanismRatio = 27.0 / 1.0 * 44.0 / 14.0;
         public static final double kAbsEncoderRatio = 48.0 / 80.0;
         public static final Angle kAbsEncoderOffset = Degrees.of(101.485065);
-        public static final Angle kIntakePosition = Degrees.of(-20.5);
+        public static final Angle kIntakePosition = Degrees.of(-20);
         public static final Angle kStartPosition = Degrees.of(-90);
         public static final Angle kL1Position = Degrees.of(45);
         public static final Angle kClimbPosition = Degrees.of(90);
