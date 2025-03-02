@@ -68,6 +68,7 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         RobotStates.actionIntake.onTrue(setHeight(ElevatorHeight.Intake));
         RobotStates.hasCoral.onTrue(setHeight(ElevatorHeight.Home));
         RobotStates.actionHome.onTrue(setHeight(ElevatorHeight.Home));
+        RobotStates.actionClimbPrep.onTrue(setHeight(ElevatorHeight.Home));
         RobotStates.actionScore.onFalse(
                 Commands.waitSeconds(0.25).unless(this::atNet).andThen(setHeight(ElevatorHeight.Home)));
     }

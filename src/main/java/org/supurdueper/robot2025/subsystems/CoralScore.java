@@ -80,6 +80,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     @Override
     public void bindCommands() {
         RobotStates.actionIntake.onTrue(loadCoral());
+        RobotStates.actionL1.onTrue(runOnce(this::stop));
         RobotStates.actionScore.and(RobotStates.atL1).onTrue(l1());
         RobotStates.actionScore.and(RobotStates.atL2.or(RobotStates.atL3)).onTrue(l2L3());
         RobotStates.actionScore.and(RobotStates.atL4).onTrue(l4());
