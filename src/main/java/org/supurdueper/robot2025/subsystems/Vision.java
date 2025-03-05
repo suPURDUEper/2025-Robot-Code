@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.Meters;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.supurdueper.lib.LimelightHelpers;
@@ -27,6 +28,7 @@ public class Vision extends SubsystemBase {
 
     private void updatePose3dAprilTag(String limelightName) {
         Drivetrain drivetrain = RobotContainer.getDrivetrain();
+        Translation2d currentPoseEstimate = drivetrain.getState().Pose.getTranslation();
         boolean doRejectUpdate = false;
         LimelightHelpers.SetRobotOrientation(
                 limelightName, drivetrain.getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
@@ -38,6 +40,9 @@ public class Vision extends SubsystemBase {
             return;
         }
         if (mt2.tagCount == 0) {
+            return;
+        }
+        if (mt2.pose.getTranslation().getDistance(currentPoseEstimate) > 1) { // 1 meter
             return;
         }
         if (!doRejectUpdate) {

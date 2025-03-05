@@ -83,8 +83,7 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
     }
 
     protected boolean atPosition() {
-        return (getSetpoint().minus(getPosition())).abs(Units.Rotations) < (positionTolerance.in(Units.Rotations))
-                && motor.getVelocity().getValueAsDouble() < 0.1;
+        return (getSetpoint().minus(getPosition())).abs(Units.Rotations) < (positionTolerance.in(Units.Rotations));
     }
 
     public PositionSubsystem() {

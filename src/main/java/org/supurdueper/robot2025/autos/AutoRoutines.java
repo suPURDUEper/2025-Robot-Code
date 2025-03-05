@@ -92,6 +92,7 @@ public class AutoRoutines {
         return Commands.sequence(
                 m_factory.resetOdometry(trajName),
                 new ScheduleCommand(untangle()),
+                Commands.waitSeconds(0.1),
                 Commands.deadline(startToFirstCoral, l4()),
                 Commands.runOnce(() -> drivetrain.setControl(stop())),
                 score(),
@@ -122,12 +123,11 @@ public class AutoRoutines {
         return Commands.sequence(
                 m_factory.resetOdometry(trajName),
                 new ScheduleCommand(untangle()),
+                Commands.waitSeconds(0.1),
                 Commands.deadline(startToFirstCoral, l3()),
                 Commands.runOnce(() -> drivetrain.setControl(stop())),
                 score(),
-                Commands.deadline(
-                        firstCoralToHp,
-                        Commands.waitSeconds(0.25).andThen(score()).andThen(intake())),
+                Commands.deadline(firstCoralToHp, Commands.waitSeconds(1).andThen(score()), intake()),
                 Commands.runOnce(() -> drivetrain.setControl(stop())),
                 Commands.waitUntil(RobotStates.hasCoral),
                 Commands.deadline(hpToSecondCoral, l4()),
@@ -149,5 +149,17 @@ public class AutoRoutines {
 
     public SwerveRequest stop() {
         return new SwerveRequest.Idle();
+    }
+
+    public Command nothing(String trajName) {
+        return Commands.sequence(m_factory.resetOdometry(trajName), new ScheduleCommand(untangle()));
+    }
+
+    public Command nothingRight() {
+        return nothing(rightTrajName);
+    }
+
+    public Command nothingLeft() {
+        return nothing(leftTrajName);
     }
 }

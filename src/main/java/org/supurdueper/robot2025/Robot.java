@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import org.ironmaple.simulation.SimulatedArena;
 import org.supurdueper.BuildConstants;
 import org.supurdueper.lib.subsystems.SupurdueperRobot;
@@ -39,7 +38,9 @@ public class Robot extends SupurdueperRobot {
         autoChooser.addOption("Three Coral Left", autoRoutines.threeCoralAutoLeft());
         autoChooser.addOption("Clear Algae Right", autoRoutines.threeCoralClearAlgaeAutoRight());
         autoChooser.addOption("Clear Algae Left", autoRoutines.threeCoralClearAlgaeAutoLeft());
-        autoChooser.setDefaultOption("Nothing", Commands.none());
+        autoChooser.setDefaultOption("Nothing Right", autoRoutines.nothingRight());
+        autoChooser.setDefaultOption("Nothing Left", autoRoutines.nothingLeft());
+
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
         choreoAutoChooser = new AutoChooser();
