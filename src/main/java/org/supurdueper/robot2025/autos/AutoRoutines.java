@@ -1,7 +1,6 @@
 package org.supurdueper.robot2025.autos;
 
 import choreo.auto.AutoFactory;
-import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -49,10 +48,6 @@ public class AutoRoutines {
                 Commands.runOnce(() -> RobotStates.setAutoscore(false)));
     }
 
-    public Command dumpCoral() {
-        return RobotContainer.getAlgaeScore().scoreProcessor();
-    }
-
     public static Command untangle() {
         return Commands.sequence(
                 Commands.runOnce(() -> RobotContainer.getClimber().zero()),
@@ -86,32 +81,6 @@ public class AutoRoutines {
         return threeCoralClearBall(leftTrajName);
     }
 
-    public AutoRoutine threeCoralAutoRoutine(String trajName) {
-        AutoRoutine routine = m_factory.newRoutine(trajName);
-
-        AutoTrajectory startToFirstCoral = routine.trajectory(trajName, 0);
-        AutoTrajectory firstCoralToHp = routine.trajectory(trajName, 1);
-        AutoTrajectory hpToSecondCoral = routine.trajectory(trajName, 2);
-        AutoTrajectory secondCoralToHp = routine.trajectory(trajName, 3);
-        AutoTrajectory hpToThirdCoral = routine.trajectory(trajName, 4);
-
-        routine.active().onTrue(Commands.sequence(
-                m_factory.resetOdometry(trajName),
-                new ScheduleCommand(untangle()),
-                startToFirstCoral.cmd()));
-
-        // Stop the drive at the end of every routine
-        routine.anyDone(startToFirstCoral, firstCoralToHp, hpToSecondCoral, secondCoralToHp, hpToThirdCoral)
-                .onTrue(drivetrain.stop());
-
-        chainWithScore(startToFirstCoral, firstCoralToHp);
-        chainWithHpLoad(firstCoralToHp, hpToSecondCoral);
-        chainWithScore(hpToSecondCoral, secondCoralToHp);
-        chainWithHpLoad(secondCoralToHp, hpToThirdCoral);
-
-        return routine;
-    }
-
     public Command threeCoralAuto(String trajName) {
 
         Command startToFirstCoral = m_factory.trajectoryCmd(trajName, 0);
@@ -124,20 +93,20 @@ public class AutoRoutines {
                 m_factory.resetOdometry(trajName),
                 new ScheduleCommand(untangle()),
                 Commands.deadline(startToFirstCoral, l4()),
-                drivetrain.stop(),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
                 score(),
                 Commands.deadline(firstCoralToHp, intake()),
-                drivetrain.stop(),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
                 Commands.waitUntil(RobotStates.hasCoral),
                 Commands.deadline(hpToSecondCoral, l4()),
-                drivetrain.stop(),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
                 score(),
                 Commands.waitSeconds(0.5),
                 Commands.deadline(secondCoralToHp, intake()),
-                drivetrain.stop(),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
                 Commands.waitUntil(RobotStates.hasCoral),
                 Commands.deadline(hpToThirdCoral, l4()),
-                drivetrain.stop(),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
                 score());
     }
 
@@ -154,34 +123,28 @@ public class AutoRoutines {
                 m_factory.resetOdometry(trajName),
                 new ScheduleCommand(untangle()),
                 Commands.deadline(startToFirstCoral, l3()),
-                drivetrain.stop(),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
                 score(),
                 Commands.deadline(
                         firstCoralToHp,
-                        Commands.waitSeconds(0.75).andThen(dumpCoral()).andThen(intake())),
-                drivetrain.stop(),
+                        Commands.waitSeconds(0.25).andThen(score()).andThen(intake())),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
                 Commands.waitUntil(RobotStates.hasCoral),
                 Commands.deadline(hpToSecondCoral, l4()),
-                drivetrain.stop(),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
                 score(),
                 Commands.waitSeconds(0.5),
                 Commands.deadline(secondCoralToHp, intake()),
-                drivetrain.stop(),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
                 Commands.waitUntil(RobotStates.hasCoral),
                 Commands.deadline(hpToThirdCoral, l2()),
-                drivetrain.stop(),
+                Commands.runOnce(() -> drivetrain.setControl(stop())),
                 score(),
                 thirdCoralBackwards);
     }
 
-    public void chainWithScore(AutoTrajectory a, AutoTrajectory b) {
-        a.atTimeBeforeEnd(1).onTrue(l4());
-        a.done().onTrue(score().andThen(b.cmd()));
-    }
-
-    public void chainWithHpLoad(AutoTrajectory a, AutoTrajectory b) {
-        a.atTimeBeforeEnd(0.5).onTrue(intake());
-        a.done().and(RobotStates.hasCoral).onTrue(b.cmd());
+    public void chain(AutoTrajectory a, AutoTrajectory b, double delaySeconds) {
+        a.doneDelayed(delaySeconds).onTrue(b.cmd());
     }
 
     public SwerveRequest stop() {
