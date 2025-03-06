@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.Meters;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.supurdueper.lib.LimelightHelpers;
@@ -31,7 +32,7 @@ public class Vision extends SubsystemBase {
         LimelightHelpers.SetRobotOrientation(
                 limelightName, drivetrain.getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
-        if (Math.abs(drivetrain.getState().Speeds.omegaRadiansPerSecond) > Units.degreesToRadians(720)) {
+        if (Math.abs(drivetrain.getState().Speeds.omegaRadiansPerSecond) > Units.degreesToRadians(360)) {
             return;
         }
         if (mt2 == null) {
@@ -40,20 +41,28 @@ public class Vision extends SubsystemBase {
         if (mt2.tagCount == 0) {
             return;
         }
-        if (!doRejectUpdate) {
-            drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.6, .6, 9999999));
-            drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
+        if(mt2.rawFiducials.length == 1){
+            double ambiguity = mt2.rawFiducials[0].ambiguity;
+            if(ambiguity >= .7){
+                return;
+            }
         }
+        drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+        drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
         DogLog.log("Vision/" + limelightName + " Pose (mt2)", mt2.pose);
     }
 
     public static double getTargetId(String limelightName) {
-        return LimelightHelpers.getFiducialID(limelightName);
+        double[] t2d = LimelightHelpers.getT2DArray(limelightName);
+        if (t2d.length != 17)
+            return -1;
+        if (t2d[1] == 0) 
+            return -1;
+        return t2d[9];
     }
 
-    public static double getHorizonalOffsetFromTargetMeters(String limelightName) {
-        return LimelightHelpers.getTargetPose3d_RobotSpace(limelightName)
-                .getMeasureX()
-                .in(Meters);
+
+    public static Pose2d getRobotPoseTargetSpace(String limelightName) {
+        return LimelightHelpers.toPose2D(LimelightHelpers.getLimelightNTDoubleArray(limelightName, "botpose_targetspace"));
     }
 }

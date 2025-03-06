@@ -8,21 +8,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import org.supurdueper.lib.utils.AllianceFlip;
 import org.supurdueper.robot2025.Constants.DriveConstants;
 import org.supurdueper.robot2025.FieldConstants;
 
 public class FieldCentricFacingReef extends FieldCentricFacingAngle {
-
-    Translation2d reefCenterBlue = FieldConstants.Reef.center;
-    final List<Rotation2d> reefAngles = List.of(
-            Rotation2d.kZero,
-            new Rotation2d(Math.PI / 3),
-            new Rotation2d(2 * Math.PI / 3),
-            Rotation2d.kPi,
-            new Rotation2d(4 * Math.PI / 3),
-            new Rotation2d(5 * Math.PI / 3));
 
     public FieldCentricFacingReef() {
         HeadingController.setPID(DriveConstants.headingKp, DriveConstants.headingKi, DriveConstants.headingKd);
@@ -30,11 +20,10 @@ public class FieldCentricFacingReef extends FieldCentricFacingAngle {
 
     @Override
     public StatusCode apply(SwerveControlParameters parameters, SwerveModule<?, ?, ?>... modulesToApply) {
-        Translation2d reefCenter = AllianceFlip.apply(reefCenterBlue);
-        Rotation2d facingReefCenter =
-                reefCenter.minus(parameters.currentPose.getTranslation()).getAngle();
-        TargetDirection =
-                Collections.min(reefAngles, Comparator.comparing(angle -> absDistanceRadians(angle, facingReefCenter)));
+        Translation2d reefCenter = AllianceFlip.apply(FieldConstants.Reef.center);
+        Rotation2d facingReefCenter = reefCenter.minus(parameters.currentPose.getTranslation()).getAngle();
+        TargetDirection = Collections.min(FieldConstants.reefAngles,
+                Comparator.comparing(angle -> absDistanceRadians(angle, facingReefCenter)));
         if (ForwardPerspective == ForwardPerspectiveValue.OperatorPerspective) {
             // This is an angle from the frame of the reference of the field. Subtract
             // the operator persepctive to counteract CTRE adding it later

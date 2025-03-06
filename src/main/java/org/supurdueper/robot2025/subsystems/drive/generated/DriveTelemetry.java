@@ -2,8 +2,14 @@ package org.supurdueper.robot2025.subsystems.drive.generated;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import org.supurdueper.lib.LimelightHelpers;
+import org.supurdueper.robot2025.FieldConstants;
+import org.supurdueper.robot2025.subsystems.Vision;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
+
+import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -130,5 +136,10 @@ public class DriveTelemetry {
 
             SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
         }
+        int id = FieldConstants.getClosestReefTagId(state.Pose.getRotation());
+        DogLog.log("Drivetrain/Closest Reef Apriltag", id);
+        // LimelightHelpers.setPriorityTagID(Vision.leftLimelightName, id);
+        // LimelightHelpers.setPriorityTagID(Vision.rightLimelimeName, id);
+
     }
 }
