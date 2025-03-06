@@ -78,6 +78,7 @@ public class RobotContainer {
     public void configureBindings() {
         climber.setDefaultCommand(climber.setVoltage(testController::getManualElevatorVoltage));
         testController.Y.onTrue(climber.home());
+        testController.X.onTrue(climber.climbPrep());
         // testController.rightStickY.onTrue((funnelTilt.setVoltage(testController::getManualWristVoltage)));
         testController.start.onTrue(Commands.runOnce(() -> climber.zero(), climber));
         testController.A.onTrue(funnelTilt.startingPosition());

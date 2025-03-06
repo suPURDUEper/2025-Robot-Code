@@ -62,7 +62,7 @@ public final class Constants {
         public static final Voltage kIntakeVoltage = Volts.of(12);
         public static final Current kHoldCurrent = Amps.of(8);
         public static final Voltage kNetScoreVoltage = Volts.of(-12);
-        public static final Time kNetScoreTime = Seconds.of(1.5);
+        public static final Time kNetScoreTime = Seconds.of(0.5);
         public static final Voltage kProcessorScoreVoltage = Volts.of(-12);
         public static final Voltage kHoldVoltage = Volts.of(2);
         public static final Time kProcessorScoreTime = Seconds.of(0.5);
@@ -89,7 +89,7 @@ public final class Constants {
         public static final Distance kIntakeHeight = Inches.of(0);
         public static final Distance kL1Height = Inches.of(1);
         public static final Distance kL2Height = Inches.of(10.8);
-        public static final Distance kL3Height = Inches.of(27);
+        public static final Distance kL3Height = Inches.of(26.75);
         public static final Distance kL4Height = Inches.of(56);
         public static final Distance kProcessorHeight = Inches.of(1);
         public static final Distance kNetHeight = Inches.of(55);
@@ -160,7 +160,7 @@ public final class Constants {
                 new CurrentLimitsConfigs().withStatorCurrentLimit(40).withStatorCurrentLimitEnable(true);
         public static final Voltage scoreVoltage = Volts.of(12);
         public static final Voltage scoreL1Voltage = Volts.of(8);
-        public static final Voltage scoreL2L3Voltage = Volts.of(6);
+        public static final Voltage scoreL2L3Voltage = Volts.of(4);
         public static final Voltage scoreL4Voltage = Volts.of(12);
         public static final Voltage backupVoltage = Volts.of(-2);
         public static final Voltage unJamVoltage = Volts.of(-6);
@@ -186,8 +186,9 @@ public final class Constants {
         public static final double kSensorToMechanismRatio = 27.0 / 1.0 * 44.0 / 14.0;
         public static final double kAbsEncoderRatio = 48.0 / 80.0;
         public static final Angle kAbsEncoderOffset = Degrees.of(101.485065);
-        public static final Angle kIntakePosition = Degrees.of(-20.5);
+        public static final Angle kIntakePosition = Degrees.of(-20);
         public static final Angle kStartPosition = Degrees.of(-90);
+        public static final Angle kL1Position = Degrees.of(45);
         public static final Angle kClimbPosition = Degrees.of(90);
     }
 
