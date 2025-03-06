@@ -24,6 +24,12 @@ public class Vision extends SubsystemBase {
     public void periodic() {
         updatePose3dAprilTag(leftLimelightName);
         updatePose3dAprilTag(rightLimelimeName);
+        DogLog.log(
+                "Robot Pose Target Space (R)",
+                LimelightHelpers.getBotPose3d_TargetSpace(rightLimelimeName).getX());
+        DogLog.log(
+                "Robot Pose Target Space (L)",
+                LimelightHelpers.getBotPose3d_TargetSpace(leftLimelightName).getX());
     }
 
     private void updatePose3dAprilTag(String limelightName) {

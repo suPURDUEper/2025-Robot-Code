@@ -24,6 +24,7 @@ public class DriveStates {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second
     private final SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric();
+    private final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric();
     private final FieldCentricFacingReef fieldCentricFacingReef = new FieldCentricFacingReef();
     private final FieldCentricFacingAngle fieldCentricFacingAngle = new FieldCentricFacingAngle();
     private final FieldCentricFacingAngle fieldCentricFacingHpStation = new FieldCentricFacingHpStation();
@@ -44,6 +45,7 @@ public class DriveStates {
         actionClimbPrep.onTrue(normalTeleopDrive());
         rezeroFieldHeading.onTrue(
                 Commands.runOnce(() -> drivetrain.resetRotation(AllianceFlip.apply(Rotation2d.kZero))));
+        actionLeftAim.whileTrue(leftAlign());
     }
 
     private Command normalTeleopDrive() {
@@ -78,5 +80,15 @@ public class DriveStates {
 
     private Command driveFacingNet() {
         return driveFacingAngle(Rotation2d.kZero);
+    }
+
+    private Command leftAlign() {
+        return drivetrain.applyRequest(
+                () -> fieldCentricFacingReef.withVelocityX(driver.getDriveFwdPositive() * MaxSpeed));
+    }
+
+    private Command rightAlign() {
+        return drivetrain.applyRequest(
+                () -> fieldCentricFacingReef.withVelocityX(driver.getDriveFwdPositive() * MaxSpeed));
     }
 }
