@@ -16,6 +16,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import dev.doglog.DogLog;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
@@ -26,6 +27,7 @@ import org.supurdueper.robot2025.state.RobotStates;
 
 public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
 
+    private Servo servo = new Servo(0);
     PositionVoltage pidTuning = new PositionVoltage(0);
 
     public Climber() {
@@ -34,9 +36,11 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
     }
 
     public void bindCommands() {
-        RobotStates.actionClimbPrep.onTrue(climbPrep());
-        RobotStates.actionClimb.onTrue(retract());
-        RobotStates.hasCage.onTrue(retract());
+        RobotStates.actionClimbPrep.onTrue(disengageRatchet().andThen(climbPrep()));
+        RobotStates.actionClimb.onTrue(engageRatchet().andThen(retract()));
+        RobotStates.auto.onTrue(disengageRatchet());
+        RobotStates.teleop.onTrue(disengageRatchet());
+        RobotStates.hasCage.onTrue(engageRatchet().andThen(retract()));
     }
 
     public Command climbPrep() {
@@ -52,7 +56,10 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
     }
 
     public Command retract() {
-        return goToPosition(kRetract).withName("Climber.Retract");
+        return goToPosition(kRetract)
+                .withName("Climber.Retract")
+                .withTimeout(2.0)
+                .andThen(stopCommand());
     }
 
     public Command runFowards() {
@@ -69,6 +76,22 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
 
     public void zero() {
         motor.setPosition(0);
+    }
+
+    public void engageServoSetpoint() {
+        servo.set(kEngagePercent);
+    }
+
+    public void disengageServoSetpoint() {
+        servo.set(kUnengagePercent);
+    }
+
+    public Command engageRatchet() {
+        return runOnce(this::engageServoSetpoint);
+    }
+
+    public Command disengageRatchet() {
+        return runOnce(this::disengageServoSetpoint);
     }
 
     @Override

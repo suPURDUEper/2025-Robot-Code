@@ -8,7 +8,6 @@ import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import dev.doglog.DogLog;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
 import org.supurdueper.robot2025.CanId;
@@ -31,7 +30,7 @@ public class CageGrabber extends TalonFXSubsystem implements SupurdueperSubsyste
     @Override
     public void bindCommands() {
         RobotStates.actionClimbPrep.onTrue(grabCage());
-        RobotStates.hasCage.onTrue(Commands.runOnce(this::stop));
+        // RobotStates.hasCage.onTrue(Commands.runOnce(this::stop));
     }
 
     public boolean hasCageLeft() {

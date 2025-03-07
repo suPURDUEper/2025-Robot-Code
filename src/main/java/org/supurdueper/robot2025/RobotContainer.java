@@ -81,9 +81,9 @@ public class RobotContainer {
         testController.X.onTrue(climber.climbPrep());
         // testController.rightStickY.onTrue((funnelTilt.setVoltage(testController::getManualWristVoltage)));
         testController.start.onTrue(Commands.runOnce(() -> climber.zero(), climber));
-        testController.A.onTrue(funnelTilt.startingPosition());
-        funnelTilt.setDefaultCommand(funnelTilt.setVoltage(testController::getManualWristVoltage));
-        // testController.B.onTrue(coralScore.l2L3());
-
+        // testController.A.onTrue(funnelTilt.startingPosition());
+        // funnelTilt.setDefaultCommand(funnelTilt.setVoltage(testController::getManualWristVoltage));
+        testController.B.onTrue(climber.engageRatchet());
+        testController.A.onTrue(climber.disengageRatchet());
     }
 }
