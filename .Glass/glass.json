@@ -25,6 +25,9 @@
         "Elevator": {
           "open": true
         },
+        "FunnelTilt": {
+          "open": true
+        },
         "Wrist": {
           "open": true
         },

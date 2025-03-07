@@ -134,12 +134,14 @@ public final class Constants {
         public static final double ka = 0;
         public static final double kg = 0.0;
         public static final double kHome = 0.0;
-        public static final double kRetract = -35;
-        public static final double kClearFunnel = 63.0;
-        public static final double kClimb = 140.0;
+        public static final double kRetract = -12;
+        public static final double kClearFunnel = 21.0;
+        public static final double kClimb = 48.8;
         public static final double kPositionTolerance = 1.0;
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(120).withStatorCurrentLimitEnable(true);
+        public static final double kEngagePercent = 0.75;
+        public static final double kUnengagePercent = 0;
     }
 
     public final class CageGrabberConstants {
@@ -184,12 +186,13 @@ public final class Constants {
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(40).withStatorCurrentLimitEnable(true);
         public static final double kSensorToMechanismRatio = 27.0 / 1.0 * 44.0 / 14.0;
-        public static final double kAbsEncoderRatio = 48.0 / 80.0;
+        public static final double kAbsEncoderRatio = 80.0 / 48.0;
         public static final Angle kAbsEncoderOffset = Degrees.of(101.485065);
         public static final Angle kIntakePosition = Degrees.of(-20);
         public static final Angle kStartPosition = Degrees.of(-90);
         public static final Angle kL1Position = Degrees.of(45);
         public static final Angle kClimbPosition = Degrees.of(90);
+        public static final Angle kCancoderMagnetOffset = Rotations.of(0.361572);
     }
 
     public static boolean tuningMode = true;
