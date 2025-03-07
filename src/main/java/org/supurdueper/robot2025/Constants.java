@@ -41,6 +41,9 @@ public final class Constants {
         public static final double headingKp = 10.0;
         public static final double headingKi = 0;
         public static final double headingKd = 0.75;
+        public static final double translationKp = 10.0;
+        public static final double translationKi = 0;
+        public static final double translationKd = 0.75;
     }
 
     public final class DIOPort {

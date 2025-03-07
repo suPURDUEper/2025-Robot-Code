@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import lombok.Getter;
 import lombok.Setter;
 import org.supurdueper.lib.gamepad.Gamepad;
-import org.supurdueper.lib.utils.Util;
 
 public class Driver extends Gamepad {
 
@@ -37,8 +36,8 @@ public class Driver extends Gamepad {
     /** Create a new Pilot with the default name and port. */
     public Driver() {
         super(0, kLeftStickCurve, kDeadzone, kRightStickCurve, kDeadzone, kTriggerCurve, kDeadzone);
-        driving = Util.teleop.and(leftStickX.or(leftStickY));
-        steer = Util.teleop.and(rightStickX.or(rightStickY));
+        driving = RobotStates.teleop.and(leftStickX.or(leftStickY));
+        steer = RobotStates.teleop.and(rightStickX.or(rightStickY));
     }
 
     // DRIVE METHODS

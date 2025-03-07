@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.util.function.DoubleSupplier;
 import lombok.Getter;
@@ -72,10 +73,10 @@ public abstract class Gamepad extends SubsystemBase {
     @Getter
     protected final ExpCurve triggersCurve;
 
-    protected Trigger teleop = Util.teleop;
-    protected Trigger autoMode = Util.autoMode;
-    protected Trigger testMode = Util.testMode;
-    protected Trigger disabled = Util.disabled;
+    protected Trigger teleop = RobotModeTriggers.teleop();
+    protected Trigger autoMode = RobotModeTriggers.autonomous();
+    protected Trigger testMode = RobotModeTriggers.test();
+    protected Trigger disabled = RobotModeTriggers.disabled();
 
     /** Constructs a Gamepad object with the specified configuration. */
     protected Gamepad(
