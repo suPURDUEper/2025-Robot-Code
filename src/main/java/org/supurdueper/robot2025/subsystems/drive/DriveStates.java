@@ -13,6 +13,7 @@ import org.supurdueper.robot2025.Constants.DriveConstants;
 import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.Driver;
 import org.supurdueper.robot2025.state.RobotStates;
+import org.supurdueper.robot2025.subsystems.Vision;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
 
 public class DriveStates {
@@ -28,6 +29,8 @@ public class DriveStates {
     private final FieldCentricFacingReef fieldCentricFacingReef = new FieldCentricFacingReef();
     private final FieldCentricFacingAngle fieldCentricFacingAngle = new FieldCentricFacingAngle();
     private final FieldCentricFacingAngle fieldCentricFacingHpStation = new FieldCentricFacingHpStation();
+    private final FullAutoAim leftAim = new FullAutoAim(Vision.leftLimelightName);
+    private final FullAutoAim rightAim = new FullAutoAim(Vision.rightLimelimeName);
 
     public DriveStates(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
@@ -46,6 +49,7 @@ public class DriveStates {
         rezeroFieldHeading.onTrue(
                 Commands.runOnce(() -> drivetrain.resetRotation(AllianceFlip.apply(Rotation2d.kZero))));
         actionLeftAim.whileTrue(leftAlign());
+        actionRightAim.whileTrue(rightAlign());
     }
 
     private Command normalTeleopDrive() {
@@ -83,12 +87,10 @@ public class DriveStates {
     }
 
     private Command leftAlign() {
-        return drivetrain.applyRequest(
-                () -> fieldCentricFacingReef.withVelocityX(driver.getDriveFwdPositive() * MaxSpeed));
+        return drivetrain.applyRequest(() -> leftAim);
     }
 
     private Command rightAlign() {
-        return drivetrain.applyRequest(
-                () -> fieldCentricFacingReef.withVelocityX(driver.getDriveFwdPositive() * MaxSpeed));
+        return drivetrain.applyRequest(() -> rightAim);
     }
 }

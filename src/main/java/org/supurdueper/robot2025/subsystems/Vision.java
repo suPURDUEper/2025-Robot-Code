@@ -48,9 +48,9 @@ public class Vision extends SubsystemBase {
         if (mt2.tagCount == 0) {
             return;
         }
-        if (mt2.pose.getTranslation().getDistance(currentPoseEstimate) > 1) { // 1 meter
-            return;
-        }
+        // if (mt2.pose.getTranslation().getDistance(currentPoseEstimate) > 1) { // 1 meter
+        //     return;
+        // }
         if (!doRejectUpdate) {
             drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.6, .6, 9999999));
             drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
