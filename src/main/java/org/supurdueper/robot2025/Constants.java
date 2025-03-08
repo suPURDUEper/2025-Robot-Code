@@ -190,12 +190,11 @@ public final class Constants {
                 new CurrentLimitsConfigs().withStatorCurrentLimit(40).withStatorCurrentLimitEnable(true);
         public static final double kSensorToMechanismRatio = 27.0 / 1.0 * 44.0 / 14.0;
         public static final double kAbsEncoderRatio = 80.0 / 48.0;
-        public static final Angle kAbsEncoderOffset = Degrees.of(101.485065);
+        public static final Angle kAbsEncoderOffset = Rotations.of(0.361572);
         public static final Angle kIntakePosition = Degrees.of(-20);
         public static final Angle kStartPosition = Degrees.of(-90);
         public static final Angle kL1Position = Degrees.of(45);
         public static final Angle kClimbPosition = Degrees.of(90);
-        public static final Angle kCancoderMagnetOffset = Rotations.of(0.361572);
     }
 
     public static boolean tuningMode = true;

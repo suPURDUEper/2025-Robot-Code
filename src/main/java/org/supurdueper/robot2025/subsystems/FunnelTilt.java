@@ -38,7 +38,7 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
         funnelCancoder =
                 new CANcoder(CanId.CANCODER_FUNNEL_TILT.getDeviceNumber(), CanId.CANCODER_FUNNEL_TILT.getBus());
         MagnetSensorConfigs cancoderConfig = new MagnetSensorConfigs()
-                .withMagnetOffset(kCancoderMagnetOffset)
+                .withMagnetOffset(kAbsEncoderOffset)
                 .withAbsoluteSensorDiscontinuityPoint(0.5)
                 .withSensorDirection(SensorDirectionValue.Clockwise_Positive);
         funnelCancoder.getConfigurator().apply(new CANcoderConfiguration().withMagnetSensor(cancoderConfig));

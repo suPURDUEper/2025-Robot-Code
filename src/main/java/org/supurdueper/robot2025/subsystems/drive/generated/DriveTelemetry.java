@@ -11,6 +11,7 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.interpolation.TimeInterpolatableBuffer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -30,8 +31,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 public class DriveTelemetry {
     private final double MaxSpeed =
             TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    ;
-
+            
     /** Construct a telemetry object, with the specified max speed of the robot */
     public DriveTelemetry() {
         SignalLogger.start();
@@ -141,5 +141,8 @@ public class DriveTelemetry {
         // LimelightHelpers.setPriorityTagID(Vision.leftLimelightName, id);
         // LimelightHelpers.setPriorityTagID(Vision.rightLimelimeName, id);
 
+
     }
+
+    
 }
