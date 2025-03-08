@@ -13,7 +13,7 @@ import org.supurdueper.robot2025.Constants.DriveConstants;
 import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.Driver;
 import org.supurdueper.robot2025.state.RobotStates;
-import org.supurdueper.robot2025.subsystems.Vision;
+import org.supurdueper.robot2025.subsystems.drive.FullAutoAim.Pole;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
 
 public class DriveStates {
@@ -29,8 +29,8 @@ public class DriveStates {
     private final FieldCentricFacingReef fieldCentricFacingReef = new FieldCentricFacingReef();
     private final FieldCentricFacingAngle fieldCentricFacingAngle = new FieldCentricFacingAngle();
     private final FieldCentricFacingAngle fieldCentricFacingHpStation = new FieldCentricFacingHpStation();
-    private final FullAutoAim leftAim = new FullAutoAim(Vision.leftLimelightName);
-    private final FullAutoAim rightAim = new FullAutoAim(Vision.rightLimelimeName);
+    private final FullAutoAim leftAim = new FullAutoAim(Pole.LEFT);
+    private final FullAutoAim rightAim = new FullAutoAim(Pole.RIGHT);
 
     public DriveStates(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;

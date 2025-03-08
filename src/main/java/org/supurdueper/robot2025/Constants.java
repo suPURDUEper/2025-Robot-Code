@@ -35,12 +35,14 @@ public final class Constants {
         public static final double kSlowModeScalor = 0.45;
         public static final double kDefaultTurnScalor = 0.75;
         public static final double kTurboModeScalor = 1;
+        public static final Distance leftAutoAlighOffset = Inches.of(-7);
+        public static final Distance rightAutoAlignOffset = Inches.of(6.5);
     }
 
     public static final class DriveConstants {
-        public static final double headingKp = 10.0;
+        public static final double headingKp = 5.0;
         public static final double headingKi = 0;
-        public static final double headingKd = 0.75;
+        public static final double headingKd = 0.0;
         public static final double translationKp = 10.0;
         public static final double translationKi = 0;
         public static final double translationKd = 0.75;
@@ -116,7 +118,7 @@ public final class Constants {
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
         public static final double kDegreesPerRotation = 0;
-        public static final Angle kCancoderMagnetOffset = Degrees.of(190);
+        public static final Angle kCancoderMagnetOffset = Degrees.of(145);
         public static final Angle kHomeAngle = Degrees.of(81);
         public static final Angle kIntakeAngle = Degrees.of(75.75);
         public static final Angle kL1Angle = Degrees.of(66.78);

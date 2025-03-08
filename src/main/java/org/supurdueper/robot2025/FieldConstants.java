@@ -37,7 +37,7 @@ public class FieldConstants {
             reefAngles.get(1), 17,
             reefAngles.get(2), 22,
             reefAngles.get(3), 21,
-            reefAngles.get(4), 29,
+            reefAngles.get(4), 20,
             reefAngles.get(5), 19);
     ;
     public static final Map<Rotation2d, Integer> reefAngleToAprilTagIdRed = Map.of(
@@ -48,7 +48,8 @@ public class FieldConstants {
             reefAngles.get(4), 8,
             reefAngles.get(5), 9);
 
-    // Angle passed in here is relative to the field (always facing red alliance wall)
+    // Angle passed in here is relative to the field (always facing red alliance
+    // wall)
     public static int getClosestReefTagId(Rotation2d robotAngle) {
         Rotation2d closestAngle = Collections.min(
                 reefAngles,
@@ -56,6 +57,20 @@ public class FieldConstants {
         return AllianceFlip.shouldFlip()
                 ? reefAngleToAprilTagIdRed.get(closestAngle)
                 : reefAngleToAprilTagIdBlue.get(closestAngle);
+    }
+
+    public static Pose2d getAprilTagPose(int id) {
+        Optional<Pose3d> pose = AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(id);
+        if (pose.isPresent()) {
+            return pose.get().toPose2d();
+        }
+        throw new IllegalArgumentException("Invalid Apriltag ID");
+    }
+
+    public static Pose2d getRobotPoseTargetSpace(Pose2d robotPose) {
+        int aprilTagId = FieldConstants.getClosestReefTagId(robotPose.getRotation());
+        Pose2d aprilTagPose = FieldConstants.getAprilTagPose(aprilTagId);
+        return robotPose.relativeTo(aprilTagPose).rotateBy(Rotation2d.k180deg);
     }
 
     public static final FieldType fieldType = FieldType.ANDYMARK;

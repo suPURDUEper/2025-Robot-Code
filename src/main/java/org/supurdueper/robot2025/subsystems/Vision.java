@@ -6,7 +6,6 @@ package org.supurdueper.robot2025.subsystems;
 
 import dev.doglog.DogLog;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -72,8 +71,15 @@ public class Vision extends SubsystemBase {
         return t2d[9];
     }
 
-    public static Pose2d getRobotPoseTargetSpace(String limelightName) {
-        return LimelightHelpers.toPose2D(
-                LimelightHelpers.getLimelightNTDoubleArray(limelightName, "botpose_targetspace"));
+    public static void updateIMUMode() {
+        LimelightHelpers.SetIMUMode(leftLimelightName, 3);
+    }
+
+    public static void setDisabled() {
+        LimelightHelpers.SetThrottle(leftLimelightName, 150);
+    }
+
+    public static void setEnabled() {
+        LimelightHelpers.SetThrottle(leftLimelightName, 0);
     }
 }

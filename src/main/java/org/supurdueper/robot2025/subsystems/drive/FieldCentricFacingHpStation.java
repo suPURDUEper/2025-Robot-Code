@@ -1,5 +1,7 @@
 package org.supurdueper.robot2025.subsystems.drive;
 
+import static edu.wpi.first.units.Units.*;
+
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
 import com.ctre.phoenix6.swerve.SwerveModule;
@@ -16,6 +18,7 @@ public class FieldCentricFacingHpStation extends FieldCentricFacingAngle {
 
     public FieldCentricFacingHpStation() {
         HeadingController.setPID(DriveConstants.headingKp, DriveConstants.headingKi, DriveConstants.headingKd);
+        HeadingController.setTolerance(Degrees.of(1).in(Radians));
     }
 
     @Override

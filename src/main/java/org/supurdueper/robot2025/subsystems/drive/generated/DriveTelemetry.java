@@ -21,7 +21,9 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import org.supurdueper.lib.LimelightHelpers;
 import org.supurdueper.robot2025.FieldConstants;
+import org.supurdueper.robot2025.subsystems.Vision;
 
 public class DriveTelemetry {
     private final double MaxSpeed =
@@ -133,8 +135,12 @@ public class DriveTelemetry {
         }
         int id = FieldConstants.getClosestReefTagId(state.Pose.getRotation());
         DogLog.log("Drivetrain/Closest Reef Apriltag", id);
-        // LimelightHelpers.setPriorityTagID(Vision.leftLimelightName, id);
-        // LimelightHelpers.setPriorityTagID(Vision.rightLimelimeName, id);
+        LimelightHelpers.setPriorityTagID(Vision.leftLimelightName, id);
+        LimelightHelpers.setPriorityTagID(Vision.rightLimelimeName, id);
 
+        DogLog.log(
+                "Drive/RobotPose_TargetSpace (MT1)",
+                LimelightHelpers.toPose2D(LimelightHelpers.getBotPose_TargetSpace("limelight-fr")));
+        DogLog.log("Drive/RobotPose_TargetSpace (MT2)", FieldConstants.getRobotPoseTargetSpace(state.Pose));
     }
 }

@@ -18,6 +18,7 @@ import org.ironmaple.simulation.SimulatedArena;
 import org.supurdueper.BuildConstants;
 import org.supurdueper.lib.subsystems.SupurdueperRobot;
 import org.supurdueper.robot2025.autos.AutoRoutines;
+import org.supurdueper.robot2025.subsystems.Vision;
 
 public class Robot extends SupurdueperRobot {
 
@@ -92,7 +93,9 @@ public class Robot extends SupurdueperRobot {
     }
 
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        Vision.setDisabled();
+    }
 
     @Override
     public void disabledPeriodic() {}
@@ -103,6 +106,7 @@ public class Robot extends SupurdueperRobot {
     @Override
     public void autonomousInit() {
         resetCommandsAndButtons();
+        Vision.setEnabled();
         autoChooser.getSelected().schedule();
     }
 
@@ -115,6 +119,7 @@ public class Robot extends SupurdueperRobot {
     @Override
     public void teleopInit() {
         resetCommandsAndButtons();
+        Vision.setEnabled();
     }
 
     @Override
