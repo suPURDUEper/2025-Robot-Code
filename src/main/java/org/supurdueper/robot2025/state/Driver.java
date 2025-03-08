@@ -2,6 +2,7 @@ package org.supurdueper.robot2025.state;
 
 import static org.supurdueper.robot2025.Constants.DriverConstants.*;
 
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,8 +37,8 @@ public class Driver extends Gamepad {
     /** Create a new Pilot with the default name and port. */
     public Driver() {
         super(0, kLeftStickCurve, kDeadzone, kRightStickCurve, kDeadzone, kTriggerCurve, kDeadzone);
-        driving = RobotStates.teleop.and(leftStickX.or(leftStickY));
-        steer = RobotStates.teleop.and(rightStickX.or(rightStickY));
+        driving = RobotModeTriggers.teleop().and(leftStickX.or(leftStickY));
+        steer = RobotModeTriggers.teleop().and(rightStickX.or(rightStickY));
     }
 
     // DRIVE METHODS

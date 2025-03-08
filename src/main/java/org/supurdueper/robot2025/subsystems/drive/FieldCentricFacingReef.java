@@ -21,9 +21,10 @@ public class FieldCentricFacingReef extends FieldCentricFacingAngle {
     @Override
     public StatusCode apply(SwerveControlParameters parameters, SwerveModule<?, ?, ?>... modulesToApply) {
         Translation2d reefCenter = AllianceFlip.apply(FieldConstants.Reef.center);
-        Rotation2d facingReefCenter = reefCenter.minus(parameters.currentPose.getTranslation()).getAngle();
-        TargetDirection = Collections.min(FieldConstants.reefAngles,
-                Comparator.comparing(angle -> absDistanceRadians(angle, facingReefCenter)));
+        Rotation2d facingReefCenter =
+                reefCenter.minus(parameters.currentPose.getTranslation()).getAngle();
+        TargetDirection = Collections.min(
+                FieldConstants.reefAngles, Comparator.comparing(angle -> absDistanceRadians(angle, facingReefCenter)));
         if (ForwardPerspective == ForwardPerspectiveValue.OperatorPerspective) {
             // This is an angle from the frame of the reference of the field. Subtract
             // the operator persepctive to counteract CTRE adding it later

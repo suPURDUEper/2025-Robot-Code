@@ -4,12 +4,10 @@
 
 package org.supurdueper.robot2025.subsystems;
 
-import static edu.wpi.first.units.Units.Meters;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.supurdueper.lib.LimelightHelpers;
@@ -49,9 +47,9 @@ public class Vision extends SubsystemBase {
         if (mt2.tagCount == 0) {
             return;
         }
-        if(mt2.rawFiducials.length == 1){
+        if (mt2.rawFiducials.length == 1) {
             double ambiguity = mt2.rawFiducials[0].ambiguity;
-            if(ambiguity >= .7){
+            if (ambiguity >= .7) {
                 return;
             }
         }
@@ -69,15 +67,13 @@ public class Vision extends SubsystemBase {
 
     public static double getTargetId(String limelightName) {
         double[] t2d = LimelightHelpers.getT2DArray(limelightName);
-        if (t2d.length != 17)
-            return -1;
-        if (t2d[1] == 0) 
-            return -1;
+        if (t2d.length != 17) return -1;
+        if (t2d[1] == 0) return -1;
         return t2d[9];
     }
 
-
     public static Pose2d getRobotPoseTargetSpace(String limelightName) {
-        return LimelightHelpers.toPose2D(LimelightHelpers.getLimelightNTDoubleArray(limelightName, "botpose_targetspace"));
+        return LimelightHelpers.toPose2D(
+                LimelightHelpers.getLimelightNTDoubleArray(limelightName, "botpose_targetspace"));
     }
 }

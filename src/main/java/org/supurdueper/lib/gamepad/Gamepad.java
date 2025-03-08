@@ -16,7 +16,6 @@ import java.util.function.DoubleSupplier;
 import lombok.Getter;
 import org.supurdueper.lib.Telemetry;
 import org.supurdueper.lib.utils.ExpCurve;
-import org.supurdueper.lib.utils.Util;
 
 // Gamepad class
 public abstract class Gamepad extends SubsystemBase {
