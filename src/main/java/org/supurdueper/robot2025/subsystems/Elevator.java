@@ -4,17 +4,21 @@
 
 package org.supurdueper.robot2025.subsystems;
 
-import static edu.wpi.first.units.Units.Second;
-import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.*;
 import static org.supurdueper.robot2025.Constants.ElevatorConstants.*;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
+import com.ctre.phoenix6.configs.ToFParamsConfigs;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.UpdateModeValue;
+
 import dev.doglog.DogLog;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -34,6 +38,8 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
 
     CurrentStallFilter homingDetector;
     PositionVoltage pidTuning = new PositionVoltage(0);
+    private CANrange canRange;
+    private CANrangeConfiguration canRangeConfig;
 
     public enum ElevatorHeight {
         L1,
@@ -50,6 +56,12 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
     private ElevatorHeight currentHeightState;
 
     public Elevator() {
+        canRange = new CANrange(CanId.CANRANGE_CORAL.getDeviceNumber(), CanId.CANRANGE_CORAL.getBus());
+        canRangeConfig = new CANrangeConfiguration()
+                .withToFParams(new ToFParamsConfigs()
+                .withUpdateMode(UpdateModeValue.ShortRangeUserFreq)
+                .withUpdateFrequency(50));
+        canRange.getConfigurator().apply(canRangeConfig);
         configureMotors();
         homingDetector = new CurrentStallFilter(motor.getStatorCurrent(), kHomingCurrent);
         Robot.add(this);
@@ -171,6 +183,7 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
                 "Elevator/Target Position", motorRotationToHeight(getSetpoint()).in(Units.Inches));
         DogLog.log("Elevator/At Position", atPosition());
         DogLog.log("Elevator/State", currentHeightState.toString());
+        DogLog.log("Elevator/Distance from reef", canRange.getDistance().getValue().in(Inches));
     }
 
     private Distance motorRotationToHeight(Angle motorRotations) {
