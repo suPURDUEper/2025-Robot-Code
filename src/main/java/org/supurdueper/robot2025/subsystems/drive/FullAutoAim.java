@@ -45,7 +45,6 @@ public class FullAutoAim implements SwerveRequest {
         robotCentricFacingAngle.Deadband = translationClosedLoopDeadband.in(MetersPerSecond);
         robotCentricFacingAngle.RotationalDeadband = rotationClosedLoopDeadband.in(RadiansPerSecond);
         this.driver = RobotContainer.getDriver();
-        mPathYController.setTolerance(Inch.of(1).in(Meters));
     }
 
     @Override
