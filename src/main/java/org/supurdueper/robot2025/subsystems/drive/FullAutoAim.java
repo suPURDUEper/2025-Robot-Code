@@ -8,9 +8,11 @@ import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.measure.Distance;
 import java.util.Collections;
 import java.util.Comparator;
@@ -24,10 +26,13 @@ import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
 public class FullAutoAim implements SwerveRequest {
 
     private RobotCentricFacingAngle robotCentricFacingAngle;
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxSpeed = TunerConstants.kMaxSpeed.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
 
-    private final PIDController mPathYController =
+    private final PIDController leftRightController =
             new PIDController(DriveConstants.translationKp, DriveConstants.translationKi, DriveConstants.translationKd);
+    private final ProfiledPIDController profiledLeftRightController =
+            new ProfiledPIDController(DriveConstants.translationKp, DriveConstants.translationKi, DriveConstants.translationKd,
+                    new TrapezoidProfile.Constraints(TunerConstants.kMaxSpeed.in(MetersPerSecond), TunerConstants.kMaxSpeed.in(MetersPerSecond)));
     private Driver driver;
     Pole pole;
 
@@ -70,7 +75,7 @@ public class FullAutoAim implements SwerveRequest {
         }
         double error =
                 FieldConstants.getRobotPoseTargetSpace(currentPoseFacingReef).getY() + yOffset.in(Meters);
-        robotCentricFacingAngle.VelocityY = mPathYController.calculate(error);
+        robotCentricFacingAngle.VelocityY = leftRightController.calculate(error);
         double throttle = getFieldCentricJoystick(
                 driver.getDriveFwdPositive(),
                 driver.getDriveLeftPositive(),

@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+
 import org.ironmaple.simulation.SimulatedArena;
 import org.supurdueper.BuildConstants;
 import org.supurdueper.lib.subsystems.SupurdueperRobot;
@@ -35,20 +37,23 @@ public class Robot extends SupurdueperRobot {
         autoFactory = RobotContainer.getDrivetrain().createAutoFactory();
         autoRoutines = new AutoRoutines(autoFactory);
         autoChooser = new SendableChooser<>();
-        autoChooser.addOption("Three Coral Right", autoRoutines.threeCoralAutoRight());
-        autoChooser.addOption("Three Coral Left", autoRoutines.threeCoralAutoLeft());
-        autoChooser.addOption("Clear Algae Right", autoRoutines.threeCoralClearAlgaeAutoRight());
-        autoChooser.addOption("Clear Algae Left", autoRoutines.threeCoralClearAlgaeAutoLeft());
-        autoChooser.setDefaultOption("Nothing Right", autoRoutines.nothingRight());
-        autoChooser.setDefaultOption("Nothing Left", autoRoutines.nothingLeft());
-
-        SmartDashboard.putData("Auto Chooser", autoChooser);
+        // autoChooser.addOption("Three Coral Right", autoRoutines.threeCoralAutoRight());
+        // autoChooser.addOption("Three Coral Left", autoRoutines.threeCoralAutoLeft());
+        // autoChooser.addOption("Clear Algae Right", autoRoutines.threeCoralClearAlgaeAutoRight());
+        // autoChooser.addOption("Clear Algae Left", autoRoutines.threeCoralClearAlgaeAutoLeft());
+        // autoChooser.addOption("Nothing Right", autoRoutines.nothingRight());
+        // autoChooser.setDefaultOption("Nothing Left", autoRoutines.nothingLeft());
+        // SmartDashboard.putData("Auto Chooser", autoChooser);
 
         choreoAutoChooser = new AutoChooser();
-        // choreoAutoChooser.addCmd("Three Coral Right", autoRoutines::threeCoralAuto);
-        // choreoAutoChooser.addCmd("Nothing", Commands::none);
-        // SmartDashboard.putData("Auto Chooser", choreoAutoChooser);
-        // RobotModeTriggers.autonomous().whileTrue(choreoAutoChooser.selectedCommandScheduler());
+        choreoAutoChooser.addCmd("Three Coral Right", autoRoutines::threeCoralAutoRight);
+        choreoAutoChooser.addCmd("Three Coral Left", autoRoutines::threeCoralAutoLeft);
+        choreoAutoChooser.addCmd("Clear Algae Right", autoRoutines::threeCoralClearAlgaeAutoRight);
+        choreoAutoChooser.addCmd("Clear Algae Left", autoRoutines::threeCoralClearAlgaeAutoLeft);
+        choreoAutoChooser.addCmd("Nothing Right", autoRoutines::nothingRight);
+        choreoAutoChooser.addCmd("Nothing Left", autoRoutines::nothingLeft);
+        SmartDashboard.putData(" Choreo Auto Chooser", choreoAutoChooser);
+        RobotModeTriggers.autonomous().whileTrue(choreoAutoChooser.selectedCommandScheduler());
     }
 
     @Override
@@ -98,7 +103,9 @@ public class Robot extends SupurdueperRobot {
     }
 
     @Override
-    public void disabledPeriodic() {}
+    public void disabledPeriodic() {
+        
+    }
 
     @Override
     public void disabledExit() {}
@@ -107,7 +114,7 @@ public class Robot extends SupurdueperRobot {
     public void autonomousInit() {
         resetCommandsAndButtons();
         Vision.setEnabled();
-        autoChooser.getSelected().schedule();
+        // autoChooser.getSelected().schedule();
     }
 
     @Override

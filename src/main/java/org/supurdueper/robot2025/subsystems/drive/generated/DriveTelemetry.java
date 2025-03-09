@@ -27,7 +27,7 @@ import org.supurdueper.robot2025.subsystems.Vision;
 
 public class DriveTelemetry {
     private final double MaxSpeed =
-            TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+            TunerConstants.kMaxSpeed.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
 
     /** Construct a telemetry object, with the specified max speed of the robot */
     public DriveTelemetry() {

@@ -1,7 +1,10 @@
 package org.supurdueper.robot2025.autos;
 
 import choreo.auto.AutoFactory;
+import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
+import choreo.trajectory.Trajectory;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -40,6 +43,11 @@ public class AutoRoutines {
     public Command intake() {
         return Commands.runEnd(() -> RobotStates.setAutointake(true), () -> RobotStates.setAutointake(false));
     }
+
+    private Command stopDrive() {
+        return Commands.runOnce(() -> drivetrain.setControl(stop()));
+    }
+
 
     public Command score() {
         return Commands.sequence(
@@ -94,20 +102,20 @@ public class AutoRoutines {
                 new ScheduleCommand(untangle()),
                 Commands.waitSeconds(0.1),
                 Commands.deadline(startToFirstCoral, l4()),
-                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                stopDrive(),
                 score(),
                 Commands.deadline(firstCoralToHp, intake()),
-                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                stopDrive(),
                 Commands.waitUntil(RobotStates.hasCoral),
                 Commands.deadline(hpToSecondCoral, l4()),
-                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                stopDrive(),
                 score(),
                 Commands.waitSeconds(0.5),
                 Commands.deadline(secondCoralToHp, intake()),
-                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                stopDrive(),
                 Commands.waitUntil(RobotStates.hasCoral),
                 Commands.deadline(hpToThirdCoral, l4()),
-                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                stopDrive(),
                 score());
     }
 
@@ -125,23 +133,24 @@ public class AutoRoutines {
                 new ScheduleCommand(untangle()),
                 Commands.waitSeconds(0.1),
                 Commands.deadline(startToFirstCoral, l3()),
-                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                stopDrive(),
                 score(),
                 Commands.deadline(firstCoralToHp, Commands.waitSeconds(1).andThen(score()), intake()),
-                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                stopDrive(),
                 Commands.waitUntil(RobotStates.hasCoral),
                 Commands.deadline(hpToSecondCoral, l4()),
-                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                stopDrive(),
                 score(),
                 Commands.waitSeconds(0.5),
                 Commands.deadline(secondCoralToHp, intake()),
-                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                stopDrive(),
                 Commands.waitUntil(RobotStates.hasCoral),
                 Commands.deadline(hpToThirdCoral, l2()),
-                Commands.runOnce(() -> drivetrain.setControl(stop())),
+                stopDrive(),
                 score(),
                 thirdCoralBackwards);
     }
+
 
     public void chain(AutoTrajectory a, AutoTrajectory b, double delaySeconds) {
         a.doneDelayed(delaySeconds).onTrue(b.cmd());

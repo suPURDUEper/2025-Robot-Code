@@ -87,6 +87,8 @@ public final class Constants {
         public static final double kg = 0.38;
         public static final double profileKv = 0.09;
         public static final double profileKa = 0.002;
+        public static final double recalcKv = 0.25568353813;
+        public static final double recalcKa = 0.00185553196;
         public static final Current kStatorCurrentLimit = Amps.of(80);
         public static final Current kSupplyCurrentLimit = Amps.of(40);
         public static final double kInchesPerRotation = (12.0 / 72.0) * Math.PI * 1.744 * 2;
