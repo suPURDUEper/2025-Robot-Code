@@ -1,6 +1,7 @@
 package org.supurdueper.robot2025.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
+import static org.supurdueper.robot2025.Constants.DriveConstants.*;
 import static org.supurdueper.robot2025.state.RobotStates.*;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -37,6 +38,7 @@ public class DriveStates {
         this.driver = RobotContainer.getDriver();
         fieldCentricFacingAngle.HeadingController.setPID(
                 DriveConstants.headingKp, DriveConstants.headingKi, DriveConstants.headingKd);
+        fieldCentricFacingAngle.RotationalDeadband = rotationClosedLoopDeadband.in(RadiansPerSecond);
     }
 
     public void bindCommands() {

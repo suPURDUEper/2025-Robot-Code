@@ -1,12 +1,7 @@
 package org.supurdueper.robot2025.subsystems.drive;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Inch;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Radians;
-import static org.supurdueper.robot2025.Constants.DriverConstants.leftAutoAlighOffset;
-import static org.supurdueper.robot2025.Constants.DriverConstants.rightAutoAlignOffset;
+import static edu.wpi.first.units.Units.*;
+import static org.supurdueper.robot2025.Constants.DriveConstants.*;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
@@ -46,8 +41,9 @@ public class FullAutoAim implements SwerveRequest {
         robotCentricFacingAngle = new RobotCentricFacingAngle();
         robotCentricFacingAngle.HeadingController.setPID(
                 DriveConstants.headingKp, DriveConstants.headingKi, DriveConstants.headingKd);
-        robotCentricFacingAngle.HeadingController.setTolerance(Degrees.of(2).in(Radians));
         robotCentricFacingAngle.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
+        robotCentricFacingAngle.Deadband = translationClosedLoopDeadband.in(MetersPerSecond);
+        robotCentricFacingAngle.RotationalDeadband = rotationClosedLoopDeadband.in(RadiansPerSecond);
         this.driver = RobotContainer.getDriver();
         mPathYController.setTolerance(Inch.of(1).in(Meters));
     }
@@ -62,14 +58,14 @@ public class FullAutoAim implements SwerveRequest {
                 reefCenter.minus(parameters.currentPose.getTranslation()).getAngle();
         robotCentricFacingAngle.TargetDirection = Collections.min(
                 FieldConstants.reefAngles, Comparator.comparing(angle -> absDistanceRadians(angle, facingReefCenter)));
-
         int aprilTagId = FieldConstants.getClosestReefTagId(robotCentricFacingAngle.TargetDirection);
 
-        // PID
+        // PID to specified left/right offset from apriltag
         Pose2d currentPoseFacingReef =
                 new Pose2d(parameters.currentPose.getTranslation(), robotCentricFacingAngle.TargetDirection);
 
         Distance yOffset = pole == Pole.LEFT ? leftAutoAlighOffset : rightAutoAlignOffset;
+        // Flip backside of reef based on driver preference
         if (aprilTagId == 10 || aprilTagId == 21) {
             yOffset = pole == Pole.RIGHT ? leftAutoAlighOffset : rightAutoAlignOffset;
         }
