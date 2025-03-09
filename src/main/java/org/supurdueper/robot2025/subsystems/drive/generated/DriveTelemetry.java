@@ -133,14 +133,5 @@ public class DriveTelemetry {
 
             SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
         }
-        int id = FieldConstants.getClosestReefTagId(state.Pose.getRotation());
-        DogLog.log("Drivetrain/Closest Reef Apriltag", id);
-        LimelightHelpers.setPriorityTagID(Vision.leftLimelightName, id);
-        LimelightHelpers.setPriorityTagID(Vision.rightLimelimeName, id);
-
-        DogLog.log(
-                "Drive/RobotPose_TargetSpace (MT1)",
-                LimelightHelpers.toPose2D(LimelightHelpers.getBotPose_TargetSpace("limelight-fr")));
-        DogLog.log("Drive/RobotPose_TargetSpace (MT2)", FieldConstants.getRobotPoseTargetSpace(state.Pose));
     }
 }
