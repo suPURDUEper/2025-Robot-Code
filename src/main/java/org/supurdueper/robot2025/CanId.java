@@ -37,7 +37,9 @@ public enum CanId {
 
     TALONFX_CORAL(17, "rio"),
     TALONFX_ALGAE(18, "rio"),
-    CANRANGE_CORAL(28, "rio");
+    CANRANGE_CORAL(28, "rio"),
+
+    CANDLE(29, "rio");
 
     private final int mDeviceNumber;
     private final String mBus;

@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-
 import org.ironmaple.simulation.SimulatedArena;
 import org.supurdueper.BuildConstants;
 import org.supurdueper.lib.subsystems.SupurdueperRobot;
@@ -103,9 +102,7 @@ public class Robot extends SupurdueperRobot {
     }
 
     @Override
-    public void disabledPeriodic() {
-        
-    }
+    public void disabledPeriodic() {}
 
     @Override
     public void disabledExit() {}
