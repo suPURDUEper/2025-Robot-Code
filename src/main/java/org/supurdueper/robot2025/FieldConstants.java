@@ -39,7 +39,6 @@ public class FieldConstants {
             reefAngles.get(3), 21,
             reefAngles.get(4), 20,
             reefAngles.get(5), 19);
-    ;
     public static final Map<Rotation2d, Integer> reefAngleToAprilTagIdRed = Map.of(
             reefAngles.get(0), 10,
             reefAngles.get(1), 11,
@@ -47,6 +46,9 @@ public class FieldConstants {
             reefAngles.get(3), 7,
             reefAngles.get(4), 8,
             reefAngles.get(5), 9);
+
+    public static final int[] redReefApriltagIds = {6, 7, 8, 9, 10, 11};
+    public static final int[] blueReefApriltagIds = {17, 18, 19, 20, 21, 22};
 
     // Angle passed in here is relative to the field (always facing red alliance
     // wall)

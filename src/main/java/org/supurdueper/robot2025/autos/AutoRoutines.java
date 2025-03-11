@@ -1,10 +1,7 @@
 package org.supurdueper.robot2025.autos;
 
 import choreo.auto.AutoFactory;
-import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
-import choreo.trajectory.Trajectory;
-
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -47,7 +44,6 @@ public class AutoRoutines {
     private Command stopDrive() {
         return Commands.runOnce(() -> drivetrain.setControl(stop()));
     }
-
 
     public Command score() {
         return Commands.sequence(
@@ -150,7 +146,6 @@ public class AutoRoutines {
                 score(),
                 thirdCoralBackwards);
     }
-
 
     public void chain(AutoTrajectory a, AutoTrajectory b, double delaySeconds) {
         a.doneDelayed(delaySeconds).onTrue(b.cmd());

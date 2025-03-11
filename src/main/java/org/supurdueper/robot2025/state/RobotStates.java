@@ -47,7 +47,7 @@ public final class RobotStates {
     public static final Trigger atL2 = new Trigger(RobotContainer.getElevator()::atL2);
     public static final Trigger atL3 = new Trigger(RobotContainer.getElevator()::atL3);
     public static final Trigger atL4 = new Trigger(RobotContainer.getElevator()::atL4);
-    public static final Trigger atReef = atL2.or(atL3).or(atL4);
+    public static final Trigger atReefNoL1 = atL2.or(atL3).or(atL4);
     public static final Trigger atNet = new Trigger(RobotContainer.getElevator()::atNet);
     public static final Trigger atProcessor = new Trigger(RobotContainer.getElevator()::atProcessor);
     public static final Trigger atIntake = new Trigger(RobotContainer.getElevator()::atIntake);
@@ -73,6 +73,7 @@ public final class RobotStates {
     public static final Trigger actionProcessor = driver.extraRight.and(teleop);
     public static final Trigger actionLeftAim = driver.leftTrigger.and(teleop);
     public static final Trigger actionRightAim = driver.rightTrigger.and(teleop);
+    public static final Trigger actionAim = actionLeftAim.or(actionRightAim);
     public static final Trigger actionHome = new Trigger(() -> false);
     public static final Trigger actionClimbPrep = driver.upDpad.and(teleop);
     public static final Trigger actionClimb = driver.downDpad.and(teleop);

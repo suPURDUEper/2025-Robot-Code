@@ -12,13 +12,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 import java.util.Collections;
 import java.util.Comparator;
 import org.supurdueper.lib.utils.AllianceFlip;
-import org.supurdueper.robot2025.Constants.DriveConstants;
 import org.supurdueper.robot2025.FieldConstants;
 
 public class FieldCentricFacingReef extends FieldCentricFacingAngle {
 
     public FieldCentricFacingReef() {
-        HeadingController.setPID(DriveConstants.headingKp, DriveConstants.headingKi, DriveConstants.headingKd);
+        HeadingController.setPID(headingKp, headingKi, headingKd);
         RotationalDeadband = rotationClosedLoopDeadband.in(RadiansPerSecond);
     }
 

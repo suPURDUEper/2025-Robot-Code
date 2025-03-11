@@ -43,7 +43,7 @@ public class DriveStates {
 
     public void bindCommands() {
         drivetrain.setDefaultCommand(normalTeleopDrive());
-        atReef.and(RobotStates.teleop).whileTrue(driveFacingReef());
+        atReefNoL1.and(RobotStates.teleop).whileTrue(driveFacingReef());
         atIntake.and(RobotStates.teleop).whileTrue(driveFacingHpStation());
         atProcessor.and(RobotStates.teleop).whileTrue(driveFacingProcessor());
         atNet.and(RobotStates.teleop).whileTrue(driveFacingNet());

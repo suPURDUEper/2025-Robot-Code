@@ -9,14 +9,26 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+
 import org.supurdueper.lib.LimelightHelpers;
+import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
+import org.supurdueper.lib.utils.AllianceFlip;
+import org.supurdueper.robot2025.FieldConstants;
+import org.supurdueper.robot2025.Robot;
 import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.subsystems.drive.Drivetrain;
 
-public class Vision extends SubsystemBase {
+public class Vision extends SubsystemBase implements SupurdueperSubsystem{
 
     public static final String leftLimelightName = "limelight-fl";
     public static final String rightLimelimeName = "limelight-fr";
+
+    public Vision() {
+        Robot.add(this);
+    }
+
+
 
     @Override
     public void periodic() {
@@ -81,5 +93,17 @@ public class Vision extends SubsystemBase {
 
     public static void setEnabled() {
         LimelightHelpers.SetThrottle(leftLimelightName, 0);
+    }
+
+    public static void setAprilTagFilter() {
+        int[] ids = AllianceFlip.shouldFlip() ? FieldConstants.redReefApriltagIds : FieldConstants.blueReefApriltagIds;
+        LimelightHelpers.SetFiducialIDFiltersOverride(leftLimelightName, ids);
+        LimelightHelpers.SetFiducialIDFiltersOverride(leftLimelightName, ids);
+    }
+
+    @Override
+    public void bindCommands() {
+        RobotModeTriggers.teleop().onTrue(runOnce(Vision::setAprilTagFilter));
+        RobotModeTriggers.autonomous().onTrue(runOnce(Vision::setAprilTagFilter));
     }
 }

@@ -30,9 +30,13 @@ public class FullAutoAim implements SwerveRequest {
 
     private final PIDController leftRightController =
             new PIDController(DriveConstants.translationKp, DriveConstants.translationKi, DriveConstants.translationKd);
-    private final ProfiledPIDController profiledLeftRightController =
-            new ProfiledPIDController(DriveConstants.translationKp, DriveConstants.translationKi, DriveConstants.translationKd,
-                    new TrapezoidProfile.Constraints(TunerConstants.kMaxSpeed.in(MetersPerSecond), TunerConstants.kMaxSpeed.in(MetersPerSecond)));
+    private final ProfiledPIDController profiledLeftRightController = new ProfiledPIDController(
+            DriveConstants.translationKp,
+            DriveConstants.translationKi,
+            DriveConstants.translationKd,
+            new TrapezoidProfile.Constraints(
+                    TunerConstants.kMaxSpeed.in(MetersPerSecond),
+                    TunerConstants.kMaxAcceleration.in(MetersPerSecondPerSecond)));
     private Driver driver;
     Pole pole;
 
