@@ -7,7 +7,7 @@
         }
       },
       "Robot": {
-        "CageGrabber": {
+        "DogLog": {
           "open": true
         },
         "Wrist": {
@@ -60,6 +60,7 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Pose": "Field2d",
+      "/SmartDashboard/ Choreo Auto Chooser": "String Chooser",
       "/SmartDashboard/Alerts": "Alerts",
       "/SmartDashboard/Auto Chooser": "String Chooser",
       "/SmartDashboard/Choreo Alerts": "Alerts",
@@ -78,9 +79,6 @@
     }
   },
   "NetworkTables Info": {
-    "Connections": {
-      "open": true
-    },
     "visible": true
   },
   "NetworkTables Settings": {

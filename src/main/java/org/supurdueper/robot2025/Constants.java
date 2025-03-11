@@ -17,6 +17,7 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -104,6 +105,9 @@ public final class Constants {
         public static final Distance kL4Height = Inches.of(56);
         public static final Distance kProcessorHeight = Inches.of(1);
         public static final Distance kNetHeight = Inches.of(55);
+        public static final Distance kNoCoralAway = Inches.of(0);
+        public static final Distance kOneCoralAway = Inches.of(0);
+        public static final Distance kTwoCoralAway = Inches.of(0);
     }
 
     public final class WristConstants {
@@ -124,7 +128,7 @@ public final class Constants {
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(20).withStatorCurrentLimitEnable(true);
         public static final double kDegreesPerRotation = 0;
-        public static final Angle kCancoderMagnetOffset = Degrees.of(145);
+        public static final Angle kCancoderMagnetOffset = Degrees.of(175 + 90);
         public static final Angle kHomeAngle = Degrees.of(81);
         public static final Angle kIntakeAngle = Degrees.of(75.75);
         public static final Angle kL1Angle = Degrees.of(66.78);
