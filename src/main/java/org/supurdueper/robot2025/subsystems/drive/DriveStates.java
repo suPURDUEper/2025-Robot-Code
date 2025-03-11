@@ -1,6 +1,7 @@
 package org.supurdueper.robot2025.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
+import static org.supurdueper.robot2025.Constants.DriveConstants.*;
 import static org.supurdueper.robot2025.state.RobotStates.*;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -22,7 +23,7 @@ public class DriveStates {
     private Driver driver;
 
     /* Setting up bindings for necessary control of the swerve drive platform */
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxSpeed = TunerConstants.kMaxSpeed.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second
     private final SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric();
     private final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric();
@@ -37,6 +38,7 @@ public class DriveStates {
         this.driver = RobotContainer.getDriver();
         fieldCentricFacingAngle.HeadingController.setPID(
                 DriveConstants.headingKp, DriveConstants.headingKi, DriveConstants.headingKd);
+        fieldCentricFacingAngle.RotationalDeadband = rotationClosedLoopDeadband.in(RadiansPerSecond);
     }
 
     public void bindCommands() {

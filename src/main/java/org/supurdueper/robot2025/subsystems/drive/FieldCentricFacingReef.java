@@ -1,6 +1,7 @@
 package org.supurdueper.robot2025.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
+import static org.supurdueper.robot2025.Constants.DriveConstants.*;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
@@ -18,7 +19,7 @@ public class FieldCentricFacingReef extends FieldCentricFacingAngle {
 
     public FieldCentricFacingReef() {
         HeadingController.setPID(DriveConstants.headingKp, DriveConstants.headingKi, DriveConstants.headingKd);
-        HeadingController.setTolerance(Degrees.of(1).in(Radians));
+        RotationalDeadband = rotationClosedLoopDeadband.in(RadiansPerSecond);
     }
 
     @Override

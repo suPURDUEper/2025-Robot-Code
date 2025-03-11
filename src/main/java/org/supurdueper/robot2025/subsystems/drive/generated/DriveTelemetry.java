@@ -27,7 +27,7 @@ import org.supurdueper.robot2025.subsystems.Vision;
 
 public class DriveTelemetry {
     private final double MaxSpeed =
-            TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+            TunerConstants.kMaxSpeed.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
 
     /** Construct a telemetry object, with the specified max speed of the robot */
     public DriveTelemetry() {
@@ -133,14 +133,5 @@ public class DriveTelemetry {
 
             SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
         }
-        int id = FieldConstants.getClosestReefTagId(state.Pose.getRotation());
-        DogLog.log("Drivetrain/Closest Reef Apriltag", id);
-        LimelightHelpers.setPriorityTagID(Vision.leftLimelightName, id);
-        LimelightHelpers.setPriorityTagID(Vision.rightLimelimeName, id);
-
-        DogLog.log(
-                "Drive/RobotPose_TargetSpace (MT1)",
-                LimelightHelpers.toPose2D(LimelightHelpers.getBotPose_TargetSpace("limelight-fr")));
-        DogLog.log("Drive/RobotPose_TargetSpace (MT2)", FieldConstants.getRobotPoseTargetSpace(state.Pose));
     }
 }

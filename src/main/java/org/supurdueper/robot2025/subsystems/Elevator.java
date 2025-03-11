@@ -18,7 +18,6 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.UpdateModeValue;
-
 import dev.doglog.DogLog;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
@@ -59,8 +58,8 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         canRange = new CANrange(CanId.CANRANGE_CORAL.getDeviceNumber(), CanId.CANRANGE_CORAL.getBus());
         canRangeConfig = new CANrangeConfiguration()
                 .withToFParams(new ToFParamsConfigs()
-                .withUpdateMode(UpdateModeValue.ShortRangeUserFreq)
-                .withUpdateFrequency(50));
+                        .withUpdateMode(UpdateModeValue.ShortRangeUserFreq)
+                        .withUpdateFrequency(50));
         canRange.getConfigurator().apply(canRangeConfig);
         configureMotors();
         homingDetector = new CurrentStallFilter(motor.getStatorCurrent(), kHomingCurrent);
@@ -183,7 +182,8 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
                 "Elevator/Target Position", motorRotationToHeight(getSetpoint()).in(Units.Inches));
         DogLog.log("Elevator/At Position", atPosition());
         DogLog.log("Elevator/State", currentHeightState.toString());
-        DogLog.log("Elevator/Distance from reef", canRange.getDistance().getValue().in(Inches));
+        DogLog.log(
+                "Elevator/Distance from reef", canRange.getDistance().getValue().in(Inches));
     }
 
     private Distance motorRotationToHeight(Angle motorRotations) {

@@ -18,8 +18,10 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.units.measure.Voltage;
 import org.supurdueper.lib.utils.ExpCurve;
@@ -35,8 +37,6 @@ public final class Constants {
         public static final double kSlowModeScalor = 0.45;
         public static final double kDefaultTurnScalor = 0.75;
         public static final double kTurboModeScalor = 1;
-        public static final Distance leftAutoAlighOffset = Inches.of(-7);
-        public static final Distance rightAutoAlignOffset = Inches.of(6.5);
     }
 
     public static final class DriveConstants {
@@ -46,6 +46,10 @@ public final class Constants {
         public static final double translationKp = 10.0;
         public static final double translationKi = 0;
         public static final double translationKd = 0.75;
+        public static final Distance leftAutoAlighOffset = Inches.of(-7);
+        public static final Distance rightAutoAlignOffset = Inches.of(6.5);
+        public static final AngularVelocity rotationClosedLoopDeadband = RadiansPerSecond.of(0.05);
+        public static final LinearVelocity translationClosedLoopDeadband = MetersPerSecond.of(0.05);
     }
 
     public final class DIOPort {
@@ -83,6 +87,8 @@ public final class Constants {
         public static final double kg = 0.38;
         public static final double profileKv = 0.09;
         public static final double profileKa = 0.002;
+        public static final double recalcKv = 0.25568353813;
+        public static final double recalcKa = 0.00185553196;
         public static final Current kStatorCurrentLimit = Amps.of(80);
         public static final Current kSupplyCurrentLimit = Amps.of(40);
         public static final double kInchesPerRotation = (12.0 / 72.0) * Math.PI * 1.744 * 2;

@@ -1,21 +1,18 @@
 package org.supurdueper.robot2025.subsystems.drive;
 
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Inch;
-import static edu.wpi.first.units.Units.Meters;
-import static edu.wpi.first.units.Units.MetersPerSecond;
-import static edu.wpi.first.units.Units.Radians;
-import static org.supurdueper.robot2025.Constants.DriverConstants.leftAutoAlighOffset;
-import static org.supurdueper.robot2025.Constants.DriverConstants.rightAutoAlignOffset;
+import static edu.wpi.first.units.Units.*;
+import static org.supurdueper.robot2025.Constants.DriveConstants.*;
 
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.measure.Distance;
 import java.util.Collections;
 import java.util.Comparator;
@@ -29,10 +26,13 @@ import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
 public class FullAutoAim implements SwerveRequest {
 
     private RobotCentricFacingAngle robotCentricFacingAngle;
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxSpeed = TunerConstants.kMaxSpeed.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
 
-    private final PIDController mPathYController =
+    private final PIDController leftRightController =
             new PIDController(DriveConstants.translationKp, DriveConstants.translationKi, DriveConstants.translationKd);
+    private final ProfiledPIDController profiledLeftRightController =
+            new ProfiledPIDController(DriveConstants.translationKp, DriveConstants.translationKi, DriveConstants.translationKd,
+                    new TrapezoidProfile.Constraints(TunerConstants.kMaxSpeed.in(MetersPerSecond), TunerConstants.kMaxSpeed.in(MetersPerSecond)));
     private Driver driver;
     Pole pole;
 
@@ -46,10 +46,10 @@ public class FullAutoAim implements SwerveRequest {
         robotCentricFacingAngle = new RobotCentricFacingAngle();
         robotCentricFacingAngle.HeadingController.setPID(
                 DriveConstants.headingKp, DriveConstants.headingKi, DriveConstants.headingKd);
-        robotCentricFacingAngle.HeadingController.setTolerance(Degrees.of(2).in(Radians));
         robotCentricFacingAngle.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
+        robotCentricFacingAngle.Deadband = translationClosedLoopDeadband.in(MetersPerSecond);
+        robotCentricFacingAngle.RotationalDeadband = rotationClosedLoopDeadband.in(RadiansPerSecond);
         this.driver = RobotContainer.getDriver();
-        mPathYController.setTolerance(Inch.of(1).in(Meters));
     }
 
     @Override
@@ -62,20 +62,20 @@ public class FullAutoAim implements SwerveRequest {
                 reefCenter.minus(parameters.currentPose.getTranslation()).getAngle();
         robotCentricFacingAngle.TargetDirection = Collections.min(
                 FieldConstants.reefAngles, Comparator.comparing(angle -> absDistanceRadians(angle, facingReefCenter)));
-
         int aprilTagId = FieldConstants.getClosestReefTagId(robotCentricFacingAngle.TargetDirection);
 
-        // PID
+        // PID to specified left/right offset from apriltag
         Pose2d currentPoseFacingReef =
                 new Pose2d(parameters.currentPose.getTranslation(), robotCentricFacingAngle.TargetDirection);
 
         Distance yOffset = pole == Pole.LEFT ? leftAutoAlighOffset : rightAutoAlignOffset;
+        // Flip backside of reef based on driver preference
         if (aprilTagId == 10 || aprilTagId == 21) {
             yOffset = pole == Pole.RIGHT ? leftAutoAlighOffset : rightAutoAlignOffset;
         }
         double error =
                 FieldConstants.getRobotPoseTargetSpace(currentPoseFacingReef).getY() + yOffset.in(Meters);
-        robotCentricFacingAngle.VelocityY = mPathYController.calculate(error);
+        robotCentricFacingAngle.VelocityY = leftRightController.calculate(error);
         double throttle = getFieldCentricJoystick(
                 driver.getDriveFwdPositive(),
                 driver.getDriveLeftPositive(),
