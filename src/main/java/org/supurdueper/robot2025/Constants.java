@@ -51,6 +51,7 @@ public final class Constants {
         public static final Distance rightAutoAlignOffset = Inches.of(6.5);
         public static final AngularVelocity rotationClosedLoopDeadband = RadiansPerSecond.of(0.05);
         public static final LinearVelocity translationClosedLoopDeadband = MetersPerSecond.of(0.05);
+        public static final Distance robotToBumperCenter = Inches.of(34.5/2.0);
     }
 
     public final class DIOPort {

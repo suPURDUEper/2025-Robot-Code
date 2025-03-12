@@ -20,24 +20,26 @@ import org.supurdueper.lib.utils.AllianceFlip;
 import org.supurdueper.robot2025.Constants.DriveConstants;
 import org.supurdueper.robot2025.FieldConstants;
 import org.supurdueper.robot2025.RobotContainer;
-import org.supurdueper.robot2025.state.Driver;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
 
 public class FullAutoAim implements SwerveRequest {
 
     private RobotCentricFacingAngle robotCentricFacingAngle;
     private double MaxSpeed = TunerConstants.kMaxSpeed.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-
-    private final PIDController leftRightController =
-            new PIDController(DriveConstants.translationKp, DriveConstants.translationKi, DriveConstants.translationKd);
-    private final ProfiledPIDController profiledLeftRightController = new ProfiledPIDController(
+    private final ProfiledPIDController leftRightController = new ProfiledPIDController(
             DriveConstants.translationKp,
             DriveConstants.translationKi,
             DriveConstants.translationKd,
             new TrapezoidProfile.Constraints(
                     TunerConstants.kMaxSpeed.in(MetersPerSecond),
                     TunerConstants.kMaxAcceleration.in(MetersPerSecondPerSecond)));
-    private Driver driver;
+    private final ProfiledPIDController throttleController = new ProfiledPIDController(
+        DriveConstants.translationKp,
+        DriveConstants.translationKi,
+        DriveConstants.translationKd,
+        new TrapezoidProfile.Constraints(
+                TunerConstants.kMaxSpeed.in(MetersPerSecond),
+                TunerConstants.kMaxAcceleration.in(MetersPerSecondPerSecond)));               
     Pole pole;
 
     public enum Pole {
@@ -53,7 +55,6 @@ public class FullAutoAim implements SwerveRequest {
         robotCentricFacingAngle.ForwardPerspective = ForwardPerspectiveValue.BlueAlliance;
         robotCentricFacingAngle.Deadband = translationClosedLoopDeadband.in(MetersPerSecond);
         robotCentricFacingAngle.RotationalDeadband = rotationClosedLoopDeadband.in(RadiansPerSecond);
-        this.driver = RobotContainer.getDriver();
     }
 
     @Override
@@ -73,6 +74,7 @@ public class FullAutoAim implements SwerveRequest {
                 new Pose2d(parameters.currentPose.getTranslation(), robotCentricFacingAngle.TargetDirection);
 
         Distance yOffset = pole == Pole.LEFT ? leftAutoAlighOffset : rightAutoAlignOffset;
+        Distance xOffset = DriveConstants.robotToBumperCenter;
         // Flip backside of reef based on driver preference
         if (aprilTagId == 10 || aprilTagId == 21) {
             yOffset = pole == Pole.RIGHT ? leftAutoAlighOffset : rightAutoAlignOffset;
@@ -80,11 +82,7 @@ public class FullAutoAim implements SwerveRequest {
         double error =
                 FieldConstants.getRobotPoseTargetSpace(currentPoseFacingReef).getY() + yOffset.in(Meters);
         robotCentricFacingAngle.VelocityY = leftRightController.calculate(error);
-        double throttle = getFieldCentricJoystick(
-                driver.getDriveFwdPositive(),
-                driver.getDriveLeftPositive(),
-                AllianceFlip.apply(parameters.currentPose.getRotation()));
-        robotCentricFacingAngle.VelocityX = throttle * MaxSpeed;
+        double throttle = 0;
         return robotCentricFacingAngle.apply(parameters, modulesToApply);
     }
 
@@ -92,9 +90,9 @@ public class FullAutoAim implements SwerveRequest {
         return Math.abs(angle1.minus(angle2).getRadians());
     }
 
-    private double getFieldCentricJoystick(double fwdPositive, double leftPositive, Rotation2d robotAngle) {
-        Translation2d joystickPos = new Translation2d(leftPositive, fwdPositive);
-        joystickPos = joystickPos.rotateBy(robotAngle);
-        return joystickPos.getY();
-    }
+    // private double getFieldCentricJoystick(double fwdPositive, double leftPositive, Rotation2d robotAngle) {
+    //     Translation2d joystickPos = new Translation2d(leftPositive, fwdPositive);
+    //     joystickPos = joystickPos.rotateBy(robotAngle);
+    //     return joystickPos.getY();
+    // }
 }

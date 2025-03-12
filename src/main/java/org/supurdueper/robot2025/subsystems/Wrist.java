@@ -97,10 +97,11 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
 
     @Override
     public void bindCommands() {
+        RobotStates.actionAim.and(RobotStates.atL2).onTrue(l2());
+        RobotStates.actionAim.and(RobotStates.atL3).onTrue(l3());
+        RobotStates.actionAim.and(RobotStates.atL4).onTrue(l4());
+
         RobotStates.actionL1.onTrue(l1());
-        RobotStates.actionL2.onTrue(l2());
-        RobotStates.actionL3.onTrue(l3());
-        RobotStates.actionL4.onTrue(l4());
         RobotStates.actionProcessor.onTrue(processor());
         RobotStates.actionNet.onTrue(Commands.waitSeconds(0.5).andThen(net()));
         RobotStates.actionIntake.onTrue(intake());
