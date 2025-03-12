@@ -10,7 +10,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-
 import org.supurdueper.lib.LimelightHelpers;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.lib.utils.AllianceFlip;
@@ -19,7 +18,7 @@ import org.supurdueper.robot2025.Robot;
 import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.subsystems.drive.Drivetrain;
 
-public class Vision extends SubsystemBase implements SupurdueperSubsystem{
+public class Vision extends SubsystemBase implements SupurdueperSubsystem {
 
     public static final String leftLimelightName = "limelight-fl";
     public static final String rightLimelimeName = "limelight-fr";
@@ -27,8 +26,6 @@ public class Vision extends SubsystemBase implements SupurdueperSubsystem{
     public Vision() {
         Robot.add(this);
     }
-
-
 
     @Override
     public void periodic() {

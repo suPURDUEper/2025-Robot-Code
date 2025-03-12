@@ -17,7 +17,6 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -51,7 +50,7 @@ public final class Constants {
         public static final Distance rightAutoAlignOffset = Inches.of(6.5);
         public static final AngularVelocity rotationClosedLoopDeadband = RadiansPerSecond.of(0.05);
         public static final LinearVelocity translationClosedLoopDeadband = MetersPerSecond.of(0.05);
-        public static final Distance robotToBumperCenter = Inches.of(34.5/2.0);
+        public static final Distance robotToBumperCenter = Inches.of(17.75);
     }
 
     public final class DIOPort {

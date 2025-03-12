@@ -18,7 +18,6 @@ import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.UpdateModeValue;
 import dev.doglog.DogLog;
-import edu.wpi.first.units.DistanceUnit;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
@@ -30,7 +29,6 @@ import org.supurdueper.lib.CurrentStallFilter;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
-import org.supurdueper.robot2025.Constants;
 import org.supurdueper.robot2025.Robot;
 import org.supurdueper.robot2025.state.RobotStates;
 
@@ -165,6 +163,7 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
     public Command goToHeightBlocking() {
         return goToPositionBlocking(heightToMotorRotations(getHeightSetpoint(heightState)));
     }
+
     public Distance distanceFromReef() {
         return canRange.getDistance().getValue();
     }
@@ -186,7 +185,6 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
     // public Command goToPosition(Angle motorRotations) {
     //     return run(() -> motor.setControl(pidTuning.withPosition(motorRotations)));
     // }
-
 
     public void zeroMotor() {
         motor.setPosition(0);

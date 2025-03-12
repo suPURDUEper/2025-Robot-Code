@@ -4,22 +4,20 @@
 
 package org.supurdueper.robot2025.subsystems;
 
+import static org.supurdueper.robot2025.state.RobotStates.actionRightAim;
+
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.CANdleConfiguration;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
-import static org.supurdueper.robot2025.state.RobotStates.actionRightAim;
-
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
 import org.supurdueper.robot2025.Robot;
 import org.supurdueper.robot2025.state.RobotStates;
 
-public class Lights extends SubsystemBase implements SupurdueperSubsystem{
+public class Lights extends SubsystemBase implements SupurdueperSubsystem {
     /** Creates a new Lights. */
     private CANdle candle;
 

@@ -7,7 +7,6 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,7 +18,6 @@ import java.util.Comparator;
 import org.supurdueper.lib.utils.AllianceFlip;
 import org.supurdueper.robot2025.Constants.DriveConstants;
 import org.supurdueper.robot2025.FieldConstants;
-import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
 
 public class FullAutoAim implements SwerveRequest {
@@ -34,12 +32,12 @@ public class FullAutoAim implements SwerveRequest {
                     TunerConstants.kMaxSpeed.in(MetersPerSecond),
                     TunerConstants.kMaxAcceleration.in(MetersPerSecondPerSecond)));
     private final ProfiledPIDController throttleController = new ProfiledPIDController(
-        DriveConstants.translationKp,
-        DriveConstants.translationKi,
-        DriveConstants.translationKd,
-        new TrapezoidProfile.Constraints(
-                TunerConstants.kMaxSpeed.in(MetersPerSecond),
-                TunerConstants.kMaxAcceleration.in(MetersPerSecondPerSecond)));               
+            DriveConstants.translationKp,
+            DriveConstants.translationKi,
+            DriveConstants.translationKd,
+            new TrapezoidProfile.Constraints(
+                    TunerConstants.kMaxSpeed.in(MetersPerSecond),
+                    TunerConstants.kMaxAcceleration.in(MetersPerSecondPerSecond)));
     Pole pole;
 
     public enum Pole {
