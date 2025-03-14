@@ -19,6 +19,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import java.util.function.Supplier;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
@@ -95,13 +96,12 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
     }
 
     @Override
-    public Command goToPosition(Angle motorRotations) {
-        return run(() -> motor.setControl(pidTuning.withPosition(motorRotations)));
+    public Command goToPosition(Supplier<Angle> motorRotations) {
+        return run(() -> motor.setControl(pidTuning.withPosition(motorRotations.get())));
     }
 
-    @Override
-    public Command goToPosition(double motorRotations) {
-        return run(() -> motor.setControl(pidTuning.withPosition(motorRotations)));
+    public Command goToPosition(double rotations) {
+        return goToPosition(() -> Rotations.of(rotations));
     }
 
     @Override

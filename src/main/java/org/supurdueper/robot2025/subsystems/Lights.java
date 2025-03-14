@@ -80,5 +80,6 @@ public class Lights extends SubsystemBase implements SupurdueperSubsystem {
         RobotStates.hasCoral.onTrue(setRed());
         RobotStates.actionLeftAim.or(actionRightAim).onTrue(setBlue());
         RobotStates.actionScore.onTrue(setWhite());
+        RobotStates.disabled.onTrue(setGold().ignoringDisable(true));
     }
 }

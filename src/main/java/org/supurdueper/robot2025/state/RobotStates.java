@@ -12,6 +12,7 @@ public final class RobotStates {
     public static final Trigger sim = new Trigger(RobotBase::isSimulation);
     public static final Trigger teleop = RobotModeTriggers.teleop();
     public static final Trigger auto = RobotModeTriggers.autonomous();
+    public static final Trigger disabled = RobotModeTriggers.disabled();
     public static final Driver driver = RobotContainer.getDriver();
     public static final TestController test = RobotContainer.getTestController();
 

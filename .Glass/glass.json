@@ -6,11 +6,11 @@
           "open": true
         }
       },
+      "Pose": {
+        "open": true
+      },
       "Robot": {
-        "DogLog": {
-          "open": true
-        },
-        "Wrist": {
+        "Elevator": {
           "open": true
         },
         "open": true
@@ -50,11 +50,13 @@
         "Tuning": {
           "Elevator": {
             "open": true
-          }
+          },
+          "open": true
         },
         "Wrist": {
           "open": true
-        }
+        },
+        "open": true
       }
     },
     "types": {
@@ -78,12 +80,10 @@
       "/SmartDashboard/navX-Sensor[4]": "Gyro"
     }
   },
-  "NetworkTables Info": {
-    "visible": true
-  },
   "NetworkTables Settings": {
     "mode": "Client (NT3)",
-    "serverTeam": "7457"
+    "serverTeam": "7457",
+    "visible": false
   },
   "Plots": {
     "Plot <0>": {
@@ -285,6 +285,51 @@
                 1.0
               ],
               "id": "NT:/Robot/Elevator/Target Position"
+            },
+            {
+              "color": [
+                0.3333333432674408,
+                0.658823549747467,
+                0.4078431725502014,
+                1.0
+              ],
+              "id": "NT:/Robot/Elevator/StatorCurrent"
+            }
+          ]
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <4>": {
+      "plots": [
+        {
+          "backgroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            0.8500000238418579
+          ],
+          "height": 326,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/Robot/Elevator/Target Position"
+            },
+            {
+              "color": [
+                0.8666667342185974,
+                0.5176470875740051,
+                0.32156863808631897,
+                1.0
+              ],
+              "id": "NT:/Robot/Elevator/Position"
             }
           ]
         }

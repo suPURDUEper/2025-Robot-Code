@@ -14,6 +14,9 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.ToFParamsConfigs;
+import com.ctre.phoenix6.configs.TorqueCurrentConfigs;
+import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.UpdateModeValue;
@@ -24,6 +27,7 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import java.util.function.Supplier;
 import lombok.Getter;
 import org.supurdueper.lib.CurrentStallFilter;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
@@ -37,6 +41,9 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
     CurrentStallFilter homingDetector;
     private CANrange canRange;
     private CANrangeConfiguration canRangeConfig;
+
+    private TorqueCurrentFOC currentRequest = new TorqueCurrentFOC(0);
+    private MotionMagicTorqueCurrentFOC positionCurrentRequest = new MotionMagicTorqueCurrentFOC(0);
 
     public enum ElevatorHeight {
         L1,
@@ -59,6 +66,9 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
                         .withUpdateMode(UpdateModeValue.ShortRangeUserFreq)
                         .withUpdateFrequency(50));
         canRange.getConfigurator().apply(canRangeConfig);
+        config = config.withTorqueCurrent(new TorqueCurrentConfigs()
+                .withPeakForwardTorqueCurrent(kStatorCurrentLimit)
+                .withPeakReverseTorqueCurrent(kStatorCurrentLimit.times(-1)));
         configureMotors();
         homingDetector = new CurrentStallFilter(motor.getStatorCurrent(), kHomingCurrent);
         Robot.add(this);
@@ -75,14 +85,13 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         RobotStates.actionL4.onTrue(setHeightState(ElevatorHeight.L4));
         RobotStates.actionAim.and(RobotStates.atReefNoL1).onTrue(goToHeight());
 
-        RobotStates.actionL1.onTrue(setStateAndGoToHeight(ElevatorHeight.L1));
-        RobotStates.actionProcessor.onTrue(setStateAndGoToHeight(ElevatorHeight.Processor));
-        RobotStates.actionNet.onTrue(setStateAndGoToHeight(ElevatorHeight.Net));
-        RobotStates.actionIntake.onTrue(setStateAndGoToHeight(ElevatorHeight.Intake));
-        RobotStates.hasCoral.onTrue(setStateAndGoToHeight(ElevatorHeight.Home));
-        RobotStates.actionHome.onTrue(setStateAndGoToHeight(ElevatorHeight.Home));
-        RobotStates.actionScore.onFalse(
-                Commands.waitSeconds(0.25).unless(this::atNet).andThen(setStateAndGoToHeight(ElevatorHeight.Home)));
+        // RobotStates.actionL1.onTrue(setStateAndGoToHeight(ElevatorHeight.L1));
+        // RobotStates.actionProcessor.onTrue(setStateAndGoToHeight(ElevatorHeight.Processor));
+        // RobotStates.actionNet.onTrue(setStateAndGoToHeight(ElevatorHeight.Net));
+        // RobotStates.actionIntake.onTrue(setStateAndGoToHeight(ElevatorHeight.Intake));
+        // RobotStates.actionHome.onTrue(setStateAndGoToHeight(ElevatorHeight.Home));
+        // RobotStates.actionScore.onFalse(
+        //         Commands.waitSeconds(0.25).unless(this::atNet).andThen(setStateAndGoToHeight(ElevatorHeight.Home)));
     }
 
     public Command setHeightState(ElevatorHeight height) {
@@ -156,12 +165,27 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         return setpoint;
     }
 
+    @Override
+    protected void setPosition(Angle position) {
+        motor.setControl(positionCurrentRequest.withPosition(position));
+    }
+
+    @Override
+    protected void setPosition(double position) {
+        motor.setControl(positionCurrentRequest.withPosition(position));
+    }
+
     public Command goToHeight() {
-        return goToPosition(heightToMotorRotations(getHeightSetpoint(heightState)));
+        return goToPosition(() -> heightToMotorRotations(getHeightSetpoint(heightState)))
+                .withName("goToHeight(" + heightState.toString() + ")");
     }
 
     public Command goToHeightBlocking() {
-        return goToPositionBlocking(heightToMotorRotations(getHeightSetpoint(heightState)));
+        return goToPositionBlocking(() -> heightToMotorRotations(getHeightSetpoint(heightState)));
+    }
+
+    public Command runCurrent(Supplier<Double> current) {
+        return run(() -> motor.setControl(currentRequest.withOutput(current.get())));
     }
 
     public Distance distanceFromReef() {
@@ -202,12 +226,20 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         homingDetector.periodic();
         // Log out to Glass for debugging
         DogLog.log("Elevator/Position", motorRotationToHeight(getPosition()).in(Units.Inches));
+        DogLog.log("Elevator/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
+        DogLog.log("Elevator/Motor Velocity", motor.getVelocity().getValueAsDouble());
+        DogLog.log("Elevator/Motor Acceleration", motor.getAcceleration().getValueAsDouble());
         DogLog.log(
                 "Elevator/Target Position", motorRotationToHeight(getSetpoint()).in(Units.Inches));
         DogLog.log("Elevator/At Position", atPosition());
         DogLog.log("Elevator/State", heightState.toString());
         DogLog.log(
                 "Elevator/Distance from reef", canRange.getDistance().getValue().in(Inches));
+        String commandName = "Unknown";
+        if (getCurrentCommand() != null && getCurrentCommand().getName() != null) {
+            commandName = getCurrentCommand().getName();
+        }
+        DogLog.log("Elevator/Command", commandName);
     }
 
     private Distance motorRotationToHeight(Angle motorRotations) {
@@ -233,7 +265,11 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
 
     @Override
     public MotionMagicConfigs motionMagicConfig() {
-        return new MotionMagicConfigs().withMotionMagicExpo_kA(profileKv).withMotionMagicExpo_kV(profileKa);
+        return new MotionMagicConfigs()
+                .withMotionMagicExpo_kA(profileKv)
+                .withMotionMagicExpo_kV(profileKa)
+                .withMotionMagicCruiseVelocity(profileV)
+                .withMotionMagicAcceleration(profileA);
     }
 
     @Override

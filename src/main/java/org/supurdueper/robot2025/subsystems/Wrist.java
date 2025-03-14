@@ -27,6 +27,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import java.util.function.Supplier;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
@@ -56,43 +57,43 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
     }
 
     public Command l1() {
-        return goToPosition(kL1Angle).withName("Wrist.L1");
+        return goToPosition(() -> kL1Angle).withName("Wrist.L1");
     }
 
     public Command l2() {
-        return goToPosition(kL2Angle).withName("Wrist.L2");
+        return goToPosition(() -> kL2Angle).withName("Wrist.L2");
     }
 
     public Command l3() {
-        return goToPosition(kL3Angle).withName("Wrist.L3");
+        return goToPosition(() -> kL3Angle).withName("Wrist.L3");
     }
 
     public Command l4() {
         return Commands.waitSeconds(0.25)
                 .andThen(Commands.waitUntil(RobotContainer.getElevator().isAtPosition())
                         .withTimeout(2))
-                .andThen(goToPosition(kL4Angle))
+                .andThen(goToPosition(() -> kL4Angle))
                 .withName("Wrist.L4");
     }
 
     public Command net() {
-        return goToPosition(kNetAngle).withName("Wrist.Net");
+        return goToPosition(() -> kNetAngle).withName("Wrist.Net");
     }
 
     public Command processor() {
-        return goToPosition(kProcessorAngle).withName("Wrist.Processor");
+        return goToPosition(() -> kProcessorAngle).withName("Wrist.Processor");
     }
 
     public Command intake() {
-        return goToPosition(kIntakeAngle).withName("Wrist.Intake");
+        return goToPosition(() -> kIntakeAngle).withName("Wrist.Intake");
     }
 
     public Command home() {
-        return goToPosition(kHomeAngle).withName("Wrist.Home");
+        return goToPosition(() -> kHomeAngle).withName("Wrist.Home");
     }
 
     public Command climbPrep() {
-        return goToPosition(kClimbPrep).withName("Wrist.kClimbPrep");
+        return goToPosition(() -> kClimbPrep).withName("Wrist.kClimbPrep");
     }
 
     @Override
@@ -111,8 +112,8 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
     }
 
     @Override
-    public Command goToPosition(Angle rotations) {
-        return run(() -> motor.setControl(noMagicMotion.withPosition(rotations)));
+    public Command goToPosition(Supplier<Angle> rotations) {
+        return run(() -> motor.setControl(noMagicMotion.withPosition(rotations.get())));
     }
 
     @Override

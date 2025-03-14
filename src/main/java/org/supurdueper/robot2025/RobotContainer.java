@@ -76,14 +76,18 @@ public class RobotContainer {
     }
 
     public void configureBindings() {
-        climber.setDefaultCommand(climber.setVoltage(testController::getManualElevatorVoltage));
-        testController.Y.onTrue(climber.home());
-        testController.X.onTrue(climber.climbPrep());
+        // climber.setDefaultCommand(climber.setVoltage(testController::getManualElevatorVoltage));
+        elevator.setDefaultCommand(elevator.runCurrent(() -> testController.getManualElevatorVoltage() * 4));
+        // testController.Y.onTrue(climber.home());
+        // testController.X.onTrue(climber.climbPrep());
         // testController.rightStickY.onTrue((funnelTilt.setVoltage(testController::getManualWristVoltage)));
         testController.start.onTrue(Commands.runOnce(() -> climber.zero(), climber));
         // testController.A.onTrue(funnelTilt.startingPosition());
-        // funnelTilt.setDefaultCommand(funnelTilt.setVoltage(testController::getManualWristVoltage));
-        testController.B.onTrue(climber.engageRatchet());
-        testController.A.onTrue(climber.disengageRatchet());
+        funnelTilt.setDefaultCommand(funnelTilt.setVoltage(testController::getManualWristVoltage));
+        testController.A.onTrue(elevator.setStateAndGoToHeight(Elevator.ElevatorHeight.Home));
+        testController.X.onTrue(elevator.setStateAndGoToHeight(Elevator.ElevatorHeight.L3));
+        testController.B.onTrue(elevator.setStateAndGoToHeight(Elevator.ElevatorHeight.L2));
+        testController.Y.onTrue(elevator.setStateAndGoToHeight(Elevator.ElevatorHeight.L4));
+        // testController.A.onTrue(climber.disengageRatchet());
     }
 }

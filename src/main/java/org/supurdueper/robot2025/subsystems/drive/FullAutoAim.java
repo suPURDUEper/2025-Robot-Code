@@ -7,6 +7,7 @@ import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import dev.doglog.DogLog;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -23,20 +24,19 @@ import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
 public class FullAutoAim implements SwerveRequest {
 
     private RobotCentricFacingAngle robotCentricFacingAngle;
-    private double MaxSpeed = TunerConstants.kMaxSpeed.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private final ProfiledPIDController leftRightController = new ProfiledPIDController(
             DriveConstants.translationKp,
             DriveConstants.translationKi,
             DriveConstants.translationKd,
             new TrapezoidProfile.Constraints(
-                    TunerConstants.kMaxSpeed.in(MetersPerSecond),
+                    TunerConstants.kMaxAutoAimSpeed.in(MetersPerSecond),
                     TunerConstants.kMaxAcceleration.in(MetersPerSecondPerSecond)));
     private final ProfiledPIDController throttleController = new ProfiledPIDController(
             DriveConstants.translationKp,
             DriveConstants.translationKi,
             DriveConstants.translationKd,
             new TrapezoidProfile.Constraints(
-                    TunerConstants.kMaxSpeed.in(MetersPerSecond),
+                    TunerConstants.kMaxAutoAimSpeed.in(MetersPerSecond),
                     TunerConstants.kMaxAcceleration.in(MetersPerSecondPerSecond)));
     Pole pole;
 
@@ -72,15 +72,19 @@ public class FullAutoAim implements SwerveRequest {
                 new Pose2d(parameters.currentPose.getTranslation(), robotCentricFacingAngle.TargetDirection);
 
         Distance yOffset = pole == Pole.LEFT ? leftAutoAlighOffset : rightAutoAlignOffset;
-        Distance xOffset = DriveConstants.robotToBumperCenter;
         // Flip backside of reef based on driver preference
         if (aprilTagId == 10 || aprilTagId == 21) {
             yOffset = pole == Pole.RIGHT ? leftAutoAlighOffset : rightAutoAlignOffset;
         }
-        double error =
-                FieldConstants.getRobotPoseTargetSpace(currentPoseFacingReef).getY() + yOffset.in(Meters);
-        robotCentricFacingAngle.VelocityY = leftRightController.calculate(error);
-        double throttle = 0;
+        Distance xOffset = DriveConstants.robotToBumperCenter;
+        Pose2d robotPoseTargetSpace = FieldConstants.getRobotPoseTargetSpace(currentPoseFacingReef);
+        Pose2d goalPoseTargetSpace = new Pose2d(xOffset, yOffset, robotCentricFacingAngle.TargetDirection);
+        DogLog.log("Drivetrain/Auto Aim Goal Pose", goalPoseTargetSpace);
+        DogLog.log("Drivetrain/Robot Pose Target Space", robotPoseTargetSpace);
+        double yError = robotPoseTargetSpace.getY() + goalPoseTargetSpace.getY();
+        double xError = robotPoseTargetSpace.getX() + goalPoseTargetSpace.getX();
+        robotCentricFacingAngle.VelocityY = leftRightController.calculate(yError);
+        robotCentricFacingAngle.VelocityX = throttleController.calculate(xError);
         return robotCentricFacingAngle.apply(parameters, modulesToApply);
     }
 

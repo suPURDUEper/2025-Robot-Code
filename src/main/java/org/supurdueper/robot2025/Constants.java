@@ -43,7 +43,7 @@ public final class Constants {
         public static final double headingKp = 5.0;
         public static final double headingKi = 0;
         public static final double headingKd = 0.0;
-        public static final double translationKp = 10.0;
+        public static final double translationKp = 7.0;
         public static final double translationKi = 0;
         public static final double translationKd = 0.75;
         public static final Distance leftAutoAlighOffset = Inches.of(-7);
@@ -79,19 +79,21 @@ public final class Constants {
     }
 
     public final class ElevatorConstants {
-        public static final double kp = 1.25;
+        public static final double kp = 75.0;
         public static final double ki = 0;
-        public static final double kd = 0;
-        public static final double ks = 0.04;
-        public static final double kv = 0.15;
-        public static final double ka = 0.00185553096;
-        public static final double kg = 0.38;
+        public static final double kd = 5.0;
+        public static final double ks = 9.75;
+        public static final double kv = 0.0;
+        public static final double ka = 0.0;
+        public static final double kg = 15.25;
         public static final double profileKv = 0.09;
         public static final double profileKa = 0.002;
+        public static final double profileV = 70;
+        public static final double profileA = 250;
         public static final double recalcKv = 0.25568353813;
         public static final double recalcKa = 0.00185553196;
-        public static final Current kStatorCurrentLimit = Amps.of(80);
-        public static final Current kSupplyCurrentLimit = Amps.of(40);
+        public static final Current kStatorCurrentLimit = Amps.of(100);
+        public static final Current kSupplyCurrentLimit = Amps.of(60);
         public static final double kInchesPerRotation = (12.0 / 72.0) * Math.PI * 1.744 * 2;
         public static final Distance kForwardSoftLimit = Inches.of(56.5);
         public static final Distance kReverseSoftLimit = Inches.of(0);
@@ -202,7 +204,7 @@ public final class Constants {
                 new CurrentLimitsConfigs().withStatorCurrentLimit(40).withStatorCurrentLimitEnable(true);
         public static final double kSensorToMechanismRatio = 27.0 / 1.0 * 44.0 / 14.0;
         public static final double kAbsEncoderRatio = 80.0 / 48.0;
-        public static final Angle kAbsEncoderOffset = Rotations.of(0.361572);
+        public static final Angle kAbsEncoderOffset = Rotations.of(0.000244);
         public static final Angle kIntakePosition = Degrees.of(-20);
         public static final Angle kStartPosition = Degrees.of(-90);
         public static final Angle kL1Position = Degrees.of(45);

@@ -22,6 +22,7 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import java.util.function.Supplier;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
@@ -52,19 +53,19 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
     }
 
     public Command intake() {
-        return goToPosition(kIntakePosition).withName("FunnelTilt.Intake");
+        return goToPosition(() -> kIntakePosition).withName("FunnelTilt.Intake");
     }
 
     public Command l1() {
-        return goToPosition(kL1Position).withName("FunnelTilt.l1");
+        return goToPosition(() -> kL1Position).withName("FunnelTilt.l1");
     }
 
     public Command startingPosition() {
-        return goToPosition(kStartPosition).withName("FunnelTilt.StartingPosition");
+        return goToPosition(() -> kStartPosition).withName("FunnelTilt.StartingPosition");
     }
 
     public Command climbPosition() {
-        return goToPosition(kClimbPosition).withName("FunnelTilt.ClimbPosition");
+        return goToPosition(() -> kClimbPosition).withName("FunnelTilt.ClimbPosition");
     }
 
     @Override
@@ -76,8 +77,8 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
     }
 
     @Override
-    public Command goToPosition(Angle rotations) {
-        return run(() -> motor.setControl(noMagicMotion.withPosition(rotations)));
+    public Command goToPosition(Supplier<Angle> rotations) {
+        return run(() -> motor.setControl(noMagicMotion.withPosition(rotations.get())));
     }
 
     @Override

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import org.supurdueper.lib.LoggedTunableNumber;
 
 public abstract class PositionSubsystem extends TalonFXSubsystem {
@@ -28,6 +29,8 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
     private final LoggedTunableNumber kg;
     private final LoggedTunableNumber profileKv;
     private final LoggedTunableNumber profileKa;
+    private final LoggedTunableNumber profileV;
+    private final LoggedTunableNumber profileA;
     private final List<LoggedTunableNumber> pidGains;
     private final GravityTypeValue gravityTypeValue;
     private final MotionMagicExpoVoltage positionRequest = new MotionMagicExpoVoltage(0);
@@ -50,15 +53,11 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
         return sysIdRoutine.dynamic(Direction.kReverse);
     }
 
-    public Command goToPosition(Angle rotations) {
-        return run(() -> setPosition(rotations));
+    public Command goToPosition(Supplier<Angle> rotations) {
+        return run(() -> setPosition(rotations.get()));
     }
 
-    public Command goToPosition(double rotations) {
-        return run(() -> setPosition(rotations));
-    }
-
-    public Command goToPositionBlocking(Angle rotations) {
+    public Command goToPositionBlocking(Supplier<Angle> rotations) {
         return goToPosition(rotations).andThen(Commands.waitUntil(this::atPosition));
     }
 
@@ -100,6 +99,8 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
         kg = new LoggedTunableNumber(name + "/Kg");
         profileKv = new LoggedTunableNumber(name + "/profileKv");
         profileKa = new LoggedTunableNumber(name + "/profileKa");
+        profileV = new LoggedTunableNumber(name + "/profileVel");
+        profileA = new LoggedTunableNumber(name + "/profileAcc");
         Slot0Configs gains = pidGains();
         gravityTypeValue = gains.GravityType;
         kp.initDefault(gains.kP);
@@ -112,8 +113,10 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
         MotionMagicConfigs motionMagicConfig = motionMagicConfig();
         profileKv.initDefault(motionMagicConfig.MotionMagicExpo_kV);
         profileKa.initDefault(motionMagicConfig.MotionMagicExpo_kA);
+        profileV.initDefault(motionMagicConfig.MotionMagicCruiseVelocity);
+        profileA.initDefault(motionMagicConfig.MotionMagicAcceleration);
         pidGains = new ArrayList<>();
-        pidGains.addAll(List.of(kp, ki, kd, ks, kv, ka, kg, profileKa, profileKv));
+        pidGains.addAll(List.of(kp, ki, kd, ks, kv, ka, kg, profileKa, profileKv, profileV, profileA));
         positionTolerance = positionTolerance();
         sysIdRoutine = sysIdConfig();
         // Add motion magic items to config
@@ -136,7 +139,9 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
                         .withKG(kg.get());
                 MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs()
                         .withMotionMagicExpo_kA(profileKa.get())
-                        .withMotionMagicExpo_kV(profileKv.get());
+                        .withMotionMagicExpo_kV(profileKv.get())
+                        .withMotionMagicCruiseVelocity(profileV.get())
+                        .withMotionMagicAcceleration(profileA.get());
                 motor.getConfigurator().apply(config.withSlot0(slot0config).withMotionMagic(motionMagicConfigs));
                 break;
             }
