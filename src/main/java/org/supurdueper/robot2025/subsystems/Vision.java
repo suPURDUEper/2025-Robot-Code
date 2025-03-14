@@ -43,8 +43,6 @@ public class Vision extends SubsystemBase implements SupurdueperSubsystem {
         Drivetrain drivetrain = RobotContainer.getDrivetrain();
         Translation2d currentPoseEstimate = drivetrain.getState().Pose.getTranslation();
         boolean doRejectUpdate = false;
-        LimelightHelpers.SetRobotOrientation(
-                limelightName, drivetrain.getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
         if (Math.abs(drivetrain.getState().Speeds.omegaRadiansPerSecond) > Units.degreesToRadians(360)) {
             return;
@@ -61,9 +59,9 @@ public class Vision extends SubsystemBase implements SupurdueperSubsystem {
                 return;
             }
         }
-        // if (mt2.pose.getTranslation().getDistance(currentPoseEstimate) > 1) { // 1 meter
-        //     return;
-        // }
+        if (mt2.pose.getTranslation().getDistance(currentPoseEstimate) > 1) { // 1 meter
+            return;
+        }
         if (!doRejectUpdate) {
             drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.6, .6, 9999999));
             drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
@@ -102,5 +100,7 @@ public class Vision extends SubsystemBase implements SupurdueperSubsystem {
     public void bindCommands() {
         RobotModeTriggers.teleop().onTrue(runOnce(Vision::setAprilTagFilter));
         RobotModeTriggers.autonomous().onTrue(runOnce(Vision::setAprilTagFilter));
+        RobotModeTriggers.disabled().onTrue(runOnce(Vision::setDisabled));
+        RobotModeTriggers.disabled().onFalse(runOnce(Vision::setEnabled));
     }
 }

@@ -28,27 +28,13 @@ public class Robot extends SupurdueperRobot {
     /* Path follower */
     private final AutoFactory autoFactory;
     private final AutoRoutines autoRoutines;
-    private final SendableChooser<Command> autoChooser;
     private final AutoChooser choreoAutoChooser;
 
     public Robot() {
         m_robotContainer = new RobotContainer();
         autoFactory = RobotContainer.getDrivetrain().createAutoFactory();
         autoRoutines = new AutoRoutines(autoFactory);
-        autoChooser = new SendableChooser<>();
-        // autoChooser.addOption("Three Coral Right", autoRoutines.threeCoralAutoRight());
-        // autoChooser.addOption("Three Coral Left", autoRoutines.threeCoralAutoLeft());
-        // autoChooser.addOption("Clear Algae Right", autoRoutines.threeCoralClearAlgaeAutoRight());
-        // autoChooser.addOption("Clear Algae Left", autoRoutines.threeCoralClearAlgaeAutoLeft());
-        // autoChooser.addOption("Nothing Right", autoRoutines.nothingRight());
-        // autoChooser.setDefaultOption("Nothing Left", autoRoutines.nothingLeft());
-        // SmartDashboard.putData("Auto Chooser", autoChooser);
-
         choreoAutoChooser = new AutoChooser();
-        choreoAutoChooser.addCmd("Three Coral Right", autoRoutines::threeCoralAutoRight);
-        choreoAutoChooser.addCmd("Three Coral Left", autoRoutines::threeCoralAutoLeft);
-        choreoAutoChooser.addCmd("Clear Algae Right", autoRoutines::threeCoralClearAlgaeAutoRight);
-        choreoAutoChooser.addCmd("Clear Algae Left", autoRoutines::threeCoralClearAlgaeAutoLeft);
         choreoAutoChooser.addCmd("Nothing Right", autoRoutines::nothingRight);
         choreoAutoChooser.addCmd("Nothing Left", autoRoutines::nothingLeft);
         SmartDashboard.putData(" Choreo Auto Chooser", choreoAutoChooser);
@@ -63,20 +49,20 @@ public class Robot extends SupurdueperRobot {
                 .withNtPublish(true)
                 .withCaptureNt(true));
         // Record metadata
-        DogLog.log("ProjectName", BuildConstants.MAVEN_NAME);
-        DogLog.log("BuildDate", BuildConstants.BUILD_DATE);
-        DogLog.log("GitSHA", BuildConstants.GIT_SHA);
-        DogLog.log("GitDate", BuildConstants.GIT_DATE);
-        DogLog.log("GitBranch", BuildConstants.GIT_BRANCH);
+        DogLog.log("Git/ProjectName", BuildConstants.MAVEN_NAME);
+        DogLog.log("Git/BuildDate", BuildConstants.BUILD_DATE);
+        DogLog.log("Git/GitSHA", BuildConstants.GIT_SHA);
+        DogLog.log("Git/GitDate", BuildConstants.GIT_DATE);
+        DogLog.log("Git/GitBranch", BuildConstants.GIT_BRANCH);
         switch (BuildConstants.DIRTY) {
             case 0:
-                DogLog.log("GitDirty", "All changes committed");
+                DogLog.log("Git/GitDirty", "All changes committed");
                 break;
             case 1:
-                DogLog.log("GitDirty", "Uncomitted changes");
+                DogLog.log("Git/GitDirty", "Uncomitted changes");
                 break;
             default:
-                DogLog.log("GitDirty", "Unknown");
+                DogLog.log("Git/GitDirty", "Unknown");
                 break;
         }
 
@@ -88,17 +74,7 @@ public class Robot extends SupurdueperRobot {
     }
 
     @Override
-    public void robotPeriodic() {
-        // Switch thread to high priority to improve loop timing
-        Threads.setCurrentThreadPriority(true, 99);
-        CommandScheduler.getInstance().run();
-        // Return to normal thread priority
-        Threads.setCurrentThreadPriority(false, 10);
-    }
-
-    @Override
     public void disabledInit() {
-        Vision.setDisabled();
     }
 
     @Override
@@ -110,8 +86,6 @@ public class Robot extends SupurdueperRobot {
     @Override
     public void autonomousInit() {
         resetCommandsAndButtons();
-        Vision.setEnabled();
-        // autoChooser.getSelected().schedule();
     }
 
     @Override
@@ -123,7 +97,6 @@ public class Robot extends SupurdueperRobot {
     @Override
     public void teleopInit() {
         resetCommandsAndButtons();
-        Vision.setEnabled();
     }
 
     @Override

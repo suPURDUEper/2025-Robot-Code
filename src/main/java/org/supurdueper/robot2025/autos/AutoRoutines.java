@@ -17,32 +17,31 @@ import org.supurdueper.robot2025.subsystems.drive.Drivetrain;
 public class AutoRoutines {
     private final AutoFactory m_factory;
     private final Drivetrain drivetrain;
-    private final String rightTrajName = "auto3coralright";
-    private final String leftTrajName = "auto3coralleft";
+
+    private final String backLeftLeftToHp = "bl_left_to_hp"; 
+    private final String backLeftRightToHp = "bl_right_to_hp";
+    private final String backRightLeftToHp = "br_left_to_hp";
+    private final String backRightRightToHp = "br_right_to_hp";
+    private final String frontLeftToHp = "f_left_to_hp";
+    private final String frontRightToHp = "f_right_to_hp";
+    private final String frontLeftLeftToHp = "fl_left_to_hp";
+    private final String frontLeftRightToHp = "fl_right_to_hp";
+    private final String frontRightLeftToHp = "fr_left_to_hp";
+    private final String frontRightRightToHp = "fr_right_to_hp";
+    private final String leftHpToFront = "hp_left_to_f";
+    private final String rightHpToFront = "hp_right_to_f";
+    private final String hpToFrontLeft = "hp_to_fl";
+    private final String hpToFrontRight = "hp_to_fr";
+    private final String leftStart = "left_start";
+    private final String rightStart = "right_start";
 
     public AutoRoutines(AutoFactory factory) {
         m_factory = factory;
         drivetrain = RobotContainer.getDrivetrain();
     }
 
-    public Command l4() {
-        return Commands.runEnd(() -> RobotStates.setAutol4(true), () -> RobotStates.setAutol4(false));
-    }
-
-    public Command l3() {
-        return Commands.runEnd(() -> RobotStates.setAutol3(true), () -> RobotStates.setAutol3(false));
-    }
-
-    public Command l2() {
-        return Commands.runEnd(() -> RobotStates.setAutol2(true), () -> RobotStates.setAutol2(false));
-    }
-
     public Command intake() {
         return Commands.runEnd(() -> RobotStates.setAutointake(true), () -> RobotStates.setAutointake(false));
-    }
-
-    private Command stopDrive() {
-        return Commands.runOnce(() -> drivetrain.setControl(stop()));
     }
 
     public Command score() {
@@ -69,101 +68,20 @@ public class AutoRoutines {
                         Rotation2d.k180deg)));
     }
 
-    public Command threeCoralAutoRight() {
-        return threeCoralAuto(rightTrajName);
-    }
-
-    public Command threeCoralAutoLeft() {
-        return threeCoralAuto(leftTrajName);
-    }
-
-    public Command threeCoralClearAlgaeAutoRight() {
-        return threeCoralClearBall(rightTrajName);
-    }
-
-    public Command threeCoralClearAlgaeAutoLeft() {
-        return threeCoralClearBall(leftTrajName);
-    }
-
-    public Command threeCoralAuto(String trajName) {
-
-        Command startToFirstCoral = m_factory.trajectoryCmd(trajName, 0);
-        Command firstCoralToHp = m_factory.trajectoryCmd(trajName, 1);
-        Command hpToSecondCoral = m_factory.trajectoryCmd(trajName, 2);
-        Command secondCoralToHp = m_factory.trajectoryCmd(trajName, 3);
-        Command hpToThirdCoral = m_factory.trajectoryCmd(trajName, 4);
-
-        return Commands.sequence(
-                m_factory.resetOdometry(trajName),
-                new ScheduleCommand(untangle()),
-                Commands.waitSeconds(0.1),
-                Commands.deadline(startToFirstCoral, l4()),
-                stopDrive(),
-                score(),
-                Commands.deadline(firstCoralToHp, intake()),
-                stopDrive(),
-                Commands.waitUntil(RobotStates.hasCoral),
-                Commands.deadline(hpToSecondCoral, l4()),
-                stopDrive(),
-                score(),
-                Commands.waitSeconds(0.5),
-                Commands.deadline(secondCoralToHp, intake()),
-                stopDrive(),
-                Commands.waitUntil(RobotStates.hasCoral),
-                Commands.deadline(hpToThirdCoral, l4()),
-                stopDrive(),
-                score());
-    }
-
-    public Command threeCoralClearBall(String trajName) {
-
-        Command startToFirstCoral = m_factory.trajectoryCmd(trajName, 0);
-        Command firstCoralToHp = m_factory.trajectoryCmd(trajName, 1);
-        Command hpToSecondCoral = m_factory.trajectoryCmd(trajName, 2);
-        Command secondCoralToHp = m_factory.trajectoryCmd(trajName, 3);
-        Command hpToThirdCoral = m_factory.trajectoryCmd(trajName, 4);
-        Command thirdCoralBackwards = m_factory.trajectoryCmd(trajName, 5);
-
-        return Commands.sequence(
-                m_factory.resetOdometry(trajName),
-                new ScheduleCommand(untangle()),
-                Commands.waitSeconds(0.1),
-                Commands.deadline(startToFirstCoral, l3()),
-                stopDrive(),
-                score(),
-                Commands.deadline(firstCoralToHp, Commands.waitSeconds(1).andThen(score()), intake()),
-                stopDrive(),
-                Commands.waitUntil(RobotStates.hasCoral),
-                Commands.deadline(hpToSecondCoral, l4()),
-                stopDrive(),
-                score(),
-                Commands.waitSeconds(0.5),
-                Commands.deadline(secondCoralToHp, intake()),
-                stopDrive(),
-                Commands.waitUntil(RobotStates.hasCoral),
-                Commands.deadline(hpToThirdCoral, l2()),
-                stopDrive(),
-                score(),
-                thirdCoralBackwards);
-    }
-
     public void chain(AutoTrajectory a, AutoTrajectory b, double delaySeconds) {
         a.doneDelayed(delaySeconds).onTrue(b.cmd());
     }
 
-    public SwerveRequest stop() {
-        return new SwerveRequest.Idle();
-    }
 
     public Command nothing(String trajName) {
         return Commands.sequence(m_factory.resetOdometry(trajName), new ScheduleCommand(untangle()));
     }
 
     public Command nothingRight() {
-        return nothing(rightTrajName);
+        return nothing(rightStart);
     }
 
     public Command nothingLeft() {
-        return nothing(leftTrajName);
+        return nothing(leftStart);
     }
 }

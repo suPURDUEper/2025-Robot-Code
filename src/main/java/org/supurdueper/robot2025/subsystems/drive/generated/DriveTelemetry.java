@@ -2,6 +2,9 @@ package org.supurdueper.robot2025.subsystems.drive.generated;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import org.supurdueper.lib.LimelightHelpers;
+import org.supurdueper.robot2025.subsystems.Vision;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -128,5 +131,9 @@ public class DriveTelemetry {
 
             SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
         }
+        LimelightHelpers.SetRobotOrientation(
+                Vision.leftLimelightName, state.Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation(
+                        Vision.rightLimelimeName, state.Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
     }
 }
