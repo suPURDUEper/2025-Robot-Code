@@ -85,13 +85,13 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         RobotStates.actionL4.onTrue(setHeightState(ElevatorHeight.L4));
         RobotStates.actionAim.and(RobotStates.atReefNoL1).onTrue(goToHeight());
 
-        // RobotStates.actionL1.onTrue(setStateAndGoToHeight(ElevatorHeight.L1));
-        // RobotStates.actionProcessor.onTrue(setStateAndGoToHeight(ElevatorHeight.Processor));
-        // RobotStates.actionNet.onTrue(setStateAndGoToHeight(ElevatorHeight.Net));
-        // RobotStates.actionIntake.onTrue(setStateAndGoToHeight(ElevatorHeight.Intake));
-        // RobotStates.actionHome.onTrue(setStateAndGoToHeight(ElevatorHeight.Home));
-        // RobotStates.actionScore.onFalse(
-        //         Commands.waitSeconds(0.25).unless(this::atNet).andThen(setStateAndGoToHeight(ElevatorHeight.Home)));
+        RobotStates.actionL1.onTrue(setStateAndGoToHeight(ElevatorHeight.L1));
+        RobotStates.actionProcessor.onTrue(setStateAndGoToHeight(ElevatorHeight.Processor));
+        RobotStates.actionNet.onTrue(setStateAndGoToHeight(ElevatorHeight.Net));
+        RobotStates.actionIntake.onTrue(setStateAndGoToHeight(ElevatorHeight.Intake));
+        RobotStates.actionHome.onTrue(setStateAndGoToHeight(ElevatorHeight.Home));
+        RobotStates.actionScore.onFalse(
+                Commands.waitSeconds(0.25).unless(this::atNet).andThen(setStateAndGoToHeight(ElevatorHeight.Home)));
     }
 
     public Command setHeightState(ElevatorHeight height) {
@@ -204,12 +204,6 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         return distanceFromReef().equals(kTwoCoralAway);
     }
 
-    // Temporary until we figure out why magic motion isn't working
-    // @Override
-    // public Command goToPosition(Angle motorRotations) {
-    //     return run(() -> motor.setControl(pidTuning.withPosition(motorRotations)));
-    // }
-
     public void zeroMotor() {
         motor.setPosition(0);
     }
@@ -221,14 +215,17 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
     }
 
     @Override
+    protected boolean atPosition() {
+        Angle setpoint = heightToMotorRotations(getHeightSetpoint(heightState));
+        return (setpoint.minus(getPosition())).abs(Units.Rotations) < (positionTolerance.in(Units.Rotations));
+    }
+
+    @Override
     public void periodic() {
         super.periodic();
         homingDetector.periodic();
         // Log out to Glass for debugging
         DogLog.log("Elevator/Position", motorRotationToHeight(getPosition()).in(Units.Inches));
-        DogLog.log("Elevator/StatorCurrent", motor.getStatorCurrent().getValueAsDouble());
-        DogLog.log("Elevator/Motor Velocity", motor.getVelocity().getValueAsDouble());
-        DogLog.log("Elevator/Motor Acceleration", motor.getAcceleration().getValueAsDouble());
         DogLog.log(
                 "Elevator/Target Position", motorRotationToHeight(getSetpoint()).in(Units.Inches));
         DogLog.log("Elevator/At Position", atPosition());

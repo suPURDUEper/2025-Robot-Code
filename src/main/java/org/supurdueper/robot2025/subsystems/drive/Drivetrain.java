@@ -47,6 +47,7 @@ public class Drivetrain extends TunerSwerveDrivetrain implements SupurdueperSubs
 
     /** Swerve request to apply during field-centric path following */
     private final SwerveRequest.ApplyFieldSpeeds m_pathApplyFieldSpeeds = new SwerveRequest.ApplyFieldSpeeds();
+
     private final SwerveRequest.Idle m_idleRequest = new SwerveRequest.Idle();
 
     private final PIDController m_pathXController = new PIDController(10, 0, 0);

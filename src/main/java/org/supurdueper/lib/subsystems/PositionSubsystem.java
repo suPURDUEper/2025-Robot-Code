@@ -34,7 +34,7 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
     private final List<LoggedTunableNumber> pidGains;
     private final GravityTypeValue gravityTypeValue;
     private final MotionMagicExpoVoltage positionRequest = new MotionMagicExpoVoltage(0);
-    private final Angle positionTolerance;
+    protected final Angle positionTolerance;
     private final SysIdRoutine sysIdRoutine;
 
     public Command sysIdQuasistaticFoward() {

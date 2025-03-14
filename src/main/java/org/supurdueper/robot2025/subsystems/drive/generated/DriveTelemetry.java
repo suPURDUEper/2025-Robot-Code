@@ -2,9 +2,6 @@ package org.supurdueper.robot2025.subsystems.drive.generated;
 
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
-import org.supurdueper.lib.LimelightHelpers;
-import org.supurdueper.robot2025.subsystems.Vision;
-
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -15,6 +12,7 @@ import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.PubSubOption;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
@@ -23,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import org.supurdueper.robot2025.subsystems.Vision;
 
 public class DriveTelemetry {
     private final double MaxSpeed = TunerConstants.kMaxSpeed.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -92,6 +91,13 @@ public class DriveTelemetry {
     private final double[] m_moduleStatesArray = new double[8];
     private final double[] m_moduleTargetsArray = new double[8];
 
+    private final NetworkTable leftLimelightTable = inst.getTable(Vision.leftLimelightName);
+    private final NetworkTable rightLimelightTable = inst.getTable(Vision.rightLimelimeName);
+    private final DoubleArrayPublisher leftLimelightRobotOrientationPublisher =
+            leftLimelightTable.getDoubleArrayTopic("robot_orientation_set").publish(PubSubOption.sendAll(true));
+    private final DoubleArrayPublisher rightLimelightRobotOrientationPublisher =
+            rightLimelightTable.getDoubleArrayTopic("robot_orientation_set").publish(PubSubOption.sendAll(true));
+    private double[] robotOrientation = {0, 0, 0, 0, 0, 0};
     /** Accept the swerve drive state and telemeterize it to SmartDashboard and SignalLogger. */
     public void telemeterize(SwerveDriveState state) {
         /* Telemeterize the swerve drive state */
@@ -102,6 +108,9 @@ public class DriveTelemetry {
         driveModulePositions.set(state.ModulePositions);
         driveTimestamp.set(state.Timestamp);
         driveOdometryFrequency.set(1.0 / state.OdometryPeriod);
+        robotOrientation[0] = state.Pose.getRotation().getDegrees();
+        leftLimelightRobotOrientationPublisher.set(robotOrientation);
+        rightLimelightRobotOrientationPublisher.set(robotOrientation);
 
         /* Also write to log file */
         m_poseArray[0] = state.Pose.getX();
@@ -131,9 +140,5 @@ public class DriveTelemetry {
 
             SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
         }
-        LimelightHelpers.SetRobotOrientation(
-                Vision.leftLimelightName, state.Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
-        LimelightHelpers.SetRobotOrientation(
-                        Vision.rightLimelimeName, state.Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
     }
 }

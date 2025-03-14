@@ -31,12 +31,6 @@ public class Vision extends SubsystemBase implements SupurdueperSubsystem {
     public void periodic() {
         updatePose3dAprilTag(leftLimelightName);
         updatePose3dAprilTag(rightLimelimeName);
-        DogLog.log(
-                "Robot Pose Target Space (R)",
-                LimelightHelpers.getBotPose3d_TargetSpace(rightLimelimeName).getX());
-        DogLog.log(
-                "Robot Pose Target Space (L)",
-                LimelightHelpers.getBotPose3d_TargetSpace(leftLimelightName).getX());
     }
 
     private void updatePose3dAprilTag(String limelightName) {
@@ -69,13 +63,6 @@ public class Vision extends SubsystemBase implements SupurdueperSubsystem {
         drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.6, .6, 9999999));
         drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
         DogLog.log("Vision/" + limelightName + " Pose (mt2)", mt2.pose);
-    }
-
-    public static double getTargetId(String limelightName) {
-        double[] t2d = LimelightHelpers.getT2DArray(limelightName);
-        if (t2d.length != 17) return -1;
-        if (t2d[1] == 0) return -1;
-        return t2d[9];
     }
 
     public static void updateIMUMode() {

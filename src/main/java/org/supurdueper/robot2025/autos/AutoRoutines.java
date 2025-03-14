@@ -2,7 +2,6 @@ package org.supurdueper.robot2025.autos;
 
 import choreo.auto.AutoFactory;
 import choreo.auto.AutoTrajectory;
-import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
@@ -18,7 +17,7 @@ public class AutoRoutines {
     private final AutoFactory m_factory;
     private final Drivetrain drivetrain;
 
-    private final String backLeftLeftToHp = "bl_left_to_hp"; 
+    private final String backLeftLeftToHp = "bl_left_to_hp";
     private final String backLeftRightToHp = "bl_right_to_hp";
     private final String backRightLeftToHp = "br_left_to_hp";
     private final String backRightRightToHp = "br_right_to_hp";
@@ -71,7 +70,6 @@ public class AutoRoutines {
     public void chain(AutoTrajectory a, AutoTrajectory b, double delaySeconds) {
         a.doneDelayed(delaySeconds).onTrue(b.cmd());
     }
-
 
     public Command nothing(String trajName) {
         return Commands.sequence(m_factory.resetOdometry(trajName), new ScheduleCommand(untangle()));
