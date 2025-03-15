@@ -50,6 +50,13 @@ public class FieldConstants {
     public static final int[] redReefApriltagIds = {6, 7, 8, 9, 10, 11};
     public static final int[] blueReefApriltagIds = {17, 18, 19, 20, 21, 22};
 
+    public static int getClosestReefTagId(Pose2d robotPose) {
+        Translation2d reefCenter = AllianceFlip.apply(Reef.center);
+        Rotation2d facingReefCenter =
+                reefCenter.minus(robotPose.getTranslation()).getAngle();
+        return getClosestReefTagId(facingReefCenter);
+    }
+
     // Angle passed in here is relative to the field (always facing red alliance
     // wall)
     public static int getClosestReefTagId(Rotation2d robotAngle) {

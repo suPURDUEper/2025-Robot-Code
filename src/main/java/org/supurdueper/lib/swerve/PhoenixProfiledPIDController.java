@@ -13,8 +13,13 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
 
 /**
+ * Phoenix-centric PID controller taken from WPI's {@link edu.wpi.first.math.controller.ProfiledPIDController} class.
+ * 
  * Implements a PID control loop whose setpoint is constrained by a trapezoid profile. Users should call reset() when
  * they first start running the controller to avoid unwanted behavior.
+ * 
+ * This class differs from the WPI implementation by using explicit timestamps for
+ * integral/derivative calculations. Ideally, these timestamps come from the {@link com.ctre.phoenix6.StatusSignal}.
  */
 public class PhoenixProfiledPIDController implements Sendable {
     private static int instances;

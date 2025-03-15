@@ -210,7 +210,7 @@ public class DriveToPose implements SwerveRequest {
      * @param newRotationalDeadband Parameter to modify
      * @return this object
      */
-    public DriveToPose withRotationalDeadband(AngularVelocity newRotationalDeadband) {
+    public DriveToPose withHeadingDeadband(AngularVelocity newRotationalDeadband) {
         this.RotationalDeadband = newRotationalDeadband.in(RadiansPerSecond);
         return this;
     }
