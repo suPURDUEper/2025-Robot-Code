@@ -4,13 +4,10 @@
 
 package org.supurdueper.robot2025.subsystems;
 
-import static org.supurdueper.robot2025.state.RobotStates.actionRightAim;
-
 import com.ctre.phoenix.led.CANdle;
 import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.ctre.phoenix.led.CANdleConfiguration;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
@@ -24,9 +21,12 @@ public class Lights extends SubsystemBase implements SupurdueperSubsystem {
     private CANdleConfiguration candleConfig;
 
     public Lights() {
-        candle = new CANdle(CanId.CANDLE.getDeviceNumber(), CanId.CANDLE.getBus());
+        super();
+        candle = new CANdle(CanId.CANDLE.getDeviceNumber());
         candleConfig = new CANdleConfiguration();
-        candleConfig.stripType = LEDStripType.RGB;
+        candleConfig.stripType = LEDStripType.GRB;
+        candleConfig.brightnessScalar = 0.5;
+        candle.configAllSettings(candleConfig);
         Robot.add(this);
     }
 
@@ -55,31 +55,31 @@ public class Lights extends SubsystemBase implements SupurdueperSubsystem {
     }
 
     public Command setBlue() {
-        return Commands.startEnd(this::turnBlue, this::turnOff);
+        return run(this::turnBlue);
     }
 
     public Command setGreen() {
-        return Commands.startEnd(this::turnGreen, this::turnOff);
+        return run(this::turnGreen);
     }
 
     public Command setRed() {
-        return Commands.startEnd(this::turnRed, this::turnOff);
+        return run(this::turnRed);
     }
 
     public Command setWhite() {
-        return Commands.startEnd(this::turnWhite, this::turnOff);
+        return run(this::turnWhite);
     }
 
     public Command setGold() {
-        return Commands.startEnd(this::turnGold, this::turnOff);
+        return run(this::turnGold);
     }
 
     @Override
     public void bindCommands() {
-        RobotStates.actionL1.onTrue(setGreen());
-        RobotStates.hasCoral.onTrue(setRed());
-        RobotStates.actionLeftAim.or(actionRightAim).onTrue(setBlue());
-        RobotStates.actionScore.onTrue(setWhite());
-        RobotStates.disabled.onTrue(setGold().ignoringDisable(true));
+        // RobotStates.actionL1.onTrue(setGreen());
+        // RobotStates.hasCoral.onTrue(setRed());
+        // RobotStates.actionLeftAim.or(actionRightAim).onTrue(setBlue());
+        // RobotStates.actionScore.onTrue(setWhite());
+        RobotStates.teleop.onTrue(setGold());
     }
 }

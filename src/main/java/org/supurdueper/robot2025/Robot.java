@@ -9,9 +9,11 @@ import choreo.auto.AutoFactory;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import org.ironmaple.simulation.SimulatedArena;
 import org.supurdueper.BuildConstants;
 import org.supurdueper.lib.subsystems.SupurdueperRobot;
@@ -25,16 +27,22 @@ public class Robot extends SupurdueperRobot {
     private final AutoFactory autoFactory;
     private final AutoRoutines autoRoutines;
     private final AutoChooser choreoAutoChooser;
+    private final SendableChooser<Command> autoChooser;
 
     public Robot() {
         m_robotContainer = new RobotContainer();
         autoFactory = RobotContainer.getDrivetrain().createAutoFactory();
         autoRoutines = new AutoRoutines(autoFactory);
         choreoAutoChooser = new AutoChooser();
+        SmartDashboard.putData("Choreo Auto Chooser", choreoAutoChooser);
         choreoAutoChooser.addCmd("Nothing Right", autoRoutines::nothingRight);
         choreoAutoChooser.addCmd("Nothing Left", autoRoutines::nothingLeft);
-        SmartDashboard.putData(" Choreo Auto Chooser", choreoAutoChooser);
-        RobotModeTriggers.autonomous().whileTrue(choreoAutoChooser.selectedCommandScheduler());
+        // RobotModeTriggers.autonomous().whileTrue(choreoAutoChooser.selectedCommandScheduler());
+
+        autoChooser = new SendableChooser<Command>();
+        autoChooser.addOption("Nothing Right", autoRoutines.nothingLeft());
+        autoChooser.addOption("Nothing Left", autoRoutines.nothingRight());
+        SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
     @Override
@@ -70,6 +78,14 @@ public class Robot extends SupurdueperRobot {
     }
 
     @Override
+    public void robotPeriodic() {
+        double startTime = Timer.getFPGATimestamp();
+        CommandScheduler.getInstance().run();
+        double endTime = Timer.getFPGATimestamp();
+        DogLog.log("Loop Time", endTime - startTime);
+    }
+
+    @Override
     public void disabledInit() {}
 
     @Override
@@ -81,6 +97,7 @@ public class Robot extends SupurdueperRobot {
     @Override
     public void autonomousInit() {
         resetCommandsAndButtons();
+        autoChooser.getSelected().schedule();
     }
 
     @Override

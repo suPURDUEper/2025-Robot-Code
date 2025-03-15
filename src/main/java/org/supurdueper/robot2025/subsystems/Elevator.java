@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import java.util.function.Supplier;
 import lombok.Getter;
-import org.supurdueper.lib.CurrentStallFilter;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.robot2025.CanId;
@@ -38,7 +37,6 @@ import org.supurdueper.robot2025.state.RobotStates;
 
 public class Elevator extends PositionSubsystem implements SupurdueperSubsystem {
 
-    CurrentStallFilter homingDetector;
     private CANrange canRange;
     private CANrangeConfiguration canRangeConfig;
 
@@ -70,7 +68,6 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
                 .withPeakForwardTorqueCurrent(kStatorCurrentLimit)
                 .withPeakReverseTorqueCurrent(kStatorCurrentLimit.times(-1)));
         configureMotors();
-        homingDetector = new CurrentStallFilter(motor.getStatorCurrent(), kHomingCurrent);
         Robot.add(this);
         motor.setPosition(0);
         heightState = ElevatorHeight.Home;
@@ -95,7 +92,7 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
     }
 
     public Command setHeightState(ElevatorHeight height) {
-        return Commands.runOnce(() -> heightState = height);
+        return runOnce(() -> heightState = height);
     }
 
     public Command setStateAndGoToHeight(ElevatorHeight height) {
@@ -208,12 +205,6 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         motor.setPosition(0);
     }
 
-    public Command zero() {
-        return runEnd(() -> runVoltage(Volts.of(-2)), this::zeroMotor)
-                .until(() -> homingDetector.isStalled())
-                .withName("Elevator.Zero");
-    }
-
     @Override
     protected boolean atPosition() {
         Angle setpoint = heightToMotorRotations(getHeightSetpoint(heightState));
@@ -223,20 +214,12 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
     @Override
     public void periodic() {
         super.periodic();
-        homingDetector.periodic();
         // Log out to Glass for debugging
         DogLog.log("Elevator/Position", motorRotationToHeight(getPosition()).in(Units.Inches));
         DogLog.log(
                 "Elevator/Target Position", motorRotationToHeight(getSetpoint()).in(Units.Inches));
         DogLog.log("Elevator/At Position", atPosition());
         DogLog.log("Elevator/State", heightState.toString());
-        DogLog.log(
-                "Elevator/Distance from reef", canRange.getDistance().getValue().in(Inches));
-        String commandName = "Unknown";
-        if (getCurrentCommand() != null && getCurrentCommand().getName() != null) {
-            commandName = getCurrentCommand().getName();
-        }
-        DogLog.log("Elevator/Command", commandName);
     }
 
     private Distance motorRotationToHeight(Angle motorRotations) {

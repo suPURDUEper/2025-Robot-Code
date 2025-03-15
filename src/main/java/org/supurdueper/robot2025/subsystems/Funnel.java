@@ -5,7 +5,6 @@
 package org.supurdueper.robot2025.subsystems;
 
 import static org.supurdueper.robot2025.Constants.FunnelConstants.*;
-import static org.supurdueper.robot2025.state.RobotStates.atPosition;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -46,10 +45,6 @@ public class Funnel extends TalonFXSubsystem implements SupurdueperSubsystem {
 
     public Command intake() {
         return runEnd(this::run, this::stop).withName("Funnel.Intake");
-    }
-
-    public Command test() {
-        return Commands.waitUntil(atPosition).andThen(runEnd(this::run, this::stop));
     }
 
     public Command stopCommand() {

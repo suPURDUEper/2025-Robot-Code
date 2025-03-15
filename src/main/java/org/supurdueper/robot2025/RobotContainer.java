@@ -15,6 +15,7 @@ import org.supurdueper.robot2025.subsystems.CoralScore;
 import org.supurdueper.robot2025.subsystems.Elevator;
 import org.supurdueper.robot2025.subsystems.Funnel;
 import org.supurdueper.robot2025.subsystems.FunnelTilt;
+import org.supurdueper.robot2025.subsystems.Lights;
 import org.supurdueper.robot2025.subsystems.Vision;
 import org.supurdueper.robot2025.subsystems.Wrist;
 import org.supurdueper.robot2025.subsystems.drive.Drivetrain;
@@ -56,6 +57,9 @@ public class RobotContainer {
     private static Driver driver;
 
     @Getter
+    private static Lights lights;
+
+    @Getter
     private static TestController testController;
 
     public RobotContainer() {
@@ -71,23 +75,19 @@ public class RobotContainer {
         testController = new TestController();
         drivetrain = TunerConstants.createDrivetrain();
         vision = new Vision();
+        lights = new Lights();
 
         configureBindings();
     }
 
     public void configureBindings() {
-        // climber.setDefaultCommand(climber.setVoltage(testController::getManualElevatorVoltage));
-        elevator.setDefaultCommand(elevator.runCurrent(() -> testController.getManualElevatorVoltage() * 4));
-        // testController.Y.onTrue(climber.home());
-        // testController.X.onTrue(climber.climbPrep());
-        // testController.rightStickY.onTrue((funnelTilt.setVoltage(testController::getManualWristVoltage)));
-        testController.start.onTrue(Commands.runOnce(() -> climber.zero(), climber));
-        // testController.A.onTrue(funnelTilt.startingPosition());
+        climber.setDefaultCommand(climber.setVoltage(testController::getManualElevatorVoltage));
+        testController.X.onTrue(climber.home());
+        testController.Y.onTrue(climber.climbPrep());
+        testController.A.onTrue(climber.retract());
+        testController.select.onTrue(Commands.runOnce(() -> climber.zero()));
+        testController.downDpad.onTrue(climber.disengageRatchet());
+        testController.upDpad.onTrue(climber.engageRatchet());
         funnelTilt.setDefaultCommand(funnelTilt.setVoltage(testController::getManualWristVoltage));
-        testController.A.onTrue(elevator.setStateAndGoToHeight(Elevator.ElevatorHeight.Home));
-        testController.X.onTrue(elevator.setStateAndGoToHeight(Elevator.ElevatorHeight.L3));
-        testController.B.onTrue(elevator.setStateAndGoToHeight(Elevator.ElevatorHeight.L2));
-        testController.Y.onTrue(elevator.setStateAndGoToHeight(Elevator.ElevatorHeight.L4));
-        // testController.A.onTrue(climber.disengageRatchet());
     }
 }

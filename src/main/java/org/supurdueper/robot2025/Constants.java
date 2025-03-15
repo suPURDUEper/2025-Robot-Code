@@ -151,9 +151,9 @@ public final class Constants {
         public static final double ka = 0;
         public static final double kg = 0.0;
         public static final double kHome = 0.0;
-        public static final double kRetract = -12;
-        public static final double kClearFunnel = 21.0;
-        public static final double kClimb = 48.8;
+        public static final double kRetract = -18;
+        public static final double kClearFunnel = 16.5;
+        public static final double kClimb = 62.646;
         public static final double kPositionTolerance = 1.0;
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(120).withStatorCurrentLimitEnable(true);
@@ -203,7 +203,7 @@ public final class Constants {
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(40).withStatorCurrentLimitEnable(true);
         public static final double kSensorToMechanismRatio = 27.0 / 1.0 * 44.0 / 14.0;
-        public static final double kAbsEncoderRatio = 80.0 / 48.0;
+        public static final double kAbsEncoderRatio = 1;
         public static final Angle kAbsEncoderOffset = Rotations.of(0.000244);
         public static final Angle kIntakePosition = Degrees.of(-20);
         public static final Angle kStartPosition = Degrees.of(-90);
@@ -211,5 +211,5 @@ public final class Constants {
         public static final Angle kClimbPosition = Degrees.of(90);
     }
 
-    public static boolean tuningMode = true;
+    public static boolean tuningMode = false;
 }

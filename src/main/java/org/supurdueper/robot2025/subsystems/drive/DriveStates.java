@@ -6,12 +6,10 @@ import static org.supurdueper.robot2025.state.RobotStates.*;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentricFacingAngle;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-
 import org.supurdueper.lib.swerve.DriveToPose;
 import org.supurdueper.lib.utils.AllianceFlip;
 import org.supurdueper.lib.utils.GeomUtil;
@@ -31,7 +29,7 @@ public class DriveStates {
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private double MaxSpeed = TunerConstants.kMaxSpeed.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second
+    private double MaxAngularRate = RotationsPerSecond.of(1.5).in(RadiansPerSecond); // 3/4 of a rotation per second
     private final SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric();
     private final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric();
     private final FieldCentricFacingReef fieldCentricFacingReef = new FieldCentricFacingReef();
@@ -41,31 +39,30 @@ public class DriveStates {
     private final FullAutoAim leftAim = new FullAutoAim(Pole.LEFT);
     private final FullAutoAim rightAim = new FullAutoAim(Pole.RIGHT);
     private final Pose2d leftRobotScoringPose =
-                new Pose2d(DriveConstants.robotToBumperCenter, DriveConstants.leftAutoAlighOffset, Rotation2d.k180deg);
+            new Pose2d(DriveConstants.robotToBumperCenter, DriveConstants.leftAutoAlighOffset, Rotation2d.k180deg);
     private final Pose2d rightRobotScoringPose =
-                new Pose2d(DriveConstants.robotToBumperCenter, DriveConstants.rightAutoAlignOffset, Rotation2d.k180deg);
+            new Pose2d(DriveConstants.robotToBumperCenter, DriveConstants.rightAutoAlignOffset, Rotation2d.k180deg);
 
     public DriveStates(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
         this.driver = RobotContainer.getDriver();
-        fieldCentricFacingAngle.HeadingController.setPID(
-                headingKp, headingKi, headingKd);
+        fieldCentricFacingAngle.HeadingController.setPID(headingKp, headingKi, headingKd);
         fieldCentricFacingAngle.RotationalDeadband = rotationClosedLoopDeadband.in(RadiansPerSecond);
 
         driveToPose
-            .withTranslationPID(translationKp, translationKi, translationKd)
-            .withTranslationConstraints(TunerConstants.kMaxAutoAimSpeed, TunerConstants.kMaxAcceleration)
-            .withTranslationDeadband(translationClosedLoopDeadband)
-            .withHeadingPID(headingKp, headingKi, headingKd)
-            .withHeadingConstraints(RotationsPerSecond.of(0.75), RotationsPerSecondPerSecond.of(1.5))
-            .withHeadingDeadband(rotationClosedLoopDeadband);
- 
+                .withTranslationPID(translationKp, translationKi, translationKd)
+                .withTranslationConstraints(TunerConstants.kMaxAutoAimSpeed, TunerConstants.kMaxAcceleration)
+                .withTranslationDeadband(translationClosedLoopDeadband)
+                .withHeadingPID(headingKp, headingKi, headingKd)
+                .withHeadingConstraints(RotationsPerSecond.of(0.75), RotationsPerSecondPerSecond.of(1.5))
+                .withHeadingDeadband(rotationClosedLoopDeadband);
     }
 
     public void bindCommands() {
         drivetrain.setDefaultCommand(normalTeleopDrive());
         atReefNoL1.and(RobotStates.teleop).whileTrue(driveFacingReef());
-        atIntake.and(RobotStates.teleop).whileTrue(driveFacingHpStation());
+        atIntake.and(RobotStates.hasCoral.negate()).and(RobotStates.teleop).whileTrue(driveFacingHpStation());
+
         atProcessor.and(RobotStates.teleop).whileTrue(driveFacingProcessor());
         atNet.and(RobotStates.teleop).whileTrue(driveFacingNet());
         actionClimbPrep.onTrue(normalTeleopDrive());
@@ -117,7 +114,8 @@ public class DriveStates {
         return drivetrain.applyRequest(() -> {
             Pose2d currentRobotPose = drivetrain.getState().Pose;
             int apriltagId = FieldConstants.getClosestReefTagId(currentRobotPose);
-            Pose2d targetPose = FieldConstants.getAprilTagPose(apriltagId).plus(GeomUtil.toTransform2d(aprilTagScoringOffset));
+            Pose2d targetPose =
+                    FieldConstants.getAprilTagPose(apriltagId).plus(GeomUtil.toTransform2d(aprilTagScoringOffset));
             return driveToPose.withGoal(targetPose);
         });
     }

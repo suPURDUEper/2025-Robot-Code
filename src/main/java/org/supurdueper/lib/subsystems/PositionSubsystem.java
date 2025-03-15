@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import org.supurdueper.lib.LoggedTunableNumber;
+import org.supurdueper.robot2025.Constants;
 
 public abstract class PositionSubsystem extends TalonFXSubsystem {
 
@@ -125,25 +126,27 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
 
     @Override
     public void periodic() {
-        for (LoggedTunableNumber gain : pidGains) {
-            if (gain.hasChanged(hashCode())) {
-                // Send new PID gains to talon
-                Slot0Configs slot0config = new Slot0Configs()
-                        .withGravityType(gravityTypeValue)
-                        .withKP(kp.get())
-                        .withKI(ki.get())
-                        .withKD(kd.get())
-                        .withKS(ks.get())
-                        .withKV(kv.get())
-                        .withKA(ka.get())
-                        .withKG(kg.get());
-                MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs()
-                        .withMotionMagicExpo_kA(profileKa.get())
-                        .withMotionMagicExpo_kV(profileKv.get())
-                        .withMotionMagicCruiseVelocity(profileV.get())
-                        .withMotionMagicAcceleration(profileA.get());
-                motor.getConfigurator().apply(config.withSlot0(slot0config).withMotionMagic(motionMagicConfigs));
-                break;
+        if (Constants.tuningMode) {
+            for (LoggedTunableNumber gain : pidGains) {
+                if (gain.hasChanged(hashCode())) {
+                    // Send new PID gains to talon
+                    Slot0Configs slot0config = new Slot0Configs()
+                            .withGravityType(gravityTypeValue)
+                            .withKP(kp.get())
+                            .withKI(ki.get())
+                            .withKD(kd.get())
+                            .withKS(ks.get())
+                            .withKV(kv.get())
+                            .withKA(ka.get())
+                            .withKG(kg.get());
+                    MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs()
+                            .withMotionMagicExpo_kA(profileKa.get())
+                            .withMotionMagicExpo_kV(profileKv.get())
+                            .withMotionMagicCruiseVelocity(profileV.get())
+                            .withMotionMagicAcceleration(profileA.get());
+                    motor.getConfigurator().apply(config.withSlot0(slot0config).withMotionMagic(motionMagicConfigs));
+                    break;
+                }
             }
         }
         super.periodic();

@@ -12,7 +12,6 @@ import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.PubSubOption;
 import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
@@ -94,9 +93,9 @@ public class DriveTelemetry {
     private final NetworkTable leftLimelightTable = inst.getTable(Vision.leftLimelightName);
     private final NetworkTable rightLimelightTable = inst.getTable(Vision.rightLimelimeName);
     private final DoubleArrayPublisher leftLimelightRobotOrientationPublisher =
-            leftLimelightTable.getDoubleArrayTopic("robot_orientation_set").publish(PubSubOption.sendAll(true));
+            leftLimelightTable.getDoubleArrayTopic("robot_orientation_set").publish();
     private final DoubleArrayPublisher rightLimelightRobotOrientationPublisher =
-            rightLimelightTable.getDoubleArrayTopic("robot_orientation_set").publish(PubSubOption.sendAll(true));
+            rightLimelightTable.getDoubleArrayTopic("robot_orientation_set").publish();
     private double[] robotOrientation = {0, 0, 0, 0, 0, 0};
     /** Accept the swerve drive state and telemeterize it to SmartDashboard and SignalLogger. */
     public void telemeterize(SwerveDriveState state) {
