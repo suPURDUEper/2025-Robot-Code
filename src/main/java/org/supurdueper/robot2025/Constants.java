@@ -212,4 +212,5 @@ public final class Constants {
     }
 
     public static boolean tuningMode = false;
+    public static boolean publishToNT = false;
 }

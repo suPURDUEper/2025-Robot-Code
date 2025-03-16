@@ -48,10 +48,10 @@ public class Robot extends SupurdueperRobot {
     @Override
     public void robotInit() {
         DogLog.setOptions(new DogLogOptions()
-                .withLogExtras(true)
-                .withCaptureDs(true)
-                .withNtPublish(true)
-                .withCaptureNt(true));
+                .withLogExtras(false)
+                .withCaptureDs(false)
+                .withNtPublish(Constants.publishToNT)
+                .withCaptureNt(false));
         // Record metadata
         DogLog.log("Git/ProjectName", BuildConstants.MAVEN_NAME);
         DogLog.log("Git/BuildDate", BuildConstants.BUILD_DATE);

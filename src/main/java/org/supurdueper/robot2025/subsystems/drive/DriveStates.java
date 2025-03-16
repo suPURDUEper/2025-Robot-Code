@@ -8,6 +8,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentricFacingAngle;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import org.supurdueper.lib.swerve.DriveToPose;
@@ -38,10 +39,10 @@ public class DriveStates {
     private final DriveToPose driveToPose = new DriveToPose();
     private final FullAutoAim leftAim = new FullAutoAim(Pole.LEFT);
     private final FullAutoAim rightAim = new FullAutoAim(Pole.RIGHT);
-    private final Pose2d leftRobotScoringPose =
-            new Pose2d(DriveConstants.robotToBumperCenter, DriveConstants.leftAutoAlighOffset, Rotation2d.k180deg);
-    private final Pose2d rightRobotScoringPose =
-            new Pose2d(DriveConstants.robotToBumperCenter, DriveConstants.rightAutoAlignOffset, Rotation2d.k180deg);
+    private final Transform2d leftRobotScoringOffset =
+            new Transform2d(DriveConstants.robotToBumperCenter, DriveConstants.leftAutoAlighOffset, Rotation2d.k180deg);
+    private final Transform2d rightRobotScoringOffset =
+            new Transform2d(DriveConstants.robotToBumperCenter, DriveConstants.rightAutoAlignOffset, Rotation2d.k180deg);
 
     public DriveStates(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
@@ -110,12 +111,12 @@ public class DriveStates {
         return drivetrain.applyRequest(() -> leftAim);
     }
 
-    private Command align(Pose2d aprilTagScoringOffset) {
+    private Command align(Transform2d aprilTagScoringOffset) {
         return drivetrain.applyRequest(() -> {
             Pose2d currentRobotPose = drivetrain.getState().Pose;
             int apriltagId = FieldConstants.getClosestReefTagId(currentRobotPose);
             Pose2d targetPose =
-                    FieldConstants.getAprilTagPose(apriltagId).plus(GeomUtil.toTransform2d(aprilTagScoringOffset));
+                    FieldConstants.getAprilTagPose(apriltagId).plus(aprilTagScoringOffset);
             return driveToPose.withGoal(targetPose);
         });
     }
