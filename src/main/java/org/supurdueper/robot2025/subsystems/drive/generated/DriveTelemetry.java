@@ -107,20 +107,21 @@ public class DriveTelemetry {
         leftLimelightRobotOrientationPublisher.set(robotOrientation);
         rightLimelightRobotOrientationPublisher.set(robotOrientation);
 
-        /* Also write to log file */
-        m_poseArray[0] = state.Pose.getX();
-        m_poseArray[1] = state.Pose.getY();
-        m_poseArray[2] = state.Pose.getRotation().getDegrees();
-        for (int i = 0; i < 4; ++i) {
-            m_moduleStatesArray[i * 2 + 0] = state.ModuleStates[i].angle.getRadians();
-            m_moduleStatesArray[i * 2 + 1] = state.ModuleStates[i].speedMetersPerSecond;
-            m_moduleTargetsArray[i * 2 + 0] = state.ModuleTargets[i].angle.getRadians();
-            m_moduleTargetsArray[i * 2 + 1] = state.ModuleTargets[i].speedMetersPerSecond;
-        }
+        // /* Also write to log file */
+        // m_poseArray[0] = state.Pose.getX();
+        // m_poseArray[1] = state.Pose.getY();
+        // m_poseArray[2] = state.Pose.getRotation().getDegrees();
+        // for (int i = 0; i < 4; ++i) {
+        //     m_moduleStatesArray[i * 2 + 0] = state.ModuleStates[i].angle.getRadians();
+        //     m_moduleStatesArray[i * 2 + 1] = state.ModuleStates[i].speedMetersPerSecond;
+        //     m_moduleTargetsArray[i * 2 + 0] = state.ModuleTargets[i].angle.getRadians();
+        //     m_moduleTargetsArray[i * 2 + 1] = state.ModuleTargets[i].speedMetersPerSecond;
+        // }
 
-        DogLog.log("Drive/Pose", m_poseArray);
-        DogLog.log("Drive/ModuleStates", m_moduleStatesArray);
-        DogLog.log("Drive/ModuleTargets", m_moduleTargetsArray);
+        DogLog.log("Drive/Pose", state.Pose);
+        DogLog.log("Drive/ModuleStates", state.ModuleStates);
+        DogLog.log("Drive/ModuleTargets", state.ModuleTargets);
+        DogLog.log("Drive/MeasuredSpeeds", state.Speeds);
         DogLog.log("Drive/OdometryPeriod", state.OdometryPeriod);
 
         // /* Telemeterize the pose to a Field2d */

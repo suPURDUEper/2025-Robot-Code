@@ -212,14 +212,6 @@ public class Drivetrain extends TunerSwerveDrivetrain implements SupurdueperSubs
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-
-        DogLog.log("BatteryVoltage", RobotController.getBatteryVoltage());
-        DogLog.log("Drive/OdometryPose", getState().Pose);
-        DogLog.log("Drive/TargetStates", getState().ModuleTargets);
-        DogLog.log("Drive/MeasuredStates", getState().ModuleStates);
-        DogLog.log("Drive/MeasuredSpeeds", getState().Speeds);
-        if (mapleSimSwerveDrivetrain != null)
-            DogLog.log("Drive/SimulationPose", mapleSimSwerveDrivetrain.mapleSimDrive.getSimulatedDriveTrainPose());
     }
 
     private MapleSimSwerveDrivetrain mapleSimSwerveDrivetrain = null;
