@@ -1,6 +1,7 @@
 package org.supurdueper.robot2025.autos;
 
 import choreo.auto.AutoFactory;
+import choreo.auto.AutoRoutine;
 import choreo.auto.AutoTrajectory;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -43,6 +44,52 @@ public class AutoRoutines {
         return Commands.runEnd(() -> RobotStates.setAutointake(true), () -> RobotStates.setAutointake(false));
     }
 
+    public AutoRoutine oneCoralLeftRoutine() {
+
+        AutoRoutine routine = m_factory.newRoutine("One Coral Left");
+
+        AutoTrajectory startToFirstCoral = routine.trajectory(leftStart);
+        AutoTrajectory firstCoralToHp = routine.trajectory(backLeftLeftToHp);
+        AutoTrajectory hpToSecondCoral = routine.trajectory(hpToFrontLeft);
+        AutoTrajectory secondCoralToHp = routine.trajectory(frontLeftLeftToHp);
+        AutoTrajectory hpToThirdCoral = routine.trajectory(hpToFrontLeft);
+
+        routine.active()
+                .onTrue(Commands.sequence(
+                        m_factory.resetOdometry(leftStart), new ScheduleCommand(untangle()), startToFirstCoral.cmd()));
+
+        startToFirstCoral
+                .recentlyDone()
+                .onTrue(Commands.sequence(
+                        aimLeft(),
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+                        score(),
+                        firstCoralToHp.cmd().asProxy()));
+
+        firstCoralToHp.chain(hpToSecondCoral);
+
+        return routine;
+    }
+
+    public Command aimLeft() {
+        return Commands.sequence(
+                Commands.runOnce(() -> RobotStates.setAutol4(true)),
+                Commands.runOnce(() -> RobotStates.setAutol4(false)),
+                Commands.runOnce(() -> RobotStates.setAutoAimLeft(true)),
+                Commands.waitUntil(RobotStates::isAimed),
+                Commands.runOnce(() -> RobotStates.setAutoAimLeft(false)));
+    }
+
+    public Command aimRight() {
+        return Commands.sequence(
+                Commands.runOnce(() -> RobotStates.setAutol4(true)),
+                Commands.runOnce(() -> RobotStates.setAutol4(false)),
+                Commands.runOnce(() -> RobotStates.setAutoAimRight(true)),
+                Commands.waitUntil(RobotStates::isAimed),
+                Commands.runOnce(() -> RobotStates.setAutoAimRight(false)));
+    }
+
     public Command score() {
         return Commands.sequence(
                 Commands.runOnce(() -> RobotStates.setAutoscore(true)),
@@ -77,6 +124,12 @@ public class AutoRoutines {
 
     public Command nothingRight() {
         return nothing(rightStart);
+    }
+
+    public AutoRoutine nothingRightRoutine() {
+        AutoRoutine routine = m_factory.newRoutine("Nothing Right");
+        routine.active().onTrue(nothingRight());
+        return routine;
     }
 
     public Command nothingLeft() {

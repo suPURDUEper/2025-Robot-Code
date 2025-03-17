@@ -1,5 +1,8 @@
 {
   "NetworkTables": {
+    "Transitory Values": {
+      "open": false
+    },
     "transitory": {
       "LiveWindow": {
         ".status": {
@@ -66,6 +69,7 @@
       "/SmartDashboard/Alerts": "Alerts",
       "/SmartDashboard/Auto Chooser": "String Chooser",
       "/SmartDashboard/Choreo Alerts": "Alerts",
+      "/SmartDashboard/Choreo Auto Chooser": "String Chooser",
       "/SmartDashboard/Configuration": "Alerts",
       "/SmartDashboard/Encoders": "Alerts",
       "/SmartDashboard/Field": "Field2d",
@@ -79,6 +83,12 @@
       "/SmartDashboard/Swerve Drive": "Alerts",
       "/SmartDashboard/navX-Sensor[4]": "Gyro"
     }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  },
+  "NetworkTables Log": {
+    "visible": true
   },
   "NetworkTables Settings": {
     "mode": "Client (NT3)",

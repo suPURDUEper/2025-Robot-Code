@@ -123,7 +123,7 @@ public final class Constants {
         public static final double profileKv = 0;
         public static final double profileKa = 0;
         public static final Current kStatorCurrentLimit = Amps.of(80);
-        public static final Angle kForwardSoftLimit = Degrees.of(115);
+        public static final Angle kForwardSoftLimit = Degrees.of(120);
 
         public static final Angle kReverseSoftLimit = Degrees.of(43);
         public static final Angle kPositionTolerance = Degrees.of(1);
@@ -138,7 +138,7 @@ public final class Constants {
         public static final Angle kL3Angle = kL2Angle;
         public static final Angle kL4Angle = Degrees.of(43);
         public static final Angle kProcessorAngle = Degrees.of(43);
-        public static final Angle kNetAngle = Degrees.of(115);
+        public static final Angle kNetAngle = Degrees.of(120);
         public static final Angle kClimbPrep = Degrees.of(43);
     }
 
@@ -169,8 +169,8 @@ public final class Constants {
 
     public final class FunnelConstants {
         public static final CurrentLimitsConfigs kCurrentLimit =
-                new CurrentLimitsConfigs().withStatorCurrentLimit(40).withStatorCurrentLimitEnable(true);
-        public static final Voltage kIntakeVoltage = Volts.of(7);
+                new CurrentLimitsConfigs().withStatorCurrentLimit(60).withStatorCurrentLimitEnable(true);
+        public static final Voltage kIntakeVoltage = Volts.of(6);
         public static final Voltage kUnjamVoltage = Volts.of(-4);
     }
 
@@ -205,12 +205,12 @@ public final class Constants {
         public static final double kSensorToMechanismRatio = 27.0 / 1.0 * 44.0 / 14.0;
         public static final double kAbsEncoderRatio = 1;
         public static final Angle kAbsEncoderOffset = Rotations.of(0.000244);
-        public static final Angle kIntakePosition = Degrees.of(-20);
+        public static final Angle kIntakePosition = Degrees.of(-22.5);
         public static final Angle kStartPosition = Degrees.of(-90);
         public static final Angle kL1Position = Degrees.of(45);
         public static final Angle kClimbPosition = Degrees.of(90);
     }
 
     public static boolean tuningMode = false;
-    public static boolean publishToNT = false;
+    public static boolean publishToNT = true;
 }

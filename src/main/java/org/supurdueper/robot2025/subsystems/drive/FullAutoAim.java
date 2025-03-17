@@ -19,6 +19,7 @@ import java.util.Comparator;
 import org.supurdueper.lib.utils.AllianceFlip;
 import org.supurdueper.robot2025.Constants.DriveConstants;
 import org.supurdueper.robot2025.FieldConstants;
+import org.supurdueper.robot2025.state.RobotStates;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
 
 public class FullAutoAim implements SwerveRequest {
@@ -57,7 +58,7 @@ public class FullAutoAim implements SwerveRequest {
 
     @Override
     public StatusCode apply(SwerveControlParameters parameters, SwerveModule<?, ?, ?>... modulesToApply) {
-
+        Distance positionTolerance = Inches.of(2);
         // Set rotation based on what side of the reef we are facing. Also grab the
         // april tag in view
         Translation2d reefCenter = AllianceFlip.apply(FieldConstants.Reef.center);
@@ -78,11 +79,17 @@ public class FullAutoAim implements SwerveRequest {
         }
         Distance xOffset = DriveConstants.robotToBumperCenter;
         Pose2d robotPoseTargetSpace = FieldConstants.getRobotPoseTargetSpace(currentPoseFacingReef);
-        Pose2d goalPoseTargetSpace = new Pose2d(xOffset, yOffset, robotCentricFacingAngle.TargetDirection);
+        Pose2d goalPoseTargetSpace =
+                new Pose2d(xOffset.unaryMinus(), yOffset.unaryMinus(), robotCentricFacingAngle.TargetDirection);
         DogLog.log("Drivetrain/Auto Aim Goal Pose", goalPoseTargetSpace);
         DogLog.log("Drivetrain/Robot Pose Target Space", robotPoseTargetSpace);
-        double yError = robotPoseTargetSpace.getY() + goalPoseTargetSpace.getY();
-        double xError = robotPoseTargetSpace.getX() + goalPoseTargetSpace.getX();
+        double yError = robotPoseTargetSpace.getY() - goalPoseTargetSpace.getY();
+        double xError = robotPoseTargetSpace.getX() - goalPoseTargetSpace.getX();
+        if (Math.hypot(xError, yError) < positionTolerance.in(Meters)) {
+            RobotStates.setAimed(true);
+        } else {
+            RobotStates.setAimed(false);
+        }
         robotCentricFacingAngle.VelocityY = leftRightController.calculate(yError);
         robotCentricFacingAngle.VelocityX = throttleController.calculate(xError);
         return robotCentricFacingAngle.apply(parameters, modulesToApply);

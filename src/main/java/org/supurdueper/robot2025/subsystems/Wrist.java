@@ -69,11 +69,14 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
     }
 
     public Command l4() {
-        return Commands.waitSeconds(0.25)
-                .andThen(Commands.waitUntil(RobotContainer.getElevator().isAtPosition())
-                        .withTimeout(2))
+        return Commands.waitUntil(RobotContainer.getElevator().isAtPosition())
+                .withTimeout(1)
                 .andThen(goToPosition(() -> kL4Angle))
                 .withName("Wrist.L4");
+    }
+
+    public boolean atL4() {
+        return (kL4Angle.minus(getPosition())).abs(Units.Rotations) < (positionTolerance.in(Units.Rotations));
     }
 
     public Command net() {

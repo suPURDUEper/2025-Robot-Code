@@ -9,7 +9,6 @@ import dev.doglog.DogLog;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import org.supurdueper.lib.LimelightHelpers;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.lib.utils.AllianceFlip;
@@ -83,10 +82,5 @@ public class Vision extends SubsystemBase implements SupurdueperSubsystem {
     }
 
     @Override
-    public void bindCommands() {
-        RobotModeTriggers.teleop().onTrue(runOnce(Vision::setAprilTagFilter));
-        RobotModeTriggers.autonomous().onTrue(runOnce(Vision::setAprilTagFilter));
-        RobotModeTriggers.disabled().onTrue(runOnce(Vision::setDisabled));
-        RobotModeTriggers.disabled().onFalse(runOnce(Vision::setEnabled));
-    }
+    public void bindCommands() {}
 }

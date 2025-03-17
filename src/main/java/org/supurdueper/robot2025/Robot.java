@@ -10,14 +10,13 @@ import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.ironmaple.simulation.SimulatedArena;
 import org.supurdueper.BuildConstants;
 import org.supurdueper.lib.subsystems.SupurdueperRobot;
 import org.supurdueper.robot2025.autos.AutoRoutines;
+import org.supurdueper.robot2025.subsystems.Vision;
 
 public class Robot extends SupurdueperRobot {
 
@@ -27,22 +26,19 @@ public class Robot extends SupurdueperRobot {
     private final AutoFactory autoFactory;
     private final AutoRoutines autoRoutines;
     private final AutoChooser choreoAutoChooser;
-    private final SendableChooser<Command> autoChooser;
+    // private final SendableChooser<Command> autoChooser;
 
     public Robot() {
         m_robotContainer = new RobotContainer();
         autoFactory = RobotContainer.getDrivetrain().createAutoFactory();
         autoRoutines = new AutoRoutines(autoFactory);
         choreoAutoChooser = new AutoChooser();
-        SmartDashboard.putData("Choreo Auto Chooser", choreoAutoChooser);
         choreoAutoChooser.addCmd("Nothing Right", autoRoutines::nothingRight);
+        choreoAutoChooser.addRoutine("Nothing Right Routine", autoRoutines::nothingRightRoutine);
         choreoAutoChooser.addCmd("Nothing Left", autoRoutines::nothingLeft);
+        choreoAutoChooser.addRoutine("One Coral Left", autoRoutines::oneCoralLeftRoutine);
+        SmartDashboard.putData("Choreo Auto Chooser", choreoAutoChooser);
         // RobotModeTriggers.autonomous().whileTrue(choreoAutoChooser.selectedCommandScheduler());
-
-        autoChooser = new SendableChooser<Command>();
-        autoChooser.addOption("Nothing Right", autoRoutines.nothingLeft());
-        autoChooser.addOption("Nothing Left", autoRoutines.nothingRight());
-        SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
     @Override
@@ -86,7 +82,9 @@ public class Robot extends SupurdueperRobot {
     }
 
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        Vision.setDisabled();
+    }
 
     @Override
     public void disabledPeriodic() {}
@@ -97,7 +95,9 @@ public class Robot extends SupurdueperRobot {
     @Override
     public void autonomousInit() {
         resetCommandsAndButtons();
-        autoChooser.getSelected().schedule();
+        Vision.setEnabled();
+        Vision.setAprilTagFilter();
+        choreoAutoChooser.selectedCommandScheduler().schedule();
     }
 
     @Override
@@ -109,6 +109,8 @@ public class Robot extends SupurdueperRobot {
     @Override
     public void teleopInit() {
         resetCommandsAndButtons();
+        Vision.setEnabled();
+        Vision.setAprilTagFilter();
     }
 
     @Override

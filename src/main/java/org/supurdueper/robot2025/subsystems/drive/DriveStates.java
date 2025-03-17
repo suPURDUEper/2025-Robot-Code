@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import org.supurdueper.lib.swerve.DriveToPose;
 import org.supurdueper.lib.utils.AllianceFlip;
-import org.supurdueper.lib.utils.GeomUtil;
 import org.supurdueper.robot2025.Constants.DriveConstants;
 import org.supurdueper.robot2025.Constants.DriveConstants.*;
 import org.supurdueper.robot2025.FieldConstants;
@@ -41,8 +40,8 @@ public class DriveStates {
     private final FullAutoAim rightAim = new FullAutoAim(Pole.RIGHT);
     private final Transform2d leftRobotScoringOffset =
             new Transform2d(DriveConstants.robotToBumperCenter, DriveConstants.leftAutoAlighOffset, Rotation2d.k180deg);
-    private final Transform2d rightRobotScoringOffset =
-            new Transform2d(DriveConstants.robotToBumperCenter, DriveConstants.rightAutoAlignOffset, Rotation2d.k180deg);
+    private final Transform2d rightRobotScoringOffset = new Transform2d(
+            DriveConstants.robotToBumperCenter, DriveConstants.rightAutoAlignOffset, Rotation2d.k180deg);
 
     public DriveStates(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
@@ -115,8 +114,7 @@ public class DriveStates {
         return drivetrain.applyRequest(() -> {
             Pose2d currentRobotPose = drivetrain.getState().Pose;
             int apriltagId = FieldConstants.getClosestReefTagId(currentRobotPose);
-            Pose2d targetPose =
-                    FieldConstants.getAprilTagPose(apriltagId).plus(aprilTagScoringOffset);
+            Pose2d targetPose = FieldConstants.getAprilTagPose(apriltagId).plus(aprilTagScoringOffset);
             return driveToPose.withGoal(targetPose);
         });
     }
