@@ -37,7 +37,7 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
     private final MotionMagicExpoVoltage positionRequest = new MotionMagicExpoVoltage(0);
     protected final Angle positionTolerance;
     private final SysIdRoutine sysIdRoutine;
-    private final Trigger atPosition = new Trigger(this::atPosition); 
+    private final Trigger atPosition = new Trigger(this::atPosition);
 
     public Command sysIdQuasistaticFoward() {
         return sysIdRoutine.quasistatic(Direction.kForward);

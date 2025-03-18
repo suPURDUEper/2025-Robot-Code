@@ -74,9 +74,9 @@ public class FullAutoAim implements SwerveRequest {
 
         Distance yOffset = pole == Pole.LEFT ? leftAutoAlighOffset : rightAutoAlignOffset;
         // Flip backside of reef based on driver preference
-        if (aprilTagId == 10 || aprilTagId == 21) {
-            yOffset = pole == Pole.RIGHT ? leftAutoAlighOffset : rightAutoAlignOffset;
-        }
+        // if (aprilTagId == 10 || aprilTagId == 21) {
+        //     yOffset = pole == Pole.RIGHT ? leftAutoAlighOffset : rightAutoAlignOffset;
+        // }
         Distance xOffset = DriveConstants.robotToBumperCenter;
         Pose2d robotPoseTargetSpace = FieldConstants.getRobotPoseTargetSpace(currentPoseFacingReef);
         Pose2d goalPoseTargetSpace =
