@@ -16,6 +16,7 @@ public class CurrentStallFilter {
     private Debouncer currentDebouncer;
     private Current filteredCurrent;
     private Current threshold;
+    private Trigger stallTrigger;
 
     public CurrentStallFilter(StatusSignal<Current> currentSignal, Current threshold) {
         this.currentSignal = currentSignal;
@@ -23,6 +24,7 @@ public class CurrentStallFilter {
         this.filteredCurrent = Amps.of(0);
         currentFilter = LinearFilter.movingAverage(7);
         currentDebouncer = new Debouncer(0.2, DebounceType.kRising);
+        this.stallTrigger = new Trigger(this::isStalled);
     }
 
     public void periodic() {
@@ -35,6 +37,6 @@ public class CurrentStallFilter {
     }
 
     public Trigger stallTrigger() {
-        return new Trigger(this::isStalled);
+        return stallTrigger;
     }
 }

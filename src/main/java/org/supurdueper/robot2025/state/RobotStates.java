@@ -94,12 +94,12 @@ public final class RobotStates {
     public static final Trigger actionL4 = driver.Y.and(teleop).or(auto_l4);
     public static final Trigger actionReef = actionL2.or(actionL3).or(actionL4);
     public static final Trigger actionNet = driver.extraLeft.and(teleop);
-    public static final Trigger actionProcessor = driver.extraRight.and(teleop);
+    public static final Trigger actionProcessor = new Trigger((() -> false));
     public static final Trigger actionLeftAim = driver.leftTrigger.and(teleop).or(auto_aimLeft);
     public static final Trigger actionRightAim = driver.rightTrigger.and(teleop).or(auto_aimRight);
     public static final Trigger actionAim = actionLeftAim.or(actionRightAim);
     public static final Trigger actionHome = new Trigger(() -> false);
-    public static final Trigger actionClimbPrep = driver.upDpad.and(teleop);
+    public static final Trigger actionClimbPrep = driver.extraRight.and(teleop);
     public static final Trigger actionClimb = driver.downDpad.and(teleop);
     public static final Trigger rezeroFieldHeading = driver.select.and(teleop);
 
