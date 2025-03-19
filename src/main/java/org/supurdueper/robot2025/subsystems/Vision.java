@@ -53,9 +53,9 @@ public class Vision extends SubsystemBase implements SupurdueperSubsystem {
                 shouldUpdate = false;
             }
         }
-        // if (mt2.pose.getTranslation().getDistance(currentPoseEstimate) > 1) { // 1 meter
-        //     shouldUpdate = false;
-        // }
+        if (mt2.pose.getTranslation().getDistance(state.Pose.getTranslation()) > 1) { // 1 meter
+            shouldUpdate = false;
+        }
         if (shouldUpdate) {
             drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.6, .6, 9999999));
             drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);
@@ -78,7 +78,7 @@ public class Vision extends SubsystemBase implements SupurdueperSubsystem {
     public static void setAprilTagFilter() {
         int[] ids = AllianceFlip.shouldFlip() ? FieldConstants.redReefApriltagIds : FieldConstants.blueReefApriltagIds;
         LimelightHelpers.SetFiducialIDFiltersOverride(leftLimelightName, ids);
-        LimelightHelpers.SetFiducialIDFiltersOverride(leftLimelightName, ids);
+        LimelightHelpers.SetFiducialIDFiltersOverride(rightLimelimeName, ids);
     }
 
     @Override

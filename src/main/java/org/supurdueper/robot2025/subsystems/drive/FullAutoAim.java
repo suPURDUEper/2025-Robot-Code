@@ -58,7 +58,7 @@ public class FullAutoAim implements SwerveRequest {
 
     @Override
     public StatusCode apply(SwerveControlParameters parameters, SwerveModule<?, ?, ?>... modulesToApply) {
-        Distance positionTolerance = Inches.of(2);
+        Distance positionTolerance = Inches.of(1);
         // Set rotation based on what side of the reef we are facing. Also grab the
         // april tag in view
         Translation2d reefCenter = AllianceFlip.apply(FieldConstants.Reef.center);

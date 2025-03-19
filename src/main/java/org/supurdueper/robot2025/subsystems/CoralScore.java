@@ -46,7 +46,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     public Command l4() {
-        return runEnd(this::scoreL4, this::stop).until(this::scoredCoral).withName("CoralScore.L4");
+        return runEnd(this::scoreL4, this::stop).withName("CoralScore.L4");
     }
 
     private void scoreL4() {

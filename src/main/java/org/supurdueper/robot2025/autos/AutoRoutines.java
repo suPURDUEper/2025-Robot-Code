@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import org.supurdueper.robot2025.FieldConstants;
 import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.RobotStates;
+import org.supurdueper.robot2025.subsystems.Elevator.ElevatorHeight;
 import org.supurdueper.robot2025.subsystems.drive.Drivetrain;
 
 public class AutoRoutines {
@@ -41,22 +42,83 @@ public class AutoRoutines {
     }
 
     public Command intake() {
-        return Commands.runEnd(() -> RobotStates.setAutointake(true), () -> RobotStates.setAutointake(false));
+        return Commands.runOnce(() -> RobotStates.setAutointake(true))
+                .andThen(Commands.runOnce(() -> RobotStates.setAutointake(false)));
     }
 
     public AutoRoutine oneCoralLeftRoutine() {
 
-        AutoRoutine routine = m_factory.newRoutine("One Coral Left");
+        AutoRoutine routine = m_factory.newRoutine("Three Coral Left");
 
         AutoTrajectory startToFirstCoral = routine.trajectory(leftStart);
-        AutoTrajectory firstCoralToHp = routine.trajectory(backLeftLeftToHp);
+        AutoTrajectory firstCoralToHp = routine.trajectory(backLeftRightToHp);
         AutoTrajectory hpToSecondCoral = routine.trajectory(hpToFrontLeft);
         AutoTrajectory secondCoralToHp = routine.trajectory(frontLeftLeftToHp);
         AutoTrajectory hpToThirdCoral = routine.trajectory(hpToFrontLeft);
+        AutoTrajectory thirdCoralToHp = routine.trajectory(frontLeftRightToHp);
+        AutoTrajectory hpToFourthCoral = routine.trajectory(leftHpToFront);
 
         routine.active()
                 .onTrue(Commands.sequence(
                         m_factory.resetOdometry(leftStart), new ScheduleCommand(untangle()), startToFirstCoral.cmd()));
+
+        startToFirstCoral.active().onTrue(RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.L3));
+
+        startToFirstCoral
+                .recentlyDone()
+                .onTrue(Commands.sequence(
+                        aimRight(),
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+                        score(),
+                        firstCoralToHp.cmd().asProxy()));
+        firstCoralToHp.atTime(1).onTrue(intake());
+        firstCoralToHp.chain(hpToSecondCoral);
+        hpToSecondCoral
+                .atTime(1.5)
+                .onTrue(Commands.sequence(
+                        aimLeft(),
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+                        score(),
+                        secondCoralToHp.cmd().asProxy()));
+        secondCoralToHp.atTime(1).onTrue(intake());
+        secondCoralToHp.chain(hpToThirdCoral);
+        hpToThirdCoral
+                .atTime(1.5)
+                .onTrue(Commands.sequence(
+                        aimRight(),
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+                        score(),
+                        thirdCoralToHp.cmd().asProxy()));
+        thirdCoralToHp.atTime(1).onTrue(intake());
+        thirdCoralToHp.chain(hpToFourthCoral);
+        hpToFourthCoral
+                .atTime(1.5)
+                .onTrue(Commands.sequence(
+                        aimLeft(),
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+                        score()));
+
+        return routine;
+    }
+
+    public AutoRoutine oneCoralRightRoutine() {
+        AutoRoutine routine = m_factory.newRoutine("Three Coral Right");
+
+        AutoTrajectory startToFirstCoral = routine.trajectory(rightStart);
+        AutoTrajectory firstCoralToHp = routine.trajectory(backRightLeftToHp);
+        AutoTrajectory hpToSecondCoral = routine.trajectory(hpToFrontRight);
+        AutoTrajectory secondCoralToHp = routine.trajectory(frontRightRightToHp);
+        AutoTrajectory hpToThirdCoral = routine.trajectory(hpToFrontRight);
+        AutoTrajectory thirdCoralToHp = routine.trajectory(frontRightLeftToHp);
+        AutoTrajectory hpToFourthCoral = routine.trajectory(rightHpToFront);
+
+        routine.active()
+                .onTrue(Commands.sequence(
+                        m_factory.resetOdometry(rightStart), new ScheduleCommand(untangle()), startToFirstCoral.cmd()));
 
         startToFirstCoral
                 .recentlyDone()
@@ -66,8 +128,35 @@ public class AutoRoutines {
                         Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
                         score(),
                         firstCoralToHp.cmd().asProxy()));
-
+        firstCoralToHp.atTime(1).onTrue(intake());
         firstCoralToHp.chain(hpToSecondCoral);
+        hpToSecondCoral
+                .recentlyDone()
+                .onTrue(Commands.sequence(
+                        aimRight(),
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+                        score(),
+                        secondCoralToHp.cmd().asProxy()));
+        secondCoralToHp.atTime(1).onTrue(intake());
+        secondCoralToHp.chain(hpToThirdCoral);
+        hpToThirdCoral
+                .recentlyDone()
+                .onTrue(Commands.sequence(
+                        aimLeft(),
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+                        score(),
+                        thirdCoralToHp.cmd().asProxy()));
+        thirdCoralToHp.atTime(1).onTrue(intake());
+        thirdCoralToHp.chain(hpToFourthCoral);
+        hpToFourthCoral
+                .recentlyDone()
+                .onTrue(Commands.sequence(
+                        aimRight(),
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+                        score()));
 
         return routine;
     }
@@ -78,6 +167,7 @@ public class AutoRoutines {
                 Commands.runOnce(() -> RobotStates.setAutol4(false)),
                 Commands.runOnce(() -> RobotStates.setAutoAimLeft(true)),
                 Commands.waitUntil(RobotStates::isAimed),
+                Commands.waitSeconds(0.2),
                 Commands.runOnce(() -> RobotStates.setAutoAimLeft(false)));
     }
 
@@ -87,6 +177,7 @@ public class AutoRoutines {
                 Commands.runOnce(() -> RobotStates.setAutol4(false)),
                 Commands.runOnce(() -> RobotStates.setAutoAimRight(true)),
                 Commands.waitUntil(RobotStates::isAimed),
+                Commands.waitSeconds(0.2),
                 Commands.runOnce(() -> RobotStates.setAutoAimRight(false)));
     }
 
