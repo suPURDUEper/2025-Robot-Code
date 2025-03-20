@@ -1,5 +1,6 @@
 package org.supurdueper.lib.subsystems;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
@@ -39,6 +40,9 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
     private final SysIdRoutine sysIdRoutine;
     private final Trigger atPosition = new Trigger(this::atPosition);
 
+    protected StatusSignal<Angle> motorPositionSignal;
+    protected StatusSignal<Double> motorSetpointSignal;
+
     public Command sysIdQuasistaticFoward() {
         return sysIdRoutine.quasistatic(Direction.kForward);
     }
@@ -76,11 +80,11 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
     }
 
     protected Angle getPosition() {
-        return motor.getPosition().getValue();
+        return motorPositionSignal.getValue();
     }
 
     protected Angle getSetpoint() {
-        return Units.Rotations.of(motor.getClosedLoopReference().getValueAsDouble());
+        return Units.Rotations.of(motorSetpointSignal.getValueAsDouble());
     }
 
     protected boolean atPosition() {
@@ -123,6 +127,8 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
         sysIdRoutine = sysIdConfig();
         // Add motion magic items to config
         config = config.withSlot0(gains).withMotionMagic(motionMagicConfig).withSoftwareLimitSwitch(softLimitConfig());
+        motorPositionSignal = motor.getPosition(false);
+        motorSetpointSignal = motor.getClosedLoopReference(false);
     }
 
     @Override
@@ -150,6 +156,7 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
                 }
             }
         }
+        StatusSignal.refreshAll(motorPositionSignal, motorSetpointSignal);
         super.periodic();
     }
 

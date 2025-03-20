@@ -61,8 +61,8 @@ public final class Constants {
         public static final int scoreBreakbeam1 = 0;
         public static final int scoreBreakbeam2 = -1;
         // Climber
-        public static final int climberBreakbeam1 = 2;
-        public static final int climberBreakbeam2 = 3;
+        public static final int cageGrabLimitLeft = 2;
+        public static final int cageGrabLimitRight = 3;
     }
 
     public static final class AlgaeScoreConstants {

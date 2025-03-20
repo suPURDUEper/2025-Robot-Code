@@ -2,10 +2,15 @@ package org.supurdueper.lib.swerve;
 
 import static edu.wpi.first.units.Units.*;
 
+import org.supurdueper.lib.utils.GeomUtil;
+import org.supurdueper.robot2025.Constants.DriveConstants;
+
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -17,49 +22,11 @@ import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.LinearVelocity;
 
 public class DriveToPose implements SwerveRequest {
-    /**
-     * The velocity in the X direction, in m/s. X is defined as forward according to WPILib convention, so this
-     * determines how fast to travel forward.
-     */
-    public double VelocityX = 0;
-    /**
-     * The velocity in the Y direction, in m/s. Y is defined as to the left according to WPILib convention, so this
-     * determines how fast to travel to the left.
-     */
-    public double VelocityY = 0;
-    /**
-     * The desired direction to face. 0 Degrees is defined as in the direction of the X axis. As a result, a
-     * TargetDirection of 90 degrees will point along the Y axis, or to the left.
-     */
-    public Rotation2d TargetDirection = new Rotation2d();
-    /**
-     * The rotational rate feedforward to add to the output of the heading controller, in radians per second. When using
-     * a motion profile for the target direction, this can be set to the current velocity reference of the profile.
-     */
-    public double rotationFeedforward = 0;
-
-    /**
-     * The rotational rate feedforward to add to the output of the heading controller, in radians per second. When using
-     * a motion profile for the target direction, this can be set to the current velocity reference of the profile.
-     */
-    public double xFeedforward = 0;
-
-    /**
-     * The rotational rate feedforward to add to the output of the heading controller, in radians per second. When using
-     * a motion profile for the target direction, this can be set to the current velocity reference of the profile.
-     */
-    public double yFeedforward = 0;
 
     /** The allowable deadband of the request, in m/s. */
     public double Deadband = 0;
     /** The rotational deadband of the request, in radians per second. */
     public double RotationalDeadband = 0;
-
-    /**
-     * The center of rotation the robot should rotate around. This is (0,0) by default, which will rotate around the
-     * center of the robot.
-     */
-    public Translation2d CenterOfRotation = new Translation2d();
 
     /** The type of control request to use for the drive motor. */
     public SwerveModule.DriveRequestType DriveRequestType = SwerveModule.DriveRequestType.OpenLoopVoltage;
@@ -75,38 +42,61 @@ public class DriveToPose implements SwerveRequest {
     public ForwardPerspectiveValue ForwardPerspective = ForwardPerspectiveValue.OperatorPerspective;
 
     private FieldCentric fieldCentric;
-    private PhoenixProfiledPIDController yController;
-    private PhoenixProfiledPIDController xController;
+    private PhoenixProfiledPIDController driveController;
     private PhoenixProfiledPIDController thetaController;
-    private Pose2d goal;
+    private Pose2d targetPose;
+    Translation2d lastSetpointTranslation; 
 
     public DriveToPose() {
-        this.goal = Pose2d.kZero;
+        this.targetPose = Pose2d.kZero;
         fieldCentric = new FieldCentric();
-        yController = new PhoenixProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0, 0));
-        xController = new PhoenixProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0, 0));
+        driveController = new PhoenixProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0, 0));
         thetaController = new PhoenixProfiledPIDController(0, 0, 0, new TrapezoidProfile.Constraints(0, 0));
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
     @Override
     public StatusCode apply(SwerveControlParameters parameters, SwerveModule<?, ?, ?>... modulesToApply) {
-        // Handle x
-        double xGoal = goal.getTranslation().getX();
-        VelocityX =
-                xController.calculate(parameters.currentPose.getTranslation().getX(), xGoal, parameters.timestamp);
-        xFeedforward = xController.getSetpoint().velocity;
-        VelocityX += xFeedforward;
+        if (lastSetpointTranslation == null) {
+            lastSetpointTranslation = parameters.currentPose.getTranslation();
+        }
+        double ffMinRadius = 0.05;
+        double ffMaxRadius = 1;
+        double currentDistanceError = parameters.currentPose.getTranslation().getDistance(targetPose.getTranslation());
+        double ffScaler =
+            MathUtil.clamp(
+                (currentDistanceError - ffMinRadius / (ffMaxRadius - ffMinRadius)),
+                0.0,
+                1.0);
 
-        // Handle y
-        double yGoal = goal.getTranslation().getY();
-        VelocityY =
-                xController.calculate(parameters.currentPose.getTranslation().getY(), yGoal, parameters.timestamp);
-        yFeedforward = yController.getSetpoint().velocity;
-        VelocityX += yFeedforward;
+        driveController.reset(
+            lastSetpointTranslation.getDistance(targetPose.getTranslation()),
+            driveController.getSetpoint().velocity);
+        double driveVelocityScalar =
+            driveController.getSetpoint().velocity * ffScaler
+                + driveController.calculate(currentDistanceError, 0.0, parameters.timestamp);
+        lastSetpointTranslation =
+        new Pose2d(
+                targetPose.getTranslation(),
+                new Rotation2d(
+                    Math.atan2(
+                        parameters.currentPose.getTranslation().getY() - targetPose.getTranslation().getY(),
+                        parameters.currentPose.getTranslation().getX() - targetPose.getTranslation().getX())))
+            .transformBy(GeomUtil.toTransform2d(driveController.getSetpoint().position, 0.0))
+            .getTranslation();
+
+        Translation2d driveVelocity =
+        new Pose2d(
+                Translation2d.kZero,
+                new Rotation2d(
+                    Math.atan2(
+                        parameters.currentPose.getTranslation().getY() - targetPose.getTranslation().getY(),
+                        parameters.currentPose.getTranslation().getX() - targetPose.getTranslation().getX())))
+            .transformBy(GeomUtil.toTransform2d(driveVelocityScalar, 0.0))
+            .getTranslation();
 
         // Handle rotation
-        Rotation2d angleToFace = goal.getRotation();
+        Rotation2d angleToFace = targetPose.getRotation();
         if (ForwardPerspective == ForwardPerspectiveValue.OperatorPerspective) {
             /*
              * If we're operator perspective, rotate the direction we want to face by the
@@ -114,18 +104,15 @@ public class DriveToPose implements SwerveRequest {
              */
             angleToFace = angleToFace.rotateBy(parameters.operatorForwardDirection);
         }
-        double toApplyOmega = thetaController.calculate(
+        double thetaVelocity = thetaController.getSetpoint().velocity * ffScaler + thetaController.calculate(
                 parameters.currentPose.getRotation().getRadians(), angleToFace.getRadians(), parameters.timestamp);
-        rotationFeedforward = thetaController.getSetpoint().velocity;
-        toApplyOmega += rotationFeedforward;
-
+        
         return fieldCentric
-                .withVelocityX(VelocityX)
-                .withVelocityY(VelocityY)
-                .withRotationalRate(toApplyOmega)
+                .withVelocityX(driveVelocity.getX())
+                .withVelocityY(driveVelocity.getY())
+                .withRotationalRate(thetaVelocity)
                 .withDeadband(Deadband)
                 .withRotationalDeadband(RotationalDeadband)
-                .withCenterOfRotation(CenterOfRotation)
                 .withDriveRequestType(DriveRequestType)
                 .withSteerRequestType(SteerRequestType)
                 .withDesaturateWheelSpeeds(DesaturateWheelSpeeds)
@@ -134,15 +121,13 @@ public class DriveToPose implements SwerveRequest {
     }
 
     public DriveToPose withGoal(Pose2d goal) {
-        this.goal = goal;
+        this.targetPose = goal;
         return this;
     }
 
     public DriveToPose withTranslationConstraints(LinearVelocity maxSpeed, LinearAcceleration maxAcceleration) {
-        yController.setConstraints(new TrapezoidProfile.Constraints(
-                maxSpeed.in(MetersPerSecond), maxAcceleration.in(MetersPerSecondPerSecond)));
-        xController.setConstraints(new TrapezoidProfile.Constraints(
-                maxSpeed.in(MetersPerSecond), maxAcceleration.in(MetersPerSecondPerSecond)));
+        driveController.setConstraints(new TrapezoidProfile.Constraints(
+            maxSpeed.in(MetersPerSecond), maxAcceleration.in(MetersPerSecondPerSecond)));
         return this;
     }
 
@@ -166,8 +151,7 @@ public class DriveToPose implements SwerveRequest {
      * @return this object
      */
     public DriveToPose withTranslationPID(double kP, double kI, double kD) {
-        this.xController.setPID(kP, kI, kD);
-        this.yController.setPID(kP, kI, kD);
+        driveController.setPID(kP, kI, kD);
         return this;
     }
 

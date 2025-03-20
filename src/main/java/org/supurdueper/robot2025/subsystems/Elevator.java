@@ -206,9 +206,8 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
     }
 
     @Override
-    protected boolean atPosition() {
-        Angle setpoint = heightToMotorRotations(getHeightSetpoint(heightState));
-        return (setpoint.minus(getPosition())).abs(Units.Rotations) < (positionTolerance.in(Units.Rotations));
+    protected Angle getSetpoint() {
+        return heightToMotorRotations(getHeightSetpoint(heightState));
     }
 
     @Override
