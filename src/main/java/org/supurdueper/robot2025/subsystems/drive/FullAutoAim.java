@@ -52,7 +52,7 @@ public class FullAutoAim implements SwerveRequest {
     }
 
     private final Transform2d leftRobotScoringOffset = new Transform2d(
-            DriveConstants.robotToBumperCenter.unaryMinus(), DriveConstants.leftAutoAlighOffset, Rotation2d.k180deg);
+            DriveConstants.robotToBumperCenter.unaryMinus(), DriveConstants.leftAutoAlignOffset, Rotation2d.k180deg);
     private final Transform2d rightRobotScoringOffset = new Transform2d(
             DriveConstants.robotToBumperCenter.unaryMinus(), DriveConstants.rightAutoAlignOffset, Rotation2d.k180deg);
 

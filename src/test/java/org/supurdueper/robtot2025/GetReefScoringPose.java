@@ -12,7 +12,7 @@ public class GetReefScoringPose {
     @Test
     void getReefScoringPoses() {
         Pose2d leftRobotScoringPose =
-                new Pose2d(DriveConstants.robotToBumperCenter, DriveConstants.leftAutoAlighOffset, Rotation2d.k180deg);
+                new Pose2d(DriveConstants.robotToBumperCenter, DriveConstants.leftAutoAlignOffset, Rotation2d.k180deg);
         Pose2d rightRobotScoringPose =
                 new Pose2d(DriveConstants.robotToBumperCenter, DriveConstants.rightAutoAlignOffset, Rotation2d.k180deg);
         int[] blueReefIds = FieldConstants.blueReefApriltagIds;

@@ -46,8 +46,8 @@ public final class Constants {
         public static final double translationKp = 7.0;
         public static final double translationKi = 0;
         public static final double translationKd = 0.1;
-        public static final Distance leftAutoAlighOffset = Inches.of(-7);
-        public static final Distance rightAutoAlignOffset = Inches.of(6.5);
+        public static final Distance rightAutoAlignOffset = Inches.of(-7);
+        public static final Distance leftAutoAlignOffset = Inches.of(6.5);
         public static final AngularVelocity rotationClosedLoopDeadband = RadiansPerSecond.of(0.05);
         public static final LinearVelocity translationClosedLoopDeadband = MetersPerSecond.of(0.01);
         public static final Distance positionTolerance = Inches.of(0.7);
