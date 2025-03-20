@@ -53,9 +53,9 @@ public class Vision extends SubsystemBase implements SupurdueperSubsystem {
                 shouldUpdate = false;
             }
         }
-        if (mt2.pose.getTranslation().getDistance(state.Pose.getTranslation()) > 1) { // 1 meter
-            shouldUpdate = false;
-        }
+        // if (mt2.pose.getTranslation().getDistance(state.Pose.getTranslation()) > 1) { // 1 meter
+        //     shouldUpdate = false;
+        // }
         if (shouldUpdate) {
             drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill(.6, .6, 9999999));
             drivetrain.addVisionMeasurement(mt2.pose, mt2.timestampSeconds);

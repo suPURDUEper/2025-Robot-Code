@@ -4,7 +4,8 @@
 
 package org.supurdueper.robot2025;
 
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import lombok.Getter;
 import org.supurdueper.robot2025.state.Driver;
 import org.supurdueper.robot2025.state.TestController;
@@ -81,13 +82,23 @@ public class RobotContainer {
     }
 
     public void configureBindings() {
-        climber.setDefaultCommand(climber.setVoltage(testController::getManualElevatorVoltage));
-        testController.X.onTrue(climber.home());
-        testController.Y.onTrue(climber.climbPrep());
-        testController.A.onTrue(climber.retract());
-        testController.select.onTrue(Commands.runOnce(() -> climber.zero()));
-        testController.downDpad.onTrue(climber.disengageRatchet());
-        testController.upDpad.onTrue(climber.engageRatchet());
-        funnelTilt.setDefaultCommand(funnelTilt.setVoltage(testController::getManualWristVoltage));
+        // climber.setDefaultCommand(climber.setVoltage(testController::getManualElevatorVoltage));
+        // testController.X.onTrue(climber.home());
+        // testController.Y.onTrue(climber.climbPrep());
+        // testController.A.onTrue(climber.retract());
+        // testController.select.onTrue(Commands.runOnce(() -> climber.zero()));
+        // testController.downDpad.onTrue(climber.disengageRatchet());
+        // testController.upDpad.onTrue(climber.engageRatchet());
+        // funnelTilt.setDefaultCommand(funnelTilt.setVoltage(testController::getManualWristVoltage));
+
+        Pose2d aGoal = new Pose2d(0, 0, Rotation2d.kZero);
+        Pose2d xGoal = new Pose2d(1, 1, Rotation2d.kZero);
+        Pose2d bGoal = new Pose2d(1, -1, Rotation2d.kZero);
+        Pose2d yGoal = new Pose2d(2, 0, Rotation2d.kZero);
+
+        testController.A.whileTrue(RobotContainer.getDrivetrain().driveStates.driveToPose(() -> aGoal));
+        testController.B.whileTrue(RobotContainer.getDrivetrain().driveStates.driveToPose(() -> bGoal));
+        testController.X.whileTrue(RobotContainer.getDrivetrain().driveStates.driveToPose(() -> xGoal));
+        testController.Y.whileTrue(RobotContainer.getDrivetrain().driveStates.driveToPose(() -> yGoal));
     }
 }

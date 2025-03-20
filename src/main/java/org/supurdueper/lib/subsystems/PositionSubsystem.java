@@ -127,8 +127,6 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
         sysIdRoutine = sysIdConfig();
         // Add motion magic items to config
         config = config.withSlot0(gains).withMotionMagic(motionMagicConfig).withSoftwareLimitSwitch(softLimitConfig());
-        motorPositionSignal = motor.getPosition(false);
-        motorSetpointSignal = motor.getClosedLoopReference(false);
     }
 
     @Override
@@ -158,6 +156,13 @@ public abstract class PositionSubsystem extends TalonFXSubsystem {
         }
         StatusSignal.refreshAll(motorPositionSignal, motorSetpointSignal);
         super.periodic();
+    }
+
+    @Override
+    protected void configureMotors() {
+        super.configureMotors();
+        motorPositionSignal = motor.getPosition(false);
+        motorSetpointSignal = motor.getClosedLoopReference(false);
     }
 
     public abstract Slot0Configs pidGains();

@@ -45,7 +45,6 @@ public class CurrentStallFilter {
         enabled = false;
     }
 
-
     public boolean isStalled() {
         return currentDebouncer.calculate(filteredCurrent.gt(threshold));
     }

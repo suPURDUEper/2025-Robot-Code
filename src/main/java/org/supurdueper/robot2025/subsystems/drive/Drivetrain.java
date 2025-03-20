@@ -7,6 +7,7 @@ import choreo.auto.AutoFactory;
 import choreo.trajectory.SwerveSample;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import dev.doglog.DogLog;
@@ -56,7 +57,7 @@ public class Drivetrain extends TunerSwerveDrivetrain implements SupurdueperSubs
 
     private DriveTelemetry telemetry = new DriveTelemetry();
 
-    private DriveStates driveStates;
+    public DriveStates driveStates;
 
     /**
      * Constructs a CTRE SwerveDrivetrain using the specified constants.
@@ -187,7 +188,8 @@ public class Drivetrain extends TunerSwerveDrivetrain implements SupurdueperSubs
         setControl(m_pathApplyFieldSpeeds
                 .withSpeeds(targetSpeeds)
                 .withWheelForceFeedforwardsX(sample.moduleForcesX())
-                .withWheelForceFeedforwardsY(sample.moduleForcesY()));
+                .withWheelForceFeedforwardsY(sample.moduleForcesY())
+                .withDriveRequestType(DriveRequestType.Velocity));
     }
 
     public Command stop() {

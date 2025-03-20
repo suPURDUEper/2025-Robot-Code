@@ -90,7 +90,8 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     private void runIntake() {
-        ballDetector.enable();;
+        ballDetector.enable();
+        ;
         runVoltage(kIntakeVoltage);
     }
 

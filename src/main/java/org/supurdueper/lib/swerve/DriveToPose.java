@@ -2,24 +2,23 @@ package org.supurdueper.lib.swerve;
 
 import static edu.wpi.first.units.Units.*;
 
-import org.supurdueper.lib.utils.GeomUtil;
-import org.supurdueper.robot2025.Constants.DriveConstants;
-
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-
+import dev.doglog.DogLog;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.LinearVelocity;
+import org.supurdueper.lib.utils.GeomUtil;
 
 public class DriveToPose implements SwerveRequest {
 
@@ -28,8 +27,11 @@ public class DriveToPose implements SwerveRequest {
     /** The rotational deadband of the request, in radians per second. */
     public double RotationalDeadband = 0;
 
+    /** The rotational deadband of the request, in radians per second. */
+    public double distanceTolerance = 0;
+
     /** The type of control request to use for the drive motor. */
-    public SwerveModule.DriveRequestType DriveRequestType = SwerveModule.DriveRequestType.OpenLoopVoltage;
+    public SwerveModule.DriveRequestType DriveRequestType = SwerveModule.DriveRequestType.Velocity;
     /** The type of control request to use for the steer motor. */
     public SwerveModule.SteerRequestType SteerRequestType = SwerveModule.SteerRequestType.Position;
     /**
@@ -38,14 +40,15 @@ public class DriveToPose implements SwerveRequest {
      */
     public boolean DesaturateWheelSpeeds = true;
 
-    /** The perspective to use when determining which direction is forward. */
-    public ForwardPerspectiveValue ForwardPerspective = ForwardPerspectiveValue.OperatorPerspective;
-
     private FieldCentric fieldCentric;
     private PhoenixProfiledPIDController driveController;
     private PhoenixProfiledPIDController thetaController;
     private Pose2d targetPose;
-    Translation2d lastSetpointTranslation; 
+    Translation2d lastSetpointTranslation;
+    private double thetaErrorAbs = 0.0;
+    private Rotation2d lastSetpointRotation;
+    private double lastTime;
+    public boolean toReset = false;
 
     public DriveToPose() {
         this.targetPose = Pose2d.kZero;
@@ -55,68 +58,111 @@ public class DriveToPose implements SwerveRequest {
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
+    public void reset(SwerveControlParameters parameters) {
+        Pose2d currentPose = parameters.currentPose;
+        ChassisSpeeds fieldVelocity = parameters.currentChassisSpeed;
+        Translation2d linearFieldVelocity =
+                new Translation2d(fieldVelocity.vxMetersPerSecond, fieldVelocity.vyMetersPerSecond);
+        driveController.reset(
+                currentPose.getTranslation().getDistance(targetPose.getTranslation()),
+                Math.min(
+                        0.0,
+                        -linearFieldVelocity
+                                .rotateBy(targetPose
+                                        .getTranslation()
+                                        .minus(currentPose.getTranslation())
+                                        .getAngle()
+                                        .unaryMinus())
+                                .getX()));
+        thetaController.reset(currentPose.getRotation().getRadians(), fieldVelocity.omegaRadiansPerSecond);
+        lastSetpointTranslation = currentPose.getTranslation();
+        lastSetpointRotation = targetPose.getRotation();
+        lastTime = parameters.timestamp;
+        toReset = false;
+    }
+
     @Override
     public StatusCode apply(SwerveControlParameters parameters, SwerveModule<?, ?, ?>... modulesToApply) {
+        if (toReset) {
+            reset(parameters);
+        }
         if (lastSetpointTranslation == null) {
             lastSetpointTranslation = parameters.currentPose.getTranslation();
         }
         double ffMinRadius = 0.05;
         double ffMaxRadius = 1;
         double currentDistanceError = parameters.currentPose.getTranslation().getDistance(targetPose.getTranslation());
-        double ffScaler =
-            MathUtil.clamp(
-                (currentDistanceError - ffMinRadius / (ffMaxRadius - ffMinRadius)),
-                0.0,
-                1.0);
+        double ffScaler = MathUtil.clamp((currentDistanceError - ffMinRadius / (ffMaxRadius - ffMinRadius)), 0.0, 1.0);
 
         driveController.reset(
-            lastSetpointTranslation.getDistance(targetPose.getTranslation()),
-            driveController.getSetpoint().velocity);
-        double driveVelocityScalar =
-            driveController.getSetpoint().velocity * ffScaler
+                lastSetpointTranslation.getDistance(targetPose.getTranslation()),
+                driveController.getSetpoint().velocity);
+        double driveVelocityScalar = driveController.getSetpoint().velocity * ffScaler
                 + driveController.calculate(currentDistanceError, 0.0, parameters.timestamp);
-        lastSetpointTranslation =
-        new Pose2d(
-                targetPose.getTranslation(),
-                new Rotation2d(
-                    Math.atan2(
-                        parameters.currentPose.getTranslation().getY() - targetPose.getTranslation().getY(),
-                        parameters.currentPose.getTranslation().getX() - targetPose.getTranslation().getX())))
-            .transformBy(GeomUtil.toTransform2d(driveController.getSetpoint().position, 0.0))
-            .getTranslation();
+        if (currentDistanceError < distanceTolerance) {
+            driveVelocityScalar = 0;
+        }
+        lastSetpointTranslation = new Pose2d(
+                        targetPose.getTranslation(),
+                        new Rotation2d(Math.atan2(
+                                parameters.currentPose.getTranslation().getY()
+                                        - targetPose.getTranslation().getY(),
+                                parameters.currentPose.getTranslation().getX()
+                                        - targetPose.getTranslation().getX())))
+                .transformBy(GeomUtil.toTransform2d(driveController.getSetpoint().position, 0.0))
+                .getTranslation();
 
-        Translation2d driveVelocity =
-        new Pose2d(
-                Translation2d.kZero,
-                new Rotation2d(
-                    Math.atan2(
-                        parameters.currentPose.getTranslation().getY() - targetPose.getTranslation().getY(),
-                        parameters.currentPose.getTranslation().getX() - targetPose.getTranslation().getX())))
-            .transformBy(GeomUtil.toTransform2d(driveVelocityScalar, 0.0))
-            .getTranslation();
+        Translation2d driveVelocity = new Pose2d(
+                        Translation2d.kZero,
+                        new Rotation2d(Math.atan2(
+                                parameters.currentPose.getTranslation().getY()
+                                        - targetPose.getTranslation().getY(),
+                                parameters.currentPose.getTranslation().getX()
+                                        - targetPose.getTranslation().getX())))
+                .transformBy(GeomUtil.toTransform2d(driveVelocityScalar, 0.0))
+                .getTranslation();
 
         // Handle rotation
         Rotation2d angleToFace = targetPose.getRotation();
-        if (ForwardPerspective == ForwardPerspectiveValue.OperatorPerspective) {
-            /*
-             * If we're operator perspective, rotate the direction we want to face by the
-             * angle
-             */
-            angleToFace = angleToFace.rotateBy(parameters.operatorForwardDirection);
-        }
-        double thetaVelocity = thetaController.getSetpoint().velocity * ffScaler + thetaController.calculate(
-                parameters.currentPose.getRotation().getRadians(), angleToFace.getRadians(), parameters.timestamp);
-        
+        // Calculate theta speed
+        double thetaVelocity = thetaController.calculate(
+                        parameters.currentPose.getRotation().getRadians(),
+                        new TrapezoidProfile.State(
+                                targetPose.getRotation().getRadians(),
+                                (targetPose.getRotation().minus(lastSetpointRotation)).getRadians()
+                                        / (parameters.timestamp - lastTime)),
+                        parameters.timestamp)
+                + thetaController.getSetpoint().velocity * ffScaler;
+        thetaErrorAbs = Math.abs(parameters
+                .currentPose
+                .getRotation()
+                .minus(targetPose.getRotation())
+                .getRadians());
+        if (thetaErrorAbs < thetaController.getPositionTolerance()) thetaVelocity = 0.0;
+        lastSetpointRotation = targetPose.getRotation();
+        lastTime = parameters.timestamp;
+
+        DogLog.log("DriveToPose/DistanceMeasured", currentDistanceError);
+        DogLog.log("DriveToPose/DistanceSetpoint", driveController.getSetpoint().position);
+        DogLog.log(
+                "DriveToPose/ThetaMeasured",
+                parameters.currentPose.getRotation().getRadians());
+        DogLog.log("DriveToPose/ThetaSetpoint", thetaController.getSetpoint().position);
+        DogLog.log("DriveToPose/Setpoint", new Pose2d[] {
+            new Pose2d(lastSetpointTranslation, Rotation2d.fromRadians(thetaController.getSetpoint().position))
+        });
+        DogLog.log("DriveToPose/Goal", new Pose2d[] {targetPose});
+
         return fieldCentric
-                .withVelocityX(driveVelocity.getX())
-                .withVelocityY(driveVelocity.getY())
+                .withVelocityX(-driveVelocity.getX())
+                .withVelocityY(-driveVelocity.getY())
                 .withRotationalRate(thetaVelocity)
                 .withDeadband(Deadband)
                 .withRotationalDeadband(RotationalDeadband)
                 .withDriveRequestType(DriveRequestType)
                 .withSteerRequestType(SteerRequestType)
                 .withDesaturateWheelSpeeds(DesaturateWheelSpeeds)
-                .withForwardPerspective(ForwardPerspective)
+                .withForwardPerspective(ForwardPerspectiveValue.BlueAlliance)
                 .apply(parameters, modulesToApply);
     }
 
@@ -127,7 +173,7 @@ public class DriveToPose implements SwerveRequest {
 
     public DriveToPose withTranslationConstraints(LinearVelocity maxSpeed, LinearAcceleration maxAcceleration) {
         driveController.setConstraints(new TrapezoidProfile.Constraints(
-            maxSpeed.in(MetersPerSecond), maxAcceleration.in(MetersPerSecondPerSecond)));
+                maxSpeed.in(MetersPerSecond), maxAcceleration.in(MetersPerSecondPerSecond)));
         return this;
     }
 
@@ -199,16 +245,12 @@ public class DriveToPose implements SwerveRequest {
         return this;
     }
 
-    /**
-     * Modifies the ForwardPerspective parameter and returns itself.
-     *
-     * <p>The perspective to use when determining which direction is forward.
-     *
-     * @param newForwardPerspective Parameter to modify
-     * @return this object
-     */
-    public DriveToPose withForwardPerspective(ForwardPerspectiveValue newForwardPerspective) {
-        this.ForwardPerspective = newForwardPerspective;
+    public DriveToPose withDistanceTolerance(double distanceTolerance) {
+        this.distanceTolerance = distanceTolerance;
         return this;
+    }
+
+    public void resetNextLoop() {
+        toReset = true;
     }
 }

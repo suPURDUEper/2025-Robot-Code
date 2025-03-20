@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.*;
 import static org.supurdueper.robot2025.Constants.DriveConstants.*;
 import static org.supurdueper.robot2025.state.RobotStates.*;
 
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentricFacingAngle;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -11,14 +12,15 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import java.util.function.Supplier;
 import org.supurdueper.lib.swerve.DriveToPose;
 import org.supurdueper.lib.utils.AllianceFlip;
-import org.supurdueper.robot2025.Constants.DriveConstants;
 import org.supurdueper.robot2025.Constants.DriveConstants.*;
 import org.supurdueper.robot2025.FieldConstants;
 import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.Driver;
 import org.supurdueper.robot2025.state.RobotStates;
+import org.supurdueper.robot2025.subsystems.drive.DriveSysId.SysIdSwerveTranslationCurrent;
 import org.supurdueper.robot2025.subsystems.drive.FullAutoAim.Pole;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
 
@@ -32,16 +34,13 @@ public class DriveStates {
     private double MaxAngularRate = RotationsPerSecond.of(1.5).in(RadiansPerSecond); // 3/4 of a rotation per second
     private final SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric();
     private final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric();
+    private final SysIdSwerveTranslationCurrent driveCurrentTuning = new SysIdSwerveTranslationCurrent();
     private final FieldCentricFacingReef fieldCentricFacingReef = new FieldCentricFacingReef();
     private final FieldCentricFacingAngle fieldCentricFacingAngle = new FieldCentricFacingAngle();
     private final FieldCentricFacingAngle fieldCentricFacingHpStation = new FieldCentricFacingHpStation();
     private final DriveToPose driveToPose = new DriveToPose();
     private final FullAutoAim leftAim = new FullAutoAim(Pole.LEFT);
     private final FullAutoAim rightAim = new FullAutoAim(Pole.RIGHT);
-    private final Transform2d leftRobotScoringOffset =
-            new Transform2d(DriveConstants.robotToBumperCenter, DriveConstants.leftAutoAlighOffset, Rotation2d.k180deg);
-    private final Transform2d rightRobotScoringOffset = new Transform2d(
-            DriveConstants.robotToBumperCenter, DriveConstants.rightAutoAlignOffset, Rotation2d.k180deg);
 
     public DriveStates(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
@@ -51,8 +50,9 @@ public class DriveStates {
 
         driveToPose
                 .withTranslationPID(translationKp, translationKi, translationKd)
-                .withTranslationConstraints(TunerConstants.kMaxAutoAimSpeed, TunerConstants.kMaxAcceleration)
+                .withTranslationConstraints(TunerConstants.kMaxAutoAimSpeed, TunerConstants.kMaxAutoAimAcceleration)
                 .withTranslationDeadband(translationClosedLoopDeadband)
+                .withDistanceTolerance(positionTolerance.in(Meters))
                 .withHeadingPID(headingKp, headingKi, headingKd)
                 .withHeadingConstraints(RotationsPerSecond.of(0.75), RotationsPerSecondPerSecond.of(1.5))
                 .withHeadingDeadband(rotationClosedLoopDeadband);
@@ -68,6 +68,8 @@ public class DriveStates {
         actionClimbPrep.onTrue(normalTeleopDrive());
         rezeroFieldHeading.onTrue(
                 Commands.runOnce(() -> drivetrain.resetRotation(AllianceFlip.apply(Rotation2d.kZero))));
+        // actionLeftAim.whileTrue(align(leftRobotScoringOffset));
+        // actionRightAim.whileTrue(align(rightRobotScoringOffset));
         actionLeftAim.whileTrue(leftAlign());
         actionRightAim.whileTrue(rightAlign());
     }
@@ -76,26 +78,44 @@ public class DriveStates {
         return drivetrain.applyRequest(() -> driveFieldCentric
                 .withVelocityX(driver.getDriveFwdPositive() * MaxSpeed)
                 .withVelocityY(driver.getDriveLeftPositive() * MaxSpeed)
-                .withRotationalRate(driver.getDriveCCWPositive() * MaxAngularRate));
+                .withRotationalRate(driver.getDriveCCWPositive() * MaxAngularRate)
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
+    }
+
+    public Command setVelocityDrive(double velocity) {
+        return drivetrain.applyRequest(
+                () -> driveFieldCentric.withVelocityX(velocity).withDriveRequestType(DriveRequestType.Velocity));
+    }
+
+    private Command currentTuningDrive() {
+        return drivetrain.applyRequest(() -> driveCurrentTuning.withCurrent(driver.getDriveFwdPositive() * 40));
+    }
+
+    public Command driveToPose(Supplier<Pose2d> targetSupplier) {
+        Pose2d targetPose = targetSupplier.get();
+        return drivetrain.applyRequest(() -> driveToPose.withGoal(targetPose));
     }
 
     private Command driveFacingReef() {
         return drivetrain.applyRequest(() -> fieldCentricFacingReef
                 .withVelocityX(driver.getDriveFwdPositive() * MaxSpeed)
-                .withVelocityY(driver.getDriveLeftPositive() * MaxSpeed));
+                .withVelocityY(driver.getDriveLeftPositive() * MaxSpeed)
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
     }
 
     private Command driveFacingHpStation() {
         return drivetrain.applyRequest(() -> fieldCentricFacingHpStation
                 .withVelocityX(driver.getDriveFwdPositive() * MaxSpeed)
-                .withVelocityY(driver.getDriveLeftPositive() * MaxSpeed));
+                .withVelocityY(driver.getDriveLeftPositive() * MaxSpeed)
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
     }
 
     private Command driveFacingAngle(Rotation2d angle) {
         return drivetrain.applyRequest(() -> fieldCentricFacingAngle
                 .withVelocityX(driver.getDriveFwdPositive() * MaxSpeed)
                 .withVelocityY(driver.getDriveLeftPositive() * MaxSpeed)
-                .withTargetDirection(angle));
+                .withTargetDirection(angle)
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
     }
 
     private Command driveFacingProcessor() {
@@ -111,12 +131,12 @@ public class DriveStates {
     }
 
     private Command align(Transform2d aprilTagScoringOffset) {
-        return drivetrain.applyRequest(() -> {
+        return Commands.runOnce(() -> driveToPose.resetNextLoop()).andThen(drivetrain.applyRequest(() -> {
             Pose2d currentRobotPose = drivetrain.getState().Pose;
             int apriltagId = FieldConstants.getClosestReefTagId(currentRobotPose);
             Pose2d targetPose = FieldConstants.getAprilTagPose(apriltagId).plus(aprilTagScoringOffset);
             return driveToPose.withGoal(targetPose);
-        });
+        }));
     }
 
     private Command rightAlign() {

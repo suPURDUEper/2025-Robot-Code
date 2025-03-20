@@ -21,10 +21,14 @@ import org.supurdueper.robot2025.state.RobotStates;
 public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem {
 
     private DigitalInput coralScoreBB;
+    private DigitalInput coralScoreBB2;
+
     public boolean hasCoral;
 
     public CoralScore() {
         coralScoreBB = new DigitalInput(Constants.DIOPort.scoreBreakbeam1);
+        coralScoreBB2 = new DigitalInput(Constants.DIOPort.scoreBreakbeam2);
+
         configureMotors();
         Robot.add(this);
     }
@@ -34,7 +38,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     private boolean scoredCoral() {
-        return coralScoreBB.get();
+        return coralScoreBB2.get();
     }
 
     public Command loadCoral() {
@@ -62,7 +66,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     public Command l1() {
-        return runEnd(this::scoreL1, this::stop).until(this::scoredCoral).withName("CoralScore.L1");
+        return runEnd(this::scoreL1, this::stop).withName("CoralScore.L1");
     }
 
     private void scoreL1() {
@@ -94,6 +98,7 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     public void periodic() {
         super.periodic();
         DogLog.log("CoralScore/BreakBeam1", coralScoreBB.get());
+        DogLog.log("CoralScore/BreakBeam2", coralScoreBB2.get());
     }
 
     @Override

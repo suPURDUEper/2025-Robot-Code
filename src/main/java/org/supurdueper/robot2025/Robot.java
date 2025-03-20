@@ -9,6 +9,7 @@ import choreo.auto.AutoFactory;
 import dev.doglog.DogLog;
 import dev.doglog.DogLogOptions;
 import edu.wpi.first.net.PortForwarder;
+import edu.wpi.first.wpilibj.Threads;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -37,6 +38,7 @@ public class Robot extends SupurdueperRobot {
         choreoAutoChooser.addRoutine("Nothing Right Routine", autoRoutines::nothingRightRoutine);
         choreoAutoChooser.addCmd("Nothing Left", autoRoutines::nothingLeft);
         choreoAutoChooser.addRoutine("One Coral Left", autoRoutines::oneCoralLeftRoutine);
+        choreoAutoChooser.addRoutine("oneCoralRightRoutine", autoRoutines::oneCoralRightRoutine);
         SmartDashboard.putData("Choreo Auto Chooser", choreoAutoChooser);
         // RobotModeTriggers.autonomous().whileTrue(choreoAutoChooser.selectedCommandScheduler());
     }
@@ -75,9 +77,11 @@ public class Robot extends SupurdueperRobot {
 
     @Override
     public void robotPeriodic() {
+        Threads.setCurrentThreadPriority(true, 1);
         double startTime = Timer.getFPGATimestamp();
         CommandScheduler.getInstance().run();
         double endTime = Timer.getFPGATimestamp();
+        Threads.setCurrentThreadPriority(false, 0);
         DogLog.log("Loop Time", endTime - startTime);
     }
 

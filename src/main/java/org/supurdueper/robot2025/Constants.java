@@ -45,11 +45,12 @@ public final class Constants {
         public static final double headingKd = 0.0;
         public static final double translationKp = 7.0;
         public static final double translationKi = 0;
-        public static final double translationKd = 0.75;
+        public static final double translationKd = 0.1;
         public static final Distance leftAutoAlighOffset = Inches.of(-7);
         public static final Distance rightAutoAlignOffset = Inches.of(6.5);
         public static final AngularVelocity rotationClosedLoopDeadband = RadiansPerSecond.of(0.05);
-        public static final LinearVelocity translationClosedLoopDeadband = MetersPerSecond.of(0.05);
+        public static final LinearVelocity translationClosedLoopDeadband = MetersPerSecond.of(0.01);
+        public static final Distance positionTolerance = Inches.of(0.7);
         public static final Distance robotToBumperCenter = Inches.of(17.75);
     }
 
@@ -59,7 +60,7 @@ public final class Constants {
         public static final int intakeBreakbeam = 5;
         // Coral score
         public static final int scoreBreakbeam1 = 0;
-        public static final int scoreBreakbeam2 = -1;
+        public static final int scoreBreakbeam2 = 1;
         // Climber
         public static final int cageGrabLimitLeft = 2;
         public static final int cageGrabLimitRight = 3;
@@ -92,8 +93,8 @@ public final class Constants {
         public static final double profileA = 250;
         public static final double recalcKv = 0.25568353813;
         public static final double recalcKa = 0.00185553196;
-        public static final Current kStatorCurrentLimit = Amps.of(100);
-        public static final Current kSupplyCurrentLimit = Amps.of(60);
+        public static final Current kStatorCurrentLimit = Amps.of(80);
+        public static final Current kSupplyCurrentLimit = Amps.of(50);
         public static final double kInchesPerRotation = (12.0 / 72.0) * Math.PI * 1.744 * 2;
         public static final Distance kForwardSoftLimit = Inches.of(56.5);
         public static final Distance kReverseSoftLimit = Inches.of(0);

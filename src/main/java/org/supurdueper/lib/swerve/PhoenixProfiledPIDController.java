@@ -335,7 +335,7 @@ public class PhoenixProfiledPIDController implements Sendable {
         m_lastTimestamp = currentTimestamp;
 
         m_setpoint = m_profile.calculate(thisPeriod, m_setpoint, m_goal);
-        return m_controller.calculate(currentTimestamp, measurement, m_setpoint.position);
+        return m_controller.calculate(measurement, m_setpoint.position, currentTimestamp);
     }
 
     /**

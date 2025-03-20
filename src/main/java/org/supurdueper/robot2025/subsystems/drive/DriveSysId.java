@@ -3,7 +3,14 @@ package org.supurdueper.robot2025.subsystems.drive;
 import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.controls.PositionTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
+import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
@@ -100,5 +107,56 @@ public class DriveSysId {
      */
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         return m_sysIdRoutineToApply.dynamic(direction);
+    }
+
+    /** SysId-specific SwerveRequest to characterize the translational characteristics of a swerve drivetrain. */
+    public static class SysIdSwerveTranslationCurrent implements SwerveRequest {
+        /** Voltage to apply to drive wheels. */
+        public double CurrentToApply = 0;
+
+        /** Local reference to a voltage request for the drive motors */
+        private final TorqueCurrentFOC m_driveRequest = new TorqueCurrentFOC(0);
+        /** Local reference to a position voltage request for the steer motors */
+        private final PositionVoltage m_steerRequest_Voltage = new PositionVoltage(0);
+        /** Local reference to a position torque current request for the steer motors */
+        private final PositionTorqueCurrentFOC m_steerRequest_TorqueCurrent = new PositionTorqueCurrentFOC(0);
+
+        public StatusCode apply(SwerveControlParameters parameters, SwerveModule<?, ?, ?>... modulesToApply) {
+            for (int i = 0; i < modulesToApply.length; ++i) {
+                switch (modulesToApply[i].getSteerClosedLoopOutputType()) {
+                    case Voltage:
+                        modulesToApply[i].apply(
+                                m_driveRequest.withOutput(CurrentToApply), m_steerRequest_Voltage.withPosition(0));
+                        break;
+                    case TorqueCurrentFOC:
+                        modulesToApply[i].apply(
+                                m_driveRequest.withOutput(CurrentToApply),
+                                m_steerRequest_TorqueCurrent.withPosition(0));
+                        break;
+                }
+            }
+            return StatusCode.OK;
+        }
+
+        /**
+         * Sets the voltage to apply to the drive wheels.
+         *
+         * @param volts Voltage to apply
+         * @return this request
+         */
+        public SysIdSwerveTranslationCurrent withCurrent(double volts) {
+            CurrentToApply = volts;
+            return this;
+        }
+        /**
+         * Sets the voltage to apply to the drive wheels.
+         *
+         * @param volts Voltage to apply
+         * @return this request
+         */
+        public SysIdSwerveTranslationCurrent withCurrent(Voltage volts) {
+            CurrentToApply = volts.in(Volts);
+            return this;
+        }
     }
 }
