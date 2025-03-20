@@ -21,8 +21,8 @@ public class CageGrabber extends TalonFXSubsystem implements SupurdueperSubsyste
     private DigitalInput cageSensorRight;
 
     public CageGrabber() {
-        cageSensorLeft = new DigitalInput(Constants.DIOPort.climberBreakbeam1);
-        cageSensorRight = new DigitalInput(Constants.DIOPort.climberBreakbeam2);
+        cageSensorLeft = new DigitalInput(Constants.DIOPort.cageGrabLimitLeft);
+        cageSensorRight = new DigitalInput(Constants.DIOPort.cageGrabLimitRight);
         configureMotors();
         Robot.add(this);
     }
