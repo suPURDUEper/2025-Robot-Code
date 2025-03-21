@@ -80,7 +80,6 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
         boolean gotBall = ballDetector.isStalled();
         if (gotBall) {
             hasBall = true;
-            ballDetector.disable();
         }
         return gotBall;
     }
@@ -90,8 +89,6 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     private void runIntake() {
-        ballDetector.enable();
-        ;
         runVoltage(kIntakeVoltage);
     }
 

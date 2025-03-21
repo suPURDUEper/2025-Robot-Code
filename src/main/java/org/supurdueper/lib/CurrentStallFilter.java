@@ -17,7 +17,6 @@ public class CurrentStallFilter {
     private Current filteredCurrent;
     private Current threshold;
     private Trigger stallTrigger;
-    private boolean enabled;
 
     public CurrentStallFilter(StatusSignal<Current> currentSignal, Current threshold) {
         this.currentSignal = currentSignal;
@@ -26,23 +25,11 @@ public class CurrentStallFilter {
         currentFilter = LinearFilter.movingAverage(7);
         currentDebouncer = new Debouncer(0.2, DebounceType.kRising);
         this.stallTrigger = new Trigger(this::isStalled);
-        this.enabled = true;
     }
 
     public void periodic() {
-        if (enabled) {
-            currentSignal.refresh();
-            filteredCurrent = Amps.of(currentFilter.calculate(currentSignal.getValueAsDouble()));
-        }
-    }
-
-    public void enable() {
-        currentFilter.reset();
-        enabled = true;
-    }
-
-    public void disable() {
-        enabled = false;
+        currentSignal.refresh();
+        filteredCurrent = Amps.of(currentFilter.calculate(currentSignal.getValueAsDouble()));
     }
 
     public boolean isStalled() {
