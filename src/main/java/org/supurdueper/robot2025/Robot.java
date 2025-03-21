@@ -35,10 +35,9 @@ public class Robot extends SupurdueperRobot {
         autoRoutines = new AutoRoutines(autoFactory);
         choreoAutoChooser = new AutoChooser();
         choreoAutoChooser.addCmd("Nothing Right", autoRoutines::nothingRight);
-        choreoAutoChooser.addRoutine("Nothing Right Routine", autoRoutines::nothingRightRoutine);
         choreoAutoChooser.addCmd("Nothing Left", autoRoutines::nothingLeft);
-        choreoAutoChooser.addRoutine("One Coral Left", autoRoutines::oneCoralLeftRoutine);
-        choreoAutoChooser.addRoutine("oneCoralRightRoutine", autoRoutines::oneCoralRightRoutine);
+        choreoAutoChooser.addRoutine("Three Coral Left", autoRoutines::oneCoralLeftRoutine);
+        choreoAutoChooser.addRoutine("Three Coral Right", autoRoutines::oneCoralRightRoutine);
         SmartDashboard.putData("Choreo Auto Chooser", choreoAutoChooser);
         // RobotModeTriggers.autonomous().whileTrue(choreoAutoChooser.selectedCommandScheduler());
     }
@@ -73,6 +72,7 @@ public class Robot extends SupurdueperRobot {
             PortForwarder.add(port, "10.74.57.11", port);
             PortForwarder.add(port + 100, "10.74.57.12", port);
         }
+        FieldConstants.getAprilTagPose(7);
     }
 
     @Override

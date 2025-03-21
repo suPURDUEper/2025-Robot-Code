@@ -64,6 +64,15 @@ public class AutoRoutines {
 
         startToFirstCoral.active().onTrue(RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.L3));
 
+        hpToSecondCoral
+                .active()
+                .and(() -> RobotContainer.getCoralScore().hasCoral)
+                .onTrue(RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.L3));
+        hpToThirdCoral
+                .active()
+                .and(() -> RobotContainer.getCoralScore().hasCoral)
+                .onTrue(RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.L3));
+
         startToFirstCoral
                 .recentlyDone()
                 .onTrue(Commands.sequence(
@@ -75,7 +84,7 @@ public class AutoRoutines {
         firstCoralToHp.atTime(1).onTrue(intake());
         firstCoralToHp.chain(hpToSecondCoral);
         hpToSecondCoral
-                .atTime(1.5)
+                .recentlyDone()
                 .onTrue(Commands.sequence(
                         aimLeft(),
                         Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
@@ -85,7 +94,7 @@ public class AutoRoutines {
         secondCoralToHp.atTime(1).onTrue(intake());
         secondCoralToHp.chain(hpToThirdCoral);
         hpToThirdCoral
-                .atTime(1.5)
+                .recentlyDone()
                 .onTrue(Commands.sequence(
                         aimRight(),
                         Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
@@ -95,7 +104,7 @@ public class AutoRoutines {
         thirdCoralToHp.atTime(1).onTrue(intake());
         thirdCoralToHp.chain(hpToFourthCoral);
         hpToFourthCoral
-                .atTime(1.5)
+                .recentlyDone()
                 .onTrue(Commands.sequence(
                         aimLeft(),
                         Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
@@ -119,6 +128,8 @@ public class AutoRoutines {
         routine.active()
                 .onTrue(Commands.sequence(
                         m_factory.resetOdometry(rightStart), new ScheduleCommand(untangle()), startToFirstCoral.cmd()));
+
+        startToFirstCoral.active().onTrue(RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.L3));
 
         startToFirstCoral
                 .recentlyDone()
@@ -166,7 +177,7 @@ public class AutoRoutines {
                 Commands.runOnce(() -> RobotStates.setAutol4(true)),
                 Commands.runOnce(() -> RobotStates.setAutol4(false)),
                 Commands.runOnce(() -> RobotStates.setAutoAimLeft(true)),
-                Commands.waitUntil(RobotStates::isAimed),
+                Commands.waitUntil(RobotStates::isAimed).withTimeout(1.5),
                 Commands.waitSeconds(0.2),
                 Commands.runOnce(() -> RobotStates.setAutoAimLeft(false)));
     }
@@ -176,7 +187,7 @@ public class AutoRoutines {
                 Commands.runOnce(() -> RobotStates.setAutol4(true)),
                 Commands.runOnce(() -> RobotStates.setAutol4(false)),
                 Commands.runOnce(() -> RobotStates.setAutoAimRight(true)),
-                Commands.waitUntil(RobotStates::isAimed),
+                Commands.waitUntil(RobotStates::isAimed).withTimeout(1.5),
                 Commands.waitSeconds(0.2),
                 Commands.runOnce(() -> RobotStates.setAutoAimRight(false)));
     }
@@ -184,7 +195,8 @@ public class AutoRoutines {
     public Command score() {
         return Commands.sequence(
                 Commands.runOnce(() -> RobotStates.setAutoscore(true)),
-                Commands.waitSeconds(0.5),
+                Commands.waitUntil(() -> RobotContainer.getCoralScore().scoredCoral())
+                        .withTimeout(0.5),
                 Commands.runOnce(() -> RobotStates.setAutoscore(false)));
     }
 

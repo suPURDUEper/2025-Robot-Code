@@ -59,8 +59,8 @@ public final class Constants {
         // Intake
         public static final int intakeBreakbeam = 5;
         // Coral score
-        public static final int scoreBreakbeam1 = 0;
-        public static final int scoreBreakbeam2 = 1;
+        public static final int scoreBreakbeamBack = 0;
+        public static final int scoreBreakbeamFront = 1;
         // Climber
         public static final int cageGrabLimitLeft = 2;
         public static final int cageGrabLimitRight = 3;
@@ -90,7 +90,7 @@ public final class Constants {
         public static final double profileKv = 0.09;
         public static final double profileKa = 0.002;
         public static final double profileV = 70;
-        public static final double profileA = 250;
+        public static final double profileA = 200;
         public static final double recalcKv = 0.25568353813;
         public static final double recalcKa = 0.00185553196;
         public static final Current kStatorCurrentLimit = Amps.of(80);
