@@ -152,7 +152,7 @@ public final class Constants {
         public static final double ka = 0;
         public static final double kg = 0.0;
         public static final double kHome = 0.0;
-        public static final double kRetract = -18;
+        public static final double kRetract = -12.5;
         public static final double kClearFunnel = 16.5;
         public static final double kClimb = 62.646;
         public static final double kPositionTolerance = 1.0;
