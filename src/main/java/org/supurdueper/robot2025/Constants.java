@@ -124,7 +124,7 @@ public final class Constants {
         public static final double profileKv = 0;
         public static final double profileKa = 0;
         public static final Current kStatorCurrentLimit = Amps.of(80);
-        public static final Angle kForwardSoftLimit = Degrees.of(120);
+        public static final Angle kForwardSoftLimit = Degrees.of(124);
 
         public static final Angle kReverseSoftLimit = Degrees.of(43);
         public static final Angle kPositionTolerance = Degrees.of(1);
@@ -139,7 +139,7 @@ public final class Constants {
         public static final Angle kL3Angle = kL2Angle;
         public static final Angle kL4Angle = Degrees.of(43);
         public static final Angle kProcessorAngle = Degrees.of(43);
-        public static final Angle kNetAngle = Degrees.of(120);
+        public static final Angle kNetAngle = Degrees.of(124);
         public static final Angle kClimbPrep = Degrees.of(43);
     }
 
