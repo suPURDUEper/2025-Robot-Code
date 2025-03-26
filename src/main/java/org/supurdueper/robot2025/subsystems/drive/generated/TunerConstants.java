@@ -74,9 +74,9 @@ public class TunerConstants {
     // Theoretical free speed (m/s) at 12 V applied output;
     // This needs to be tuned to your individual robot
     public static final LinearVelocity kMaxSpeed = MetersPerSecond.of(4.45);
-    public static final LinearVelocity kMaxAutoAimSpeed = MetersPerSecond.of(2.5);
+    public static final LinearVelocity kMaxAutoAimSpeed = MetersPerSecond.of(3.5);
 
-    public static final LinearAcceleration kMaxAutoAimAcceleration = MetersPerSecondPerSecond.of(0.5);
+    public static final LinearAcceleration kMaxAutoAimAcceleration = MetersPerSecondPerSecond.of(2.5);
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot

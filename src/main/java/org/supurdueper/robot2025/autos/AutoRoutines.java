@@ -66,45 +66,48 @@ public class AutoRoutines {
 
         hpToSecondCoral
                 .active()
-                .and(() -> RobotContainer.getCoralScore().hasCoral)
+                .and(RobotContainer.getCoralScore()::hasCoral)
                 .onTrue(RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.L3));
         hpToThirdCoral
                 .active()
-                .and(() -> RobotContainer.getCoralScore().hasCoral)
+                .and(RobotContainer.getCoralScore()::hasCoral)
                 .onTrue(RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.L3));
 
         startToFirstCoral
-                .recentlyDone()
+                .atTimeBeforeEnd(0.3)
                 .onTrue(Commands.sequence(
                         aimRight(),
                         Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
                         Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
                         score(),
+                        Commands.runOnce(() -> RobotStates.setAutoAimRight(false)),
                         firstCoralToHp.cmd().asProxy()));
         firstCoralToHp.atTime(1).onTrue(intake());
         firstCoralToHp.chain(hpToSecondCoral);
         hpToSecondCoral
-                .recentlyDone()
+                .atTimeBeforeEnd(0.5)
                 .onTrue(Commands.sequence(
                         aimLeft(),
                         Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
                         Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
                         score(),
+                        Commands.runOnce(() -> RobotStates.setAutoAimLeft(false)),
                         secondCoralToHp.cmd().asProxy()));
         secondCoralToHp.atTime(1).onTrue(intake());
         secondCoralToHp.chain(hpToThirdCoral);
         hpToThirdCoral
-                .recentlyDone()
+                .atTimeBeforeEnd(0.5)
                 .onTrue(Commands.sequence(
                         aimRight(),
                         Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
                         Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
                         score(),
+                        Commands.runOnce(() -> RobotStates.setAutoAimRight(false)),
                         thirdCoralToHp.cmd().asProxy()));
         thirdCoralToHp.atTime(1).onTrue(intake());
         thirdCoralToHp.chain(hpToFourthCoral);
         hpToFourthCoral
-                .recentlyDone()
+                .atTimeBeforeEnd(0.5)
                 .onTrue(Commands.sequence(
                         aimLeft(),
                         Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
@@ -177,9 +180,7 @@ public class AutoRoutines {
                 Commands.runOnce(() -> RobotStates.setAutol4(true)),
                 Commands.runOnce(() -> RobotStates.setAutol4(false)),
                 Commands.runOnce(() -> RobotStates.setAutoAimLeft(true)),
-                Commands.waitUntil(RobotStates::isAimed).withTimeout(1.5),
-                Commands.waitSeconds(0.2),
-                Commands.runOnce(() -> RobotStates.setAutoAimLeft(false)));
+                Commands.waitUntil(RobotStates::isAimed));
     }
 
     public Command aimRight() {
@@ -187,16 +188,14 @@ public class AutoRoutines {
                 Commands.runOnce(() -> RobotStates.setAutol4(true)),
                 Commands.runOnce(() -> RobotStates.setAutol4(false)),
                 Commands.runOnce(() -> RobotStates.setAutoAimRight(true)),
-                Commands.waitUntil(RobotStates::isAimed).withTimeout(1.5),
-                Commands.waitSeconds(0.2),
-                Commands.runOnce(() -> RobotStates.setAutoAimRight(false)));
+                Commands.waitUntil(RobotStates::isAimed));
     }
 
     public Command score() {
         return Commands.sequence(
                 Commands.runOnce(() -> RobotStates.setAutoscore(true)),
                 Commands.waitUntil(() -> RobotContainer.getCoralScore().scoredCoral())
-                        .withTimeout(0.5),
+                        .withTimeout(0.25),
                 Commands.runOnce(() -> RobotStates.setAutoscore(false)));
     }
 

@@ -384,9 +384,10 @@ public class PhoenixProfiledPIDController implements Sendable {
      *
      * @param measurement The current measured State of the system.
      */
-    public void reset(TrapezoidProfile.State measurement) {
+    public void reset(TrapezoidProfile.State measurement, double timestamp) {
         m_controller.reset();
         m_setpoint = measurement;
+        m_lastTimestamp = timestamp;
     }
 
     /**
@@ -395,8 +396,8 @@ public class PhoenixProfiledPIDController implements Sendable {
      * @param measuredPosition The current measured position of the system.
      * @param measuredVelocity The current measured velocity of the system.
      */
-    public void reset(double measuredPosition, double measuredVelocity) {
-        reset(new TrapezoidProfile.State(measuredPosition, measuredVelocity));
+    public void reset(double measuredPosition, double measuredVelocity, double timestamp) {
+        reset(new TrapezoidProfile.State(measuredPosition, measuredVelocity), timestamp);
     }
 
     /**
@@ -404,8 +405,8 @@ public class PhoenixProfiledPIDController implements Sendable {
      *
      * @param measuredPosition The current measured position of the system. The velocity is assumed to be zero.
      */
-    public void reset(double measuredPosition) {
-        reset(measuredPosition, 0.0);
+    public void reset(double measuredPosition, double timestamp) {
+        reset(measuredPosition, 0.0, timestamp);
     }
 
     @Override

@@ -87,6 +87,7 @@ public class Robot extends SupurdueperRobot {
 
     @Override
     public void disabledInit() {
+        resetCommandsAndButtons();
         Vision.setDisabled();
     }
 
@@ -98,7 +99,6 @@ public class Robot extends SupurdueperRobot {
 
     @Override
     public void autonomousInit() {
-        resetCommandsAndButtons();
         Vision.setEnabled();
         Vision.setAprilTagFilter();
         choreoAutoChooser.selectedCommandScheduler().schedule();

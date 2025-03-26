@@ -127,7 +127,11 @@ public class DriveStates {
     }
 
     private Command leftAlign() {
-        return drivetrain.applyRequest(() -> leftAim);
+        return Commands.runOnce(() -> {
+                    RobotStates.setAimed(false);
+                    leftAim.reset(drivetrain.getState());
+                })
+                .andThen(drivetrain.applyRequest(() -> leftAim));
     }
 
     private Command align(Transform2d aprilTagScoringOffset) {
@@ -140,6 +144,14 @@ public class DriveStates {
     }
 
     private Command rightAlign() {
-        return drivetrain.applyRequest(() -> rightAim);
+        return Commands.runOnce(() -> {
+                    RobotStates.setAimed(false);
+                    rightAim.reset(drivetrain.getState());
+                })
+                .andThen(drivetrain.applyRequest(() -> rightAim));
+    }
+
+    private double absDistanceRadians(Rotation2d angle1, Rotation2d angle2) {
+        return Math.abs(angle1.minus(angle2).getRadians());
     }
 }

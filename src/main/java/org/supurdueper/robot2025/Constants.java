@@ -46,8 +46,8 @@ public final class Constants {
         public static final double translationKp = 7.0;
         public static final double translationKi = 0;
         public static final double translationKd = 0.1;
-        public static final Distance rightAutoAlignOffset = Inches.of(-7);
-        public static final Distance leftAutoAlignOffset = Inches.of(6.5);
+        public static final Distance leftAutoAlignOffset = Inches.of(-7);
+        public static final Distance rightAutoAlignOffset = Inches.of(6.5);
         public static final AngularVelocity rotationClosedLoopDeadband = RadiansPerSecond.of(0.05);
         public static final LinearVelocity translationClosedLoopDeadband = MetersPerSecond.of(0.01);
         public static final Distance positionTolerance = Inches.of(0.7);
@@ -94,7 +94,7 @@ public final class Constants {
         public static final double recalcKv = 0.25568353813;
         public static final double recalcKa = 0.00185553196;
         public static final Current kStatorCurrentLimit = Amps.of(80);
-        public static final Current kSupplyCurrentLimit = Amps.of(50);
+        public static final Current kSupplyCurrentLimit = Amps.of(40);
         public static final double kInchesPerRotation = (12.0 / 72.0) * Math.PI * 1.744 * 2;
         public static final Distance kForwardSoftLimit = Inches.of(56.5);
         public static final Distance kReverseSoftLimit = Inches.of(0);

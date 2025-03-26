@@ -23,8 +23,6 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     private DigitalInput coralScoreBack;
     private DigitalInput coralScoreFront;
 
-    public boolean hasCoral;
-
     public CoralScore() {
         coralScoreBack = new DigitalInput(Constants.DIOPort.scoreBreakbeamBack);
         coralScoreFront = new DigitalInput(Constants.DIOPort.scoreBreakbeamFront);
