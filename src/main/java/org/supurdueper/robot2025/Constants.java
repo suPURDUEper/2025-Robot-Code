@@ -203,7 +203,7 @@ public final class Constants {
         public static final Angle kPositionTolerance = Degrees.of(1);
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(40).withStatorCurrentLimitEnable(true);
-        public static final double kSensorToMechanismRatio = 27.0 / 1.0 * 44.0 / 14.0;
+        public static final double kSensorToMechanismRatio = 45.0 / 1.0 * 44.0 / 14.0;
         public static final double kAbsEncoderRatio = 1;
         public static final Angle kAbsEncoderOffset = Rotations.of(0.000244);
         public static final Angle kIntakePosition = Degrees.of(-22.5);

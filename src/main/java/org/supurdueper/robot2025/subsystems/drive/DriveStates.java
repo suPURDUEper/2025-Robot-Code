@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.*;
 import static org.supurdueper.robot2025.Constants.DriveConstants.*;
 import static org.supurdueper.robot2025.state.RobotStates.*;
 
+import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentricFacingAngle;
@@ -129,7 +130,10 @@ public class DriveStates {
     private Command leftAlign() {
         return Commands.runOnce(() -> {
                     RobotStates.setAimed(false);
-                    leftAim.reset(drivetrain.getState());
+                    SwerveDriveState state = drivetrain.getState();
+                    Pose2d goalPose = FieldConstants.getAprilTagPose(FieldConstants.getReefTagId(
+                            FieldConstants.getClosestReefAngle(state.Pose.getTranslation())));
+                    leftAim.setResetNextLoop();
                 })
                 .andThen(drivetrain.applyRequest(() -> leftAim));
     }
@@ -146,7 +150,11 @@ public class DriveStates {
     private Command rightAlign() {
         return Commands.runOnce(() -> {
                     RobotStates.setAimed(false);
-                    rightAim.reset(drivetrain.getState());
+                    SwerveDriveState state = drivetrain.getState();
+                    Pose2d goalPose = FieldConstants.getAprilTagPose(FieldConstants.getReefTagId(
+                            FieldConstants.getClosestReefAngle(state.Pose.getTranslation())));
+                    rightAim.setResetNextLoop();
+                    ;
                 })
                 .andThen(drivetrain.applyRequest(() -> rightAim));
     }
