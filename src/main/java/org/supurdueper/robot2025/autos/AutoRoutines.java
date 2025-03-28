@@ -46,7 +46,7 @@ public class AutoRoutines {
                 .andThen(Commands.runOnce(() -> RobotStates.setAutointake(false)));
     }
 
-    public AutoRoutine oneCoralLeftRoutine() {
+    public AutoRoutine threeCoralLeftRoutine() {
 
         AutoRoutine routine = m_factory.newRoutine("Three Coral Left");
 
