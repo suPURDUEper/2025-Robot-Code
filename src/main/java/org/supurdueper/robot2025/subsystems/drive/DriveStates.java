@@ -33,6 +33,7 @@ public class DriveStates {
     private final SwerveRequest.FieldCentric driveFieldCentric = new SwerveRequest.FieldCentric();
     private final SysIdSwerveTranslationCurrent driveCurrentTuning = new SysIdSwerveTranslationCurrent();
     private final FieldCentricFacingReef fieldCentricFacingReef = new FieldCentricFacingReef();
+    private final FieldCentricFacingReefL1 fieldCentricFacingReefL1 = new FieldCentricFacingReefL1();
     private final FieldCentricFacingAngle fieldCentricFacingAngle = new FieldCentricFacingAngle();
     private final FieldCentricFacingAngle fieldCentricFacingHpStation = new FieldCentricFacingHpStation();
     private final DriveToPose driveToPose;
@@ -66,6 +67,10 @@ public class DriveStates {
                 Commands.runOnce(() -> drivetrain.resetRotation(AllianceFlip.apply(Rotation2d.kZero))));
         actionLeftAim.whileTrue(leftAlign());
         actionRightAim.whileTrue(rightAlign());
+        RobotStates.atL1.whileTrue(driveFacingHpStation());
+        RobotStates.actionL1.onTrue(driveFacingHpStation());
+
+        actionScore.and(RobotStates.atL1).whileTrue(driveFacingReefL1());
     }
 
     private Command normalTeleopDrive() {
@@ -92,6 +97,13 @@ public class DriveStates {
 
     private Command driveFacingReef() {
         return drivetrain.applyRequest(() -> fieldCentricFacingReef
+                .withVelocityX(driver.getDriveFwdPositive() * MaxSpeed)
+                .withVelocityY(driver.getDriveLeftPositive() * MaxSpeed)
+                .withDriveRequestType(DriveRequestType.OpenLoopVoltage));
+    }
+
+    private Command driveFacingReefL1() {
+        return drivetrain.applyRequest(() -> fieldCentricFacingReefL1
                 .withVelocityX(driver.getDriveFwdPositive() * MaxSpeed)
                 .withVelocityY(driver.getDriveLeftPositive() * MaxSpeed)
                 .withDriveRequestType(DriveRequestType.OpenLoopVoltage));

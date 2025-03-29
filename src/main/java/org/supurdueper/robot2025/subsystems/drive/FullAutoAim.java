@@ -105,6 +105,10 @@ public class FullAutoAim implements SwerveRequest {
         Pose2d goalPose = aprilTagPose.plus(offset);
         DogLog.log("Auto Aim/Goal Position", goalPose);
 
+        if (RobotStates.atL1.getAsBoolean()) {
+            swerveRequest.TargetDirection = swerveRequest.TargetDirection.rotateBy(Rotation2d.k180deg);
+        }
+
         reset(parameters, goalPose);
 
         // Calculate x and y velocities

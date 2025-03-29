@@ -111,7 +111,7 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
         RobotStates.actionIntake.onTrue(intake());
         RobotStates.actionHome.onTrue(home());
         RobotStates.actionScore.onFalse(
-                Commands.waitSeconds(0.2).onlyIf(RobotStates.atNet).andThen(home()));
+                Commands.waitSeconds(0.2).onlyIf(RobotStates.atNet).andThen(home().unless(RobotStates.atL1)));
         RobotStates.actionClimbPrep.onTrue(climbPrep());
     }
 

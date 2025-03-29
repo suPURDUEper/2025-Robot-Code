@@ -1,0 +1,43 @@
+package org.supurdueper.robot2025.subsystems.drive;
+
+import static edu.wpi.first.units.Units.*;
+import static org.supurdueper.robot2025.Constants.DriveConstants.*;
+
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
+import com.ctre.phoenix6.swerve.SwerveModule;
+import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentricFacingAngle;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import java.util.Collections;
+import java.util.Comparator;
+import org.supurdueper.lib.utils.AllianceFlip;
+import org.supurdueper.robot2025.FieldConstants;
+
+public class FieldCentricFacingReefL1 extends FieldCentricFacingAngle {
+
+    public FieldCentricFacingReefL1() {
+        HeadingController.setPID(headingKp, headingKi, headingKd);
+        RotationalDeadband = rotationClosedLoopDeadband.in(RadiansPerSecond);
+    }
+
+    @Override
+    public StatusCode apply(SwerveControlParameters parameters, SwerveModule<?, ?, ?>... modulesToApply) {
+        Translation2d reefCenter = AllianceFlip.apply(FieldConstants.Reef.center);
+        Rotation2d facingReefCenter =
+                reefCenter.minus(parameters.currentPose.getTranslation()).getAngle();
+        TargetDirection = Collections.min(
+                FieldConstants.reefAngles, Comparator.comparing(angle -> absDistanceRadians(angle, facingReefCenter)));
+        if (ForwardPerspective == ForwardPerspectiveValue.OperatorPerspective) {
+            // This is an angle from the frame of the reference of the field. Subtract
+            // the operator persepctive to counteract CTRE adding it later
+            TargetDirection = TargetDirection.minus(parameters.operatorForwardDirection);
+        }
+        TargetDirection = TargetDirection.rotateBy(Rotation2d.k180deg);
+        return super.apply(parameters, modulesToApply);
+    }
+
+    private double absDistanceRadians(Rotation2d angle1, Rotation2d angle2) {
+        return Math.abs(angle1.minus(angle2).getRadians());
+    }
+}

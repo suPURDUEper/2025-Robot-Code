@@ -92,8 +92,9 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         RobotStates.actionNet.onTrue(setStateAndGoToHeight(ElevatorHeight.Net));
         RobotStates.actionIntake.onTrue(setStateAndGoToHeight(ElevatorHeight.Intake));
         RobotStates.actionHome.onTrue(setStateAndGoToHeight(ElevatorHeight.Home));
-        RobotStates.actionScore.onFalse(
-                Commands.waitSeconds(0.25).unless(this::atNet).andThen(setStateAndGoToHeight(ElevatorHeight.Home)));
+        RobotStates.actionScore.onFalse(Commands.waitSeconds(0.25)
+                .unless(this::atNet)
+                .andThen(setStateAndGoToHeight(ElevatorHeight.Home).unless(RobotStates.atL1)));
     }
 
     public Command setHeightState(ElevatorHeight height) {

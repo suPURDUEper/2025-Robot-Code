@@ -21,6 +21,7 @@ import dev.doglog.DogLog;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import java.util.function.Supplier;
 import org.supurdueper.lib.subsystems.PositionSubsystem;
@@ -56,8 +57,12 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
         return goToPosition(() -> kIntakePosition).withName("FunnelTilt.Intake");
     }
 
-    public Command l1() {
-        return goToPosition(() -> kL1Position).withName("FunnelTilt.l1");
+    public Command l1Load() {
+        return goToPosition(() -> kL1LoadPosition).withName("FunnelTilt.L1Load");
+    }
+
+    public Command l1Score() {
+        return goToPosition(() -> kL1ScorePosition).withName("FunnelTilt.L1Score");
     }
 
     public Command startingPosition() {
@@ -72,8 +77,13 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
     public void bindCommands() {
         RobotStates.actionClimbPrep.onTrue(climbPosition());
         RobotStates.actionIntake.onTrue(intake());
-        RobotStates.actionL1.onTrue(intake());
-        RobotStates.actionScore.and(RobotStates.atL1).onTrue(l1());
+        RobotStates.actionL1.onTrue(l1Load());
+        (RobotStates.actionScore.or(RobotStates.actionAim))
+                .and(RobotStates.atL1)
+                .onTrue(l1Score());
+        RobotStates.actionScore
+                .and(RobotStates.atL1)
+                .onFalse(Commands.waitSeconds(1).andThen(intake()));
     }
 
     @Override
