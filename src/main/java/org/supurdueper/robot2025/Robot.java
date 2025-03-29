@@ -73,6 +73,7 @@ public class Robot extends SupurdueperRobot {
             PortForwarder.add(port + 100, "10.74.57.12", port);
         }
         FieldConstants.getAprilTagPose(7);
+        resetCommandsAndButtons();
     }
 
     @Override

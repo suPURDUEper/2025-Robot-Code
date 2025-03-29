@@ -9,6 +9,7 @@ import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -109,7 +110,11 @@ public class FullAutoAim implements SwerveRequest {
         // Calculate x and y velocities
         double distanceToGoalMeters = parameters.currentPose.getTranslation().getDistance(goalPose.getTranslation());
         double driveVelocityMagnitude = throttleController.calculate(distanceToGoalMeters, 0, parameters.timestamp);
-        driveVelocityMagnitude += throttleController.getSetpoint().velocity;
+        double ffMinRadius = 0.05;
+        double ffMaxRadius = 1;
+        double ffScaler =
+                MathUtil.clamp((driveVelocityMagnitude - ffMinRadius) / (ffMaxRadius - ffMinRadius), 0.0, 1.0);
+        driveVelocityMagnitude += throttleController.getSetpoint().velocity * ffScaler;
         // Check if we're aimed
         if (distanceToGoalMeters < positionTolerance.in(Meters)) {
             RobotStates.setAimed(true);

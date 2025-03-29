@@ -75,7 +75,7 @@ public class TunerConstants {
     // This needs to be tuned to your individual robot
     public static final LinearVelocity kMaxSpeed = MetersPerSecond.of(4.45);
     public static final LinearVelocity kMaxAutoAimSpeed = kMaxSpeed;
-    public static final LinearAcceleration kMaxAutoAimAcceleration = MetersPerSecondPerSecond.of(3.5);
+    public static final LinearAcceleration kMaxAutoAimAcceleration = MetersPerSecondPerSecond.of(5);
 
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
     // This may need to be tuned to your individual robot

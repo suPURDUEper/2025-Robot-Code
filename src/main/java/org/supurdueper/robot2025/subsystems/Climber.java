@@ -164,12 +164,12 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
 
     @Override
     public CanId canIdLeader() {
-        return CanId.TALONFX_CLIMBER_LEADER;
+        return CanId.TALONFX_CLIMBER;
     }
 
     @Override
     public CanId canIdFollower() {
-        return CanId.TALONFX_CLIMBER_FOLLOWER;
+        return null;
     }
 
     @Override
@@ -179,7 +179,7 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
 
     @Override
     public boolean inverted() {
-        return false;
+        return true;
     }
 
     @Override
@@ -189,6 +189,6 @@ public class Climber extends PositionSubsystem implements SupurdueperSubsystem {
 
     @Override
     public boolean followerInverted() {
-        return true;
+        return false;
     }
 }

@@ -35,6 +35,7 @@ public class AutoRoutines {
     private final String hpToFrontRight = "hp_to_fr";
     private final String leftStart = "left_start";
     private final String rightStart = "right_start";
+    private final String hpToBackLeft = "hp_to_bl";
 
     public AutoRoutines(AutoFactory factory) {
         m_factory = factory;
@@ -51,18 +52,16 @@ public class AutoRoutines {
         AutoRoutine routine = m_factory.newRoutine("Three Coral Left");
 
         AutoTrajectory startToFirstCoral = routine.trajectory(leftStart);
-        AutoTrajectory firstCoralToHp = routine.trajectory(backLeftRightToHp);
+        AutoTrajectory firstCoralToHp = routine.trajectory(backLeftLeftToHp);
         AutoTrajectory hpToSecondCoral = routine.trajectory(hpToFrontLeft);
-        AutoTrajectory secondCoralToHp = routine.trajectory(frontLeftLeftToHp);
+        AutoTrajectory secondCoralToHp = routine.trajectory(frontLeftRightToHp);
         AutoTrajectory hpToThirdCoral = routine.trajectory(hpToFrontLeft);
-        AutoTrajectory thirdCoralToHp = routine.trajectory(frontLeftRightToHp);
-        AutoTrajectory hpToFourthCoral = routine.trajectory(leftHpToFront);
+        AutoTrajectory thirdCoralToHp = routine.trajectory(frontLeftLeftToHp);
+        AutoTrajectory hpToFourthCoral = routine.trajectory(hpToBackLeft);
 
         routine.active()
                 .onTrue(Commands.sequence(
-                        m_factory.resetOdometry(leftStart), new ScheduleCommand(untangle()), startToFirstCoral.cmd()));
-
-        startToFirstCoral.active().onTrue(RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.L3));
+                        m_factory.resetOdometry(leftStart), startToFirstCoral.cmd(), new ScheduleCommand(untangle())));
 
         hpToSecondCoral
                 .active()
@@ -72,19 +71,34 @@ public class AutoRoutines {
                 .active()
                 .and(RobotContainer.getCoralScore()::hasCoral)
                 .onTrue(RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.L3));
+        hpToFourthCoral
+                .active()
+                .and(RobotContainer.getCoralScore()::hasCoral)
+                .onTrue(RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.L3));
 
         startToFirstCoral
-                .atTimeBeforeEnd(0.3)
+                .atTime(0.5)
+                .onTrue(Commands.sequence(
+                        aimLeft(),
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+                        score(),
+                        Commands.runOnce(() -> RobotStates.setAutoAimLeft(false)),
+                        firstCoralToHp.cmd().asProxy()));
+        firstCoralToHp.atTime(1).onTrue(intake());
+        firstCoralToHp.chain(hpToSecondCoral);
+        hpToSecondCoral
+                .atTimeBeforeEnd(0.5)
                 .onTrue(Commands.sequence(
                         aimRight(),
                         Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
                         Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
                         score(),
                         Commands.runOnce(() -> RobotStates.setAutoAimRight(false)),
-                        firstCoralToHp.cmd().asProxy()));
-        firstCoralToHp.atTime(1).onTrue(intake());
-        firstCoralToHp.chain(hpToSecondCoral);
-        hpToSecondCoral
+                        secondCoralToHp.cmd().asProxy()));
+        secondCoralToHp.atTime(1).onTrue(intake());
+        secondCoralToHp.chain(hpToThirdCoral);
+        hpToThirdCoral
                 .atTimeBeforeEnd(0.5)
                 .onTrue(Commands.sequence(
                         aimLeft(),
@@ -92,24 +106,13 @@ public class AutoRoutines {
                         Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
                         score(),
                         Commands.runOnce(() -> RobotStates.setAutoAimLeft(false)),
-                        secondCoralToHp.cmd().asProxy()));
-        secondCoralToHp.atTime(1).onTrue(intake());
-        secondCoralToHp.chain(hpToThirdCoral);
-        hpToThirdCoral
-                .atTimeBeforeEnd(0.5)
-                .onTrue(Commands.sequence(
-                        aimRight(),
-                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
-                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
-                        score(),
-                        Commands.runOnce(() -> RobotStates.setAutoAimRight(false)),
                         thirdCoralToHp.cmd().asProxy()));
         thirdCoralToHp.atTime(1).onTrue(intake());
         thirdCoralToHp.chain(hpToFourthCoral);
         hpToFourthCoral
                 .atTimeBeforeEnd(0.5)
                 .onTrue(Commands.sequence(
-                        aimLeft(),
+                        aimRight(),
                         Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
                         Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
                         score()));
@@ -180,7 +183,8 @@ public class AutoRoutines {
                 Commands.runOnce(() -> RobotStates.setAutol4(true)),
                 Commands.runOnce(() -> RobotStates.setAutol4(false)),
                 Commands.runOnce(() -> RobotStates.setAutoAimLeft(true)),
-                Commands.waitUntil(RobotStates::isAimed));
+                Commands.waitUntil(RobotStates::isAimed),
+                Commands.waitSeconds(0.1));
     }
 
     public Command aimRight() {
@@ -188,7 +192,8 @@ public class AutoRoutines {
                 Commands.runOnce(() -> RobotStates.setAutol4(true)),
                 Commands.runOnce(() -> RobotStates.setAutol4(false)),
                 Commands.runOnce(() -> RobotStates.setAutoAimRight(true)),
-                Commands.waitUntil(RobotStates::isAimed));
+                Commands.waitUntil(RobotStates::isAimed),
+                Commands.waitSeconds(0.1));
     }
 
     public Command score() {

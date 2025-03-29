@@ -26,6 +26,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import java.util.function.Supplier;
 import lombok.Getter;
@@ -42,6 +43,8 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
 
     private TorqueCurrentFOC currentRequest = new TorqueCurrentFOC(0);
     private MotionMagicTorqueCurrentFOC positionCurrentRequest = new MotionMagicTorqueCurrentFOC(0);
+
+    public Trigger safeForL4Wrist;
 
     public enum ElevatorHeight {
         L1,
@@ -71,6 +74,8 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         Robot.add(this);
         motor.setPosition(0);
         heightState = ElevatorHeight.Home;
+        this.safeForL4Wrist =
+                new Trigger(() -> motorRotationToHeight(this.getPosition()).gt(kSafeL4WristHeight));
     }
 
     @Override

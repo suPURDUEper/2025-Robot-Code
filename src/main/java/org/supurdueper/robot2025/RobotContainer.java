@@ -82,9 +82,9 @@ public class RobotContainer {
 
     public void configureBindings() {
         climber.setDefaultCommand(climber.setVoltage(testController::getManualElevatorVoltage));
-        testController.X.onTrue(climber.home());
-        testController.Y.onTrue(climber.climbPrep());
-        testController.A.onTrue(climber.retract());
+        // testController.X.onTrue(climber.home());
+        // testController.Y.onTrue(climber.climbPrep());
+        // testController.A.onTrue(climber.retract());
         testController.select.onTrue(Commands.runOnce(() -> climber.zero()));
         testController.downDpad.onTrue(climber.disengageRatchet());
         testController.upDpad.onTrue(climber.engageRatchet());
@@ -95,9 +95,9 @@ public class RobotContainer {
         // Pose2d bGoal = new Pose2d(1, -1, Rotation2d.kZero);
         // Pose2d yGoal = new Pose2d(2, 0, Rotation2d.kZero);
 
-        // testController.A.whileTrue(RobotContainer.getDrivetrain().driveStates.driveToPose(() -> aGoal));
-        // testController.B.whileTrue(RobotContainer.getDrivetrain().driveStates.driveToPose(() -> bGoal));
-        // testController.X.whileTrue(RobotContainer.getDrivetrain().driveStates.driveToPose(() -> xGoal));
-        // testController.Y.whileTrue(RobotContainer.getDrivetrain().driveStates.driveToPose(() -> yGoal));
+        testController.A.whileTrue(RobotContainer.getWrist().l1());
+        testController.B.whileTrue(RobotContainer.getWrist().intake());
+        testController.X.whileTrue(RobotContainer.getWrist().net());
+        testController.Y.whileTrue(RobotContainer.getWrist().l4());
     }
 }

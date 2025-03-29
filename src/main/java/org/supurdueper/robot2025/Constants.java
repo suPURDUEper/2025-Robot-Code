@@ -105,6 +105,7 @@ public final class Constants {
         public static final Distance kL1Height = Inches.of(1);
         public static final Distance kL2Height = Inches.of(10.8);
         public static final Distance kL3Height = Inches.of(26.75);
+        public static final Distance kSafeL4WristHeight = Inches.of(40);
         public static final Distance kL4Height = Inches.of(56);
         public static final Distance kProcessorHeight = Inches.of(1);
         public static final Distance kNetHeight = Inches.of(55);
@@ -121,8 +122,8 @@ public final class Constants {
         public static final double kv = 16.8;
         public static final double ka = 0;
         public static final double kg = 0.12;
-        public static final double profileKv = 0;
-        public static final double profileKa = 0;
+        public static final double profileKv = 15.0;
+        public static final double profileKa = 0.05;
         public static final Current kStatorCurrentLimit = Amps.of(80);
         public static final Angle kForwardSoftLimit = Degrees.of(124);
 
@@ -212,6 +213,6 @@ public final class Constants {
         public static final Angle kClimbPosition = Degrees.of(90);
     }
 
-    public static boolean tuningMode = false;
+    public static boolean tuningMode = true;
     public static boolean publishToNT = true;
 }

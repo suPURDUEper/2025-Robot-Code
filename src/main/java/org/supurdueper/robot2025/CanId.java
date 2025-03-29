@@ -22,8 +22,7 @@ public enum CanId {
     TALONFX_ELEVATOR_FOLLOWER(10, "rio"),
 
     // Climber
-    TALONFX_CLIMBER_LEADER(11, "rio"),
-    TALONFX_CLIMBER_FOLLOWER(12, "rio"),
+    TALONFX_CLIMBER(12, "rio"),
     TALONFX_CLIMBER_GRAB(13, "rio"),
 
     // Funnel
