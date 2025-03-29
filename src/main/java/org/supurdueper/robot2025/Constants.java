@@ -181,7 +181,7 @@ public final class Constants {
                 new CurrentLimitsConfigs().withStatorCurrentLimit(40).withStatorCurrentLimitEnable(true);
         public static final Voltage scoreVoltage = Volts.of(12);
         public static final Voltage scoreL1Voltage = Volts.of(8);
-        public static final Voltage scoreL2L3Voltage = Volts.of(4);
+        public static final Voltage scoreL2L3Voltage = Volts.of(3);
         public static final Voltage scoreL4Voltage = Volts.of(12);
         public static final Voltage backupVoltage = Volts.of(-2);
         public static final Voltage unJamVoltage = Volts.of(-6);

@@ -45,6 +45,8 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
     private MotionMagicTorqueCurrentFOC positionCurrentRequest = new MotionMagicTorqueCurrentFOC(0);
 
     public Trigger safeForL4Wrist;
+    public boolean isOneCoralAway = false;
+    public boolean againstReef = false;
 
     public enum ElevatorHeight {
         L1,
@@ -220,11 +222,26 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
     public void periodic() {
         super.periodic();
         // Log out to Glass for debugging
+        double distance = distanceFromReef().in(Inches);
+        if (distance < 6.0) {
+            againstReef = true;
+            isOneCoralAway = false;
+        } else if (distance < 10.0 && distance > 8.0) {
+            againstReef = false;
+            isOneCoralAway = true;
+        } else {
+            againstReef = false;
+            isOneCoralAway = false;
+        }
+
         DogLog.log("Elevator/Position", motorRotationToHeight(getPosition()).in(Units.Inches));
         DogLog.log(
                 "Elevator/Target Position", motorRotationToHeight(getSetpoint()).in(Units.Inches));
         DogLog.log("Elevator/At Position", atPosition());
         DogLog.log("Elevator/State", heightState.toString());
+        DogLog.log("Elevator/Canrange Distance", distanceFromReef().in(Inches));
+        DogLog.log("Elevator/Against Reef", againstReef);
+        DogLog.log("Elevator/One Coral Away", isOneCoralAway);
     }
 
     private Distance motorRotationToHeight(Angle motorRotations) {
