@@ -37,6 +37,7 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
         RobotStates.actionScore
                 .and(RobotStates.atIntake.or(RobotStates.atL1).and(RobotStates.hasCoral.negate()))
                 .onTrue(scoreProcessor());
+        RobotStates.actionLollipop.onTrue(intake());
     }
 
     @Override

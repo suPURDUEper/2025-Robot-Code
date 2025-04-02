@@ -142,6 +142,7 @@ public final class Constants {
         public static final Angle kProcessorAngle = Degrees.of(43);
         public static final Angle kNetAngle = Degrees.of(124);
         public static final Angle kClimbPrep = Degrees.of(43);
+        public static final Angle kLollipop = Degrees.of(39.463);
     }
 
     public final class ClimberConstants {
@@ -212,7 +213,7 @@ public final class Constants {
         public static final Angle kAbsEncoderOffset = Rotations.of(0.000244);
         public static final Angle kIntakePosition = Degrees.of(-22.5);
         public static final Angle kStartPosition = Degrees.of(-90);
-        public static final Angle kL1LoadPosition = Degrees.of(-75);
+        public static final Angle kL1LoadPosition = Degrees.of(-80);
         public static final Angle kL1ScorePosition = Degrees.of(20);
         public static final Angle kClimbPosition = Degrees.of(90);
     }

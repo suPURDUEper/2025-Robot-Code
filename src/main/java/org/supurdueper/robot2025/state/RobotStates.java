@@ -102,6 +102,7 @@ public final class RobotStates {
     public static final Trigger actionClimbPrep = driver.extraRight.and(teleop);
     public static final Trigger actionClimb = driver.downDpad.and(teleop);
     public static final Trigger rezeroFieldHeading = driver.select.and(teleop);
+    public static final Trigger actionLollipop = driver.leftDpad.and(teleop);
 
     private RobotStates() {
         throw new IllegalStateException("Utility class");

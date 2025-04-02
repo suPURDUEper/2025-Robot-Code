@@ -99,6 +99,10 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
         return goToPosition(() -> kClimbPrep).withName("Wrist.kClimbPrep");
     }
 
+    public Command lollipop() {
+        return goToPosition(() -> kLollipop).withName("Wrist.Lollipop");
+    }
+
     @Override
     public void bindCommands() {
         RobotStates.actionAim.and(RobotStates.atL2).onTrue(l2());
@@ -113,6 +117,7 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
         RobotStates.actionScore.onFalse(
                 Commands.waitSeconds(0.2).onlyIf(RobotStates.atNet).andThen(home().unless(RobotStates.atL1)));
         RobotStates.actionClimbPrep.onTrue(climbPrep());
+        RobotStates.actionLollipop.onTrue(lollipop());
     }
 
     @Override
