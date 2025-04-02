@@ -116,8 +116,7 @@ public class FullAutoAim implements SwerveRequest {
         double driveVelocityMagnitude = throttleController.calculate(distanceToGoalMeters, 0, parameters.timestamp);
         double ffMinRadius = 0.05;
         double ffMaxRadius = 1;
-        double ffScaler =
-                MathUtil.clamp((driveVelocityMagnitude - ffMinRadius) / (ffMaxRadius - ffMinRadius), 0.0, 1.0);
+        double ffScaler = MathUtil.clamp((distanceToGoalMeters - ffMinRadius) / (ffMaxRadius - ffMinRadius), 0.0, 1.0);
         driveVelocityMagnitude += throttleController.getSetpoint().velocity * ffScaler;
         // Check if we're aimed
         if (distanceToGoalMeters < positionTolerance.in(Meters)) {

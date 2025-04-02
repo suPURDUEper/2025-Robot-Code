@@ -9,6 +9,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
+import org.supurdueper.robot2025.Constants.FunnelTiltConstants;
 import org.supurdueper.robot2025.FieldConstants;
 import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.RobotStates;
@@ -61,7 +62,7 @@ public class AutoRoutines {
 
         routine.active()
                 .onTrue(Commands.sequence(
-                        m_factory.resetOdometry(leftStart), startToFirstCoral.cmd(), new ScheduleCommand(untangle())));
+                        m_factory.resetOdometry(leftStart), new ScheduleCommand(untangle()), startToFirstCoral.cmd()));
 
         hpToSecondCoral
                 .active()
@@ -77,8 +78,10 @@ public class AutoRoutines {
                 .onTrue(RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.L3));
 
         startToFirstCoral
-                .atTime(0.5)
+                .atTime(0.35)
                 .onTrue(Commands.sequence(
+                        new ScheduleCommand(
+                                RobotContainer.getFunnelTilt().goToPosition(() -> FunnelTiltConstants.kIntakePosition)),
                         aimLeft(),
                         Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
                         Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
@@ -91,6 +94,7 @@ public class AutoRoutines {
                 .atTimeBeforeEnd(0.5)
                 .onTrue(Commands.sequence(
                         aimRight(),
+                        Commands.waitSeconds(0.1),
                         Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
                         Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
                         score(),
@@ -113,6 +117,7 @@ public class AutoRoutines {
                 .atTimeBeforeEnd(0.5)
                 .onTrue(Commands.sequence(
                         aimRight(),
+                        Commands.waitSeconds(0.15),
                         Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
                         Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
                         score()));
@@ -183,8 +188,7 @@ public class AutoRoutines {
                 Commands.runOnce(() -> RobotStates.setAutol4(true)),
                 Commands.runOnce(() -> RobotStates.setAutol4(false)),
                 Commands.runOnce(() -> RobotStates.setAutoAimLeft(true)),
-                Commands.waitUntil(RobotStates::isAimed),
-                Commands.waitSeconds(0.1));
+                Commands.waitUntil(RobotStates::isAimed));
     }
 
     public Command aimRight() {
@@ -192,8 +196,7 @@ public class AutoRoutines {
                 Commands.runOnce(() -> RobotStates.setAutol4(true)),
                 Commands.runOnce(() -> RobotStates.setAutol4(false)),
                 Commands.runOnce(() -> RobotStates.setAutoAimRight(true)),
-                Commands.waitUntil(RobotStates::isAimed),
-                Commands.waitSeconds(0.1));
+                Commands.waitUntil(RobotStates::isAimed));
     }
 
     public Command score() {
@@ -207,10 +210,7 @@ public class AutoRoutines {
     public static Command untangle() {
         return Commands.sequence(
                 Commands.runOnce(() -> RobotContainer.getClimber().zero()),
-                // Commands.runOnce(() -> RobotContainer.getElevator().zero()),
-                RobotContainer.getClimber().clearFunnel().withTimeout(1.5),
-                RobotContainer.getFunnelTilt().intake().withTimeout(0.75),
-                RobotContainer.getClimber().home());
+                RobotContainer.getClimber().clearFunnel());
     }
 
     public static Command resetPose() {

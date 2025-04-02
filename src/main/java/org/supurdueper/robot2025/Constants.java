@@ -154,7 +154,7 @@ public final class Constants {
         public static final double kg = 0.0;
         public static final double kHome = 0.0;
         public static final double kRetract = -12.5;
-        public static final double kClearFunnel = 16.5;
+        public static final double kClearFunnel = 12.5;
         public static final double kClimb = 62.646;
         public static final double kPositionTolerance = 1.0;
         public static final CurrentLimitsConfigs kCurrentLimit =
@@ -172,8 +172,10 @@ public final class Constants {
     public final class FunnelConstants {
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(60).withStatorCurrentLimitEnable(true);
-        public static final Voltage kIntakeVoltage = Volts.of(6);
+        public static final Voltage kIntakeVoltage = Volts.of(8);
         public static final Voltage kUnjamVoltage = Volts.of(-4);
+        public static final Voltage kL1IntakeVoltage = Volts.of(-6);
+        public static final Voltage kL1ScoreVoltage = Volts.of(4);
     }
 
     public final class CoralScoreConstants {
@@ -187,6 +189,7 @@ public final class Constants {
         public static final Voltage unJamVoltage = Volts.of(-6);
         public static final DebounceType kDebounceTime = null;
         public static final Voltage loadVoltage = Volts.of(5);
+        public static final Voltage slowLoadVoltage = Volts.of(2);
     }
 
     public final class FunnelTiltConstants {

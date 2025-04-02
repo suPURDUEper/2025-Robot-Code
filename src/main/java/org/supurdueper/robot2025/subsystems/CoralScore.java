@@ -40,11 +40,18 @@ public class CoralScore extends TalonFXSubsystem implements SupurdueperSubsystem
     }
 
     public Command loadCoral() {
-        return runEnd(this::load, this::stop).until(this::hasCoral).withName("CoralScore.LoadCoral");
+        return runEnd(this::load, this::stop)
+                .until(this::hasCoral)
+                .andThen(runEnd(this::slowLoad, this::stop).until(() -> !coralScoreFront.get()))
+                .withName("CoralScore.LoadCoral");
     }
 
     private void load() {
         runVoltage(Constants.CoralScoreConstants.loadVoltage);
+    }
+
+    private void slowLoad() {
+        runVoltage(Constants.CoralScoreConstants.slowLoadVoltage);
     }
 
     public Command l4() {
