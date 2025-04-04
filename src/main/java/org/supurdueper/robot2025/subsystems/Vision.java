@@ -53,7 +53,7 @@ public class Vision extends SubsystemBase implements SupurdueperSubsystem {
                 shouldUpdate = false;
             }
         }
-        if (mt2.pose.getTranslation().getDistance(state.Pose.getTranslation()) > 1) { // 1 meter
+        if (Math.abs(mt2.pose.getRotation().minus(state.Pose.getRotation()).getDegrees()) > 30) { // 1 meter
             shouldUpdate = false;
         }
         if (shouldUpdate) {
