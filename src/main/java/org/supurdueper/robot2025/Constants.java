@@ -154,7 +154,7 @@ public final class Constants {
         public static final double ka = 0;
         public static final double kg = 0.0;
         public static final double kHome = 0.0;
-        public static final double kRetract = -12.5;
+        public static final double kRetract = -17;
         public static final double kClearFunnel = 12.5;
         public static final double kClimb = 62.646;
         public static final double kPositionTolerance = 1.0;
@@ -203,7 +203,7 @@ public final class Constants {
         public static final double kg = 0;
         public static final double profileKv = 0;
         public static final double profileKa = 0;
-        public static final Angle kForwardSoftLimit = Degrees.of(90);
+        public static final Angle kForwardSoftLimit = Degrees.of(12);
         public static final Angle kReverseSoftLimit = Degrees.of(-97);
         public static final Angle kPositionTolerance = Degrees.of(1);
         public static final CurrentLimitsConfigs kCurrentLimit =
@@ -213,11 +213,11 @@ public final class Constants {
         public static final Angle kAbsEncoderOffset = Rotations.of(0.000244);
         public static final Angle kIntakePosition = Degrees.of(-22.5);
         public static final Angle kStartPosition = Degrees.of(-90);
-        public static final Angle kL1LoadPosition = Degrees.of(-80);
+        public static final Angle kL1LoadPosition = Degrees.of(-72.25);
         public static final Angle kL1ScorePosition = Degrees.of(20);
         public static final Angle kClimbPosition = Degrees.of(90);
     }
 
-    public static boolean tuningMode = true;
+    public static boolean tuningMode = false;
     public static boolean publishToNT = true;
 }

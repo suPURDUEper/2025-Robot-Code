@@ -70,7 +70,7 @@ public class DriveStates {
         RobotStates.atL1.whileTrue(driveFacingHpStation());
         RobotStates.actionL1.onTrue(driveFacingHpStation());
 
-        actionScore.and(RobotStates.atL1).whileTrue(driveFacingReefL1());
+        actionScore.and(RobotStates.atL1).whileTrue(normalTeleopDrive());
     }
 
     private Command normalTeleopDrive() {
