@@ -95,8 +95,10 @@ public class AutoRoutines {
                 .onTrue(Commands.sequence(
                         aimRight(),
                         Commands.waitSeconds(0.1),
-                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
-                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition())
+                                .withTimeout(0.5),
+                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4())
+                                .withTimeout(0.5),
                         score(),
                         Commands.runOnce(() -> RobotStates.setAutoAimRight(false)),
                         secondCoralToHp.cmd().asProxy()));
@@ -106,8 +108,10 @@ public class AutoRoutines {
                 .atTimeBeforeEnd(0.5)
                 .onTrue(Commands.sequence(
                         aimLeft(),
-                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
-                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition())
+                                .withTimeout(0.5),
+                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4())
+                                .withTimeout(0.5),
                         score(),
                         Commands.runOnce(() -> RobotStates.setAutoAimLeft(false)),
                         thirdCoralToHp.cmd().asProxy()));
@@ -118,8 +122,10 @@ public class AutoRoutines {
                 .onTrue(Commands.sequence(
                         aimRight(),
                         Commands.waitSeconds(0.15),
-                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
-                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition())
+                                .withTimeout(0.5),
+                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4())
+                                .withTimeout(0.5),
                         score()));
 
         return routine;

@@ -8,6 +8,7 @@ import static org.supurdueper.robot2025.Constants.AlgaeScoreConstants.*;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import dev.doglog.DogLog;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -22,11 +23,13 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
 
     private CurrentStallFilter ballDetector;
     private boolean hasBall;
+    private Timer timer;
 
     public AlgaeScore() {
         configureMotors();
         ballDetector = new CurrentStallFilter(motor.getStatorCurrent(), kHasBallCurrent);
         Robot.add(this);
+        timer = new Timer();
     }
 
     @Override
@@ -50,7 +53,7 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
     // Public methods
     public Command intake() {
         return new FunctionalCommand(
-                () -> {},
+                timer::restart,
                 this::runIntake,
                 interrupted -> {
                     if (interrupted) {
@@ -79,7 +82,7 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
     // Private methods
     public boolean gotBall() {
         boolean gotBall = ballDetector.isStalled();
-        if (gotBall) {
+        if (gotBall && timer.hasElapsed(0.25)) {
             hasBall = true;
         }
         return gotBall;

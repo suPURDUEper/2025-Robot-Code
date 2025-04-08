@@ -5,6 +5,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
 import dev.doglog.DogLog;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -92,6 +93,7 @@ public class DriveTelemetry {
     private final DoubleArrayPublisher rightLimelightRobotOrientationPublisher =
             rightLimelightTable.getDoubleArrayTopic("robot_orientation_set").publish();
     private double[] robotOrientation = {0, 0, 0, 0, 0, 0};
+    private double[] wrappedModuleAngleRads = {0, 0, 0, 0};
 
     /** Accept the swerve drive state and telemeterize it to SmartDashboard and SignalLogger. */
     public void telemeterize(SwerveDriveState state) {
@@ -123,6 +125,10 @@ public class DriveTelemetry {
         DogLog.log("Drive/ModuleTargets", state.ModuleTargets);
         DogLog.log("Drive/MeasuredSpeeds", state.Speeds);
         DogLog.log("Drive/OdometryPeriod", state.OdometryPeriod);
+        for (int i = 0; i < 4; i++) {
+            wrappedModuleAngleRads[i] = MathUtil.angleModulus(state.ModuleStates[i].angle.getRadians());
+        }
+        DogLog.log("Drive/ModuleAnglesWrapped", wrappedModuleAngleRads);
 
         // /* Telemeterize the pose to a Field2d */
         // fieldTypePub.set("Field2d");
