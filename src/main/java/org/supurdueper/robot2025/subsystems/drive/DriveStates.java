@@ -18,8 +18,8 @@ import org.supurdueper.robot2025.Constants.DriveConstants.*;
 import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.Driver;
 import org.supurdueper.robot2025.state.RobotStates;
+import org.supurdueper.robot2025.subsystems.drive.CoralAutoAim.Pole;
 import org.supurdueper.robot2025.subsystems.drive.DriveSysId.SysIdSwerveTranslationCurrent;
-import org.supurdueper.robot2025.subsystems.drive.FullAutoAim.Pole;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
 
 public class DriveStates {
@@ -37,8 +37,9 @@ public class DriveStates {
     private final FieldCentricFacingAngle fieldCentricFacingAngle = new FieldCentricFacingAngle();
     private final FieldCentricFacingAngle fieldCentricFacingHpStation = new FieldCentricFacingHpStation();
     private final DriveToPose driveToPose;
-    private final FullAutoAim leftAim = new FullAutoAim(Pole.LEFT);
-    private final FullAutoAim rightAim = new FullAutoAim(Pole.RIGHT);
+    private final CoralAutoAim leftAim = new CoralAutoAim(Pole.LEFT);
+    private final CoralAutoAim rightAim = new CoralAutoAim(Pole.RIGHT);
+    private final BargeAutoAim bargeAutoAim = new BargeAutoAim();
 
     public DriveStates(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
@@ -65,8 +66,9 @@ public class DriveStates {
         actionClimbPrep.onTrue(normalTeleopDrive());
         rezeroFieldHeading.onTrue(
                 Commands.runOnce(() -> drivetrain.resetRotation(AllianceFlip.apply(Rotation2d.kZero))));
-        actionLeftAim.whileTrue(leftAlign());
-        actionRightAim.whileTrue(rightAlign());
+        actionLeftAim.and(RobotStates.atReefNoL1).whileTrue(reefLeftPoleAlign());
+        actionRightAim.and(RobotStates.atReefNoL1).whileTrue(reefRightPoleAlign());
+        actionAim.and(RobotStates.atNet).whileTrue(bargeAlign());
         RobotStates.atL1.whileTrue(driveFacingHpStation());
         RobotStates.actionL1.onTrue(driveFacingHpStation());
 
@@ -132,7 +134,7 @@ public class DriveStates {
         return driveFacingAngle(Rotation2d.kZero);
     }
 
-    private Command leftAlign() {
+    private Command reefLeftPoleAlign() {
         return Commands.runOnce(() -> {
                     RobotStates.setAimed(false);
                     leftAim.setResetNextLoop();
@@ -148,11 +150,19 @@ public class DriveStates {
         return new AutoAim(drivetrain, false, () -> driveToPose);
     }
 
-    private Command rightAlign() {
+    private Command reefRightPoleAlign() {
         return Commands.runOnce(() -> {
                     RobotStates.setAimed(false);
                     rightAim.setResetNextLoop();
                 })
                 .andThen(drivetrain.applyRequest(() -> rightAim));
+    }
+
+    private Command bargeAlign() {
+        return Commands.runOnce(() -> {
+                    RobotStates.setAimed(false);
+                    bargeAutoAim.setResetNextLoop();
+                })
+                .andThen(drivetrain.applyRequest(() -> bargeAutoAim));
     }
 }

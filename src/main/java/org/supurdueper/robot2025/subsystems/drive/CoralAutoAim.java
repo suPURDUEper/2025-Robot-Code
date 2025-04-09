@@ -24,7 +24,7 @@ import org.supurdueper.robot2025.FieldConstants;
 import org.supurdueper.robot2025.state.RobotStates;
 import org.supurdueper.robot2025.subsystems.drive.generated.TunerConstants;
 
-public class FullAutoAim implements SwerveRequest {
+public class CoralAutoAim implements SwerveRequest {
 
     private FieldCentricFacingAngle swerveRequest;
     private final PhoenixProfiledPIDController throttleController = new PhoenixProfiledPIDController(
@@ -49,7 +49,7 @@ public class FullAutoAim implements SwerveRequest {
             DriveConstants.robotToBumperCenter, DriveConstants.rightAutoAlignOffset, Rotation2d.k180deg);
     private boolean reset = true;
 
-    public FullAutoAim(Pole pole) {
+    public CoralAutoAim(Pole pole) {
 
         this.pole = pole;
         swerveRequest = new FieldCentricFacingAngle();
