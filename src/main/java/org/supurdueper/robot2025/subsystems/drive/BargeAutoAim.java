@@ -76,7 +76,8 @@ public class BargeAutoAim implements SwerveRequest {
         // Calculate x and y velocities
         double distanceToGoalMeters = Math.abs(goalX - parameters.currentPose.getX());
 
-        double driveVelocityMagnitude = xController.calculate(parameters.currentPose.getX(), goalX, parameters.timestamp);
+        double driveVelocityMagnitude =
+                xController.calculate(parameters.currentPose.getX(), goalX, parameters.timestamp);
         double ffMinRadius = 0.05;
         double ffMaxRadius = 1;
         double ffScaler = MathUtil.clamp((distanceToGoalMeters - ffMinRadius) / (ffMaxRadius - ffMinRadius), 0.0, 1.0);
@@ -91,7 +92,11 @@ public class BargeAutoAim implements SwerveRequest {
         DogLog.log("Barge Auto Aim/Distance To Goal", distanceToGoalMeters);
         DogLog.log("Barge Auto Aim/Throttle Setpoint", xController.getSetpoint().position);
 
-        swerveRequest.VelocityY = RobotContainer.getDriver().getDriveLeftPositive();
+        swerveRequest.VelocityY =
+                RobotContainer.getDriver().getDriveLeftPositive() * TunerConstants.kMaxSpeed.in(MetersPerSecond);
+        if (AllianceFlip.shouldFlip()) {
+            swerveRequest.VelocityY = swerveRequest.VelocityY * -1;
+        }
         swerveRequest.VelocityX = driveVelocityMagnitude;
 
         // Log setpoint
