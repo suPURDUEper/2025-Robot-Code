@@ -8,11 +8,7 @@ import static org.supurdueper.robot2025.Constants.AlgaeScoreConstants.*;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import dev.doglog.DogLog;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import org.supurdueper.lib.CurrentStallFilter;
 import org.supurdueper.lib.subsystems.SupurdueperSubsystem;
 import org.supurdueper.lib.subsystems.TalonFXSubsystem;
 import org.supurdueper.robot2025.CanId;
@@ -21,20 +17,16 @@ import org.supurdueper.robot2025.state.RobotStates;
 
 public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem {
 
-    private CurrentStallFilter ballDetector;
-    private boolean hasBall;
-    private Timer timer;
-
     public AlgaeScore() {
         configureMotors();
-        ballDetector = new CurrentStallFilter(motor.getStatorCurrent(), kHasBallCurrent);
         Robot.add(this);
-        timer = new Timer();
     }
 
     @Override
     public void bindCommands() {
+        setDefaultCommand(hold());
         RobotStates.atL2.or(RobotStates.atL3).whileTrue(intake());
+        RobotStates.atL2.or(RobotStates.atL3).onFalse(hold());
         RobotStates.actionScore.and(RobotStates.atNet).onTrue(scoreNet());
         RobotStates.actionScore.and(RobotStates.atProcessor).onTrue(scoreProcessor());
         RobotStates.actionScore
@@ -46,50 +38,28 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
     @Override
     public void periodic() {
         super.periodic();
-        ballDetector.periodic();
-        DogLog.log("AlgaeScore/HasBall", hasBall());
+        if (getCurrentCommand() != null && getCurrentCommand().getName() != null) {
+            DogLog.log("AlgaeScore/Command", getCurrentCommand().getName());
+        }
     }
 
     // Public methods
     public Command intake() {
-        return new FunctionalCommand(
-                timer::restart,
-                this::runIntake,
-                interrupted -> {
-                    if (interrupted) {
-                        stop();
-                    } else {
-                        hold();
-                    }
-                },
-                this::gotBall,
-                this);
+        return run(this::runIntake).withName("AlgaeScore.Intake");
+    }
+
+    public Command hold() {
+        return run(this::runHold).withName("AlgaeScore.Hold");
     }
 
     public Command scoreNet() {
-        return runEnd(this::net, this::stop)
-                .withTimeout(kNetScoreTime)
-                .alongWith(Commands.runOnce(() -> hasBall = false).withName("AlgaeScore.ScoreNet"));
+        return runEnd(this::net, this::stop).withTimeout(kNetScoreTime).withName("AlgaeScore.ScoreNet");
     }
 
     public Command scoreProcessor() {
         return runEnd(this::processor, this::stop)
                 .withTimeout(kProcessorScoreTime)
-                .alongWith(Commands.runOnce(() -> hasBall = false))
                 .withName("AlgaeScore.ScoreProcessor");
-    }
-
-    // Private methods
-    public boolean gotBall() {
-        boolean gotBall = ballDetector.isStalled();
-        if (gotBall && timer.hasElapsed(0.25)) {
-            hasBall = true;
-        }
-        return gotBall;
-    }
-
-    public boolean hasBall() {
-        return hasBall;
     }
 
     private void runIntake() {
@@ -104,7 +74,7 @@ public class AlgaeScore extends TalonFXSubsystem implements SupurdueperSubsystem
         runVoltage(kProcessorScoreVoltage);
     }
 
-    private void hold() {
+    private void runHold() {
         runVoltage(kHoldVoltage);
         // Don't have Phoenix Pro on this motor
         // runCurrent(kHoldCurrent);

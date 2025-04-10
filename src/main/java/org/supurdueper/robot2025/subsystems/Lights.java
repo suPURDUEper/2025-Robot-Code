@@ -79,7 +79,7 @@ public class Lights extends SubsystemBase implements SupurdueperSubsystem {
         RobotStates.atL1.whileTrue(setGreen());
         RobotStates.actionL1.onTrue(setGreen());
         RobotStates.atL1.whileFalse(run(this::turnOff));
-        RobotStates.actionAim.onTrue(setRed());
+        RobotStates.actionAim.and(RobotStates.atL1.negate()).onTrue(setRed());
         RobotStates.actionScore.onTrue(run(this::turnOff));
         RobotStates.actionLeftAim.onFalse(run(this::turnOff));
         RobotStates.actionRightAim.onFalse(run(this::turnOff));

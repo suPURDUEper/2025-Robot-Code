@@ -70,7 +70,7 @@ public final class Constants {
         public static final Current kHasBallCurrent = Amps.of(50);
         public static final CurrentLimitsConfigs kAlgaeCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(80).withStatorCurrentLimitEnable(true);
-        public static final Voltage kIntakeVoltage = Volts.of(12);
+        public static final Voltage kIntakeVoltage = Volts.of(9);
         public static final Current kHoldCurrent = Amps.of(8);
         public static final Voltage kNetScoreVoltage = Volts.of(-12);
         public static final Time kNetScoreTime = Seconds.of(0.5);
@@ -174,7 +174,7 @@ public final class Constants {
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(60).withStatorCurrentLimitEnable(true);
         public static final Voltage kIntakeVoltage = Volts.of(8);
-        public static final Voltage kUnjamVoltage = Volts.of(-4);
+        public static final Voltage kUnjamVoltage = Volts.of(-3);
         public static final Voltage kL1IntakeVoltage = Volts.of(-6);
         public static final Voltage kL1ScoreVoltage = Volts.of(4);
     }

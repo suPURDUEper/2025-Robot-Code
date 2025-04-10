@@ -66,7 +66,7 @@ public class Elevator extends PositionSubsystem implements SupurdueperSubsystem 
         canRange = new CANrange(CanId.CANRANGE_CORAL.getDeviceNumber(), CanId.CANRANGE_CORAL.getBus());
         canRangeConfig = new CANrangeConfiguration()
                 .withToFParams(new ToFParamsConfigs()
-                        .withUpdateMode(UpdateModeValue.ShortRangeUserFreq)
+                        .withUpdateMode(UpdateModeValue.LongRangeUserFreq)
                         .withUpdateFrequency(50));
         canRange.getConfigurator().apply(canRangeConfig);
         config = config.withTorqueCurrent(new TorqueCurrentConfigs()

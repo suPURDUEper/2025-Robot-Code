@@ -40,6 +40,7 @@ public class DriveStates {
     private final CoralAutoAim leftAim = new CoralAutoAim(Pole.LEFT);
     private final CoralAutoAim rightAim = new CoralAutoAim(Pole.RIGHT);
     private final BargeAutoAim bargeAutoAim = new BargeAutoAim();
+    private final L1LoadAutoAim l1LoadAutoAim = new L1LoadAutoAim();
 
     public DriveStates(Drivetrain drivetrain) {
         this.drivetrain = drivetrain;
@@ -71,8 +72,10 @@ public class DriveStates {
         actionAim.and(RobotStates.atNet).whileTrue(bargeAlign());
         RobotStates.atL1.whileTrue(driveFacingHpStation());
         RobotStates.actionL1.onTrue(driveFacingHpStation());
+        RobotStates.atL1.and(RobotStates.actionAim).whileTrue(l1LoadAutoAim());
 
-        actionScore.and(RobotStates.atL1).whileTrue(normalTeleopDrive());
+        actionScore.and(RobotStates.atL1).whileTrue(driveFacingReefL1());
+        actionScore.onFalse(normalTeleopDrive());
     }
 
     private Command normalTeleopDrive() {
@@ -164,5 +167,12 @@ public class DriveStates {
                     bargeAutoAim.setResetNextLoop();
                 })
                 .andThen(drivetrain.applyRequest(() -> bargeAutoAim));
+    }
+
+    private Command l1LoadAutoAim() {
+        return Commands.runOnce(() -> {
+                    l1LoadAutoAim.setResetNextLoop();
+                })
+                .andThen(drivetrain.applyRequest(() -> l1LoadAutoAim));
     }
 }

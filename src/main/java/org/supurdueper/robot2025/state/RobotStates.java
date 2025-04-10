@@ -67,7 +67,6 @@ public final class RobotStates {
     public static final Trigger atProcessor = new Trigger(RobotContainer.getElevator()::atProcessor);
     public static final Trigger atIntake = new Trigger(RobotContainer.getElevator()::atIntake);
     public static final Trigger atHome = new Trigger(RobotContainer.getElevator()::atHome);
-    public static final Trigger hasBall = new Trigger(RobotContainer.getAlgaeScore()::hasBall);
     public static final Trigger hasCoral = new Trigger(RobotContainer.getCoralScore()::hasCoral);
     public static final Trigger hasCage = new Trigger(RobotContainer.getCageGrabber()::hasCage);
     public static final Trigger isAimed = new Trigger(() -> aimed);

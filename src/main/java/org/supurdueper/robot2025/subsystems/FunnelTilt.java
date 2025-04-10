@@ -78,9 +78,7 @@ public class FunnelTilt extends PositionSubsystem implements SupurdueperSubsyste
         RobotStates.actionClimbPrep.onTrue(climbPosition());
         RobotStates.actionIntake.onTrue(intake());
         RobotStates.actionL1.onTrue(l1Load());
-        (RobotStates.actionScore.or(RobotStates.actionAim))
-                .and(RobotStates.atL1)
-                .onTrue(l1Score());
+        (RobotStates.actionScore).and(RobotStates.atL1).onTrue(l1Score());
         RobotStates.actionScore
                 .and(RobotStates.atL1)
                 .onFalse(Commands.waitSeconds(1).andThen(intake()));
