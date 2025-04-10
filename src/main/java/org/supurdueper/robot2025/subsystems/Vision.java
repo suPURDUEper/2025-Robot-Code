@@ -21,6 +21,7 @@ public class Vision extends SubsystemBase implements SupurdueperSubsystem {
 
     public static final String leftLimelightName = "limelight-fl";
     public static final String rightLimelimeName = "limelight-fr";
+    public static final String backLimelightName = "limelight-r";
 
     public Vision() {
         Robot.add(this);
@@ -32,6 +33,7 @@ public class Vision extends SubsystemBase implements SupurdueperSubsystem {
         SwerveDriveState state = drivetrain.getState();
         updatePose3dAprilTag(leftLimelightName, drivetrain, state);
         updatePose3dAprilTag(rightLimelimeName, drivetrain, state);
+        updatePose3dAprilTag(backLimelightName, drivetrain, state);
     }
 
     private void updatePose3dAprilTag(String limelightName, Drivetrain drivetrain, SwerveDriveState state) {
@@ -79,6 +81,7 @@ public class Vision extends SubsystemBase implements SupurdueperSubsystem {
         int[] ids = AllianceFlip.shouldFlip() ? FieldConstants.redReefApriltagIds : FieldConstants.blueReefApriltagIds;
         LimelightHelpers.SetFiducialIDFiltersOverride(leftLimelightName, ids);
         LimelightHelpers.SetFiducialIDFiltersOverride(rightLimelimeName, ids);
+        LimelightHelpers.SetFiducialIDFiltersOverride(backLimelightName, ids);
     }
 
     @Override

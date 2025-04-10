@@ -88,10 +88,14 @@ public class DriveTelemetry {
 
     private final NetworkTable leftLimelightTable = inst.getTable(Vision.leftLimelightName);
     private final NetworkTable rightLimelightTable = inst.getTable(Vision.rightLimelimeName);
+    private final NetworkTable backLimelightTable = inst.getTable(Vision.backLimelightName);
+
     private final DoubleArrayPublisher leftLimelightRobotOrientationPublisher =
             leftLimelightTable.getDoubleArrayTopic("robot_orientation_set").publish();
     private final DoubleArrayPublisher rightLimelightRobotOrientationPublisher =
             rightLimelightTable.getDoubleArrayTopic("robot_orientation_set").publish();
+    private final DoubleArrayPublisher backLimelightRobotOrientationPublisher =
+            backLimelightTable.getDoubleArrayTopic("robot_orientation_set").publish();
     private double[] robotOrientation = {0, 0, 0, 0, 0, 0};
     private double[] wrappedModuleAngleRads = {0, 0, 0, 0};
 
@@ -108,6 +112,7 @@ public class DriveTelemetry {
         robotOrientation[0] = state.Pose.getRotation().getDegrees();
         leftLimelightRobotOrientationPublisher.set(robotOrientation);
         rightLimelightRobotOrientationPublisher.set(robotOrientation);
+        backLimelightRobotOrientationPublisher.set(robotOrientation);
 
         // /* Also write to log file */
         // m_poseArray[0] = state.Pose.getX();
