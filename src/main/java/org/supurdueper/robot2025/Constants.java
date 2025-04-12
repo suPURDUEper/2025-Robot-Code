@@ -173,7 +173,7 @@ public final class Constants {
     public final class FunnelConstants {
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(60).withStatorCurrentLimitEnable(true);
-        public static final Voltage kIntakeVoltage = Volts.of(8);
+        public static final Voltage kIntakeVoltage = Volts.of(6);
         public static final Voltage kUnjamVoltage = Volts.of(-3);
         public static final Voltage kL1IntakeVoltage = Volts.of(-6);
         public static final Voltage kL1ScoreVoltage = Volts.of(4);
@@ -211,7 +211,7 @@ public final class Constants {
         public static final double kSensorToMechanismRatio = 45.0 / 1.0 * 44.0 / 14.0;
         public static final double kAbsEncoderRatio = 1;
         public static final Angle kAbsEncoderOffset = Rotations.of(0.000244);
-        public static final Angle kIntakePosition = Degrees.of(-22.5);
+        public static final Angle kIntakePosition = Degrees.of(-27);
         public static final Angle kStartPosition = Degrees.of(-90);
         public static final Angle kL1LoadPosition = Degrees.of(-72.25);
         public static final Angle kL1ScorePosition = Degrees.of(20);

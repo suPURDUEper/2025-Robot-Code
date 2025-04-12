@@ -59,8 +59,7 @@ public class LollipopAutoAim implements SwerveRequest {
                     .getAngle()
                     .rotateBy(Rotation2d.k180deg);
             goalPose = new Pose2d(goalTranslation, goalRotation);
-            Transform2d offset = new Transform2d(0, Inches.of(4
-            ).in(Meters), goalRotation);
+            Transform2d offset = new Transform2d(0, Inches.of(4).in(Meters), goalRotation);
             goalPose = goalPose.plus(offset);
             goalPose = new Pose2d(goalPose.getTranslation(), goalRotation);
             DogLog.log("Lollipop Auto Aim/Goal Position", goalPose);

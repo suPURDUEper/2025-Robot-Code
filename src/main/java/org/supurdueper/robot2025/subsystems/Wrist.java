@@ -79,6 +79,10 @@ public class Wrist extends PositionSubsystem implements SupurdueperSubsystem {
         return (kL4Angle.minus(getPosition())).abs(Units.Rotations) < (positionTolerance.in(Units.Rotations));
     }
 
+    public boolean atNet() {
+        return (kNetAngle.minus(getPosition())).abs(Units.Rotations) < (positionTolerance.in(Units.Rotations));
+    }
+
     public Command net() {
         return goToPosition(() -> kNetAngle).withName("Wrist.Net");
     }

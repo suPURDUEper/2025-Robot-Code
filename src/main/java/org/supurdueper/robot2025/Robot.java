@@ -38,6 +38,7 @@ public class Robot extends SupurdueperRobot {
         choreoAutoChooser.addCmd("Nothing Left", autoRoutines::nothingLeft);
         choreoAutoChooser.addRoutine("Three Coral Left", autoRoutines::threeCoralLeftRoutine);
         choreoAutoChooser.addRoutine("Three Coral Right", autoRoutines::oneCoralRightRoutine);
+        choreoAutoChooser.addRoutine("Center Algae", autoRoutines::centerAuto);
         SmartDashboard.putData("Choreo Auto Chooser", choreoAutoChooser);
         // RobotModeTriggers.autonomous().whileTrue(choreoAutoChooser.selectedCommandScheduler());
     }

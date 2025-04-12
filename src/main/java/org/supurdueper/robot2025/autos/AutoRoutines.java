@@ -13,12 +13,18 @@ import org.supurdueper.robot2025.Constants.FunnelTiltConstants;
 import org.supurdueper.robot2025.FieldConstants;
 import org.supurdueper.robot2025.RobotContainer;
 import org.supurdueper.robot2025.state.RobotStates;
+import org.supurdueper.robot2025.subsystems.Elevator;
 import org.supurdueper.robot2025.subsystems.Elevator.ElevatorHeight;
+import org.supurdueper.robot2025.subsystems.Wrist;
 import org.supurdueper.robot2025.subsystems.drive.Drivetrain;
 
 public class AutoRoutines {
     private final AutoFactory m_factory;
     private final Drivetrain drivetrain;
+
+    // center auto paths
+
+    private final String centerAuto = "center_barge";
 
     private final String backLeftLeftToHp = "bl_left_to_hp";
     private final String backLeftRightToHp = "bl_right_to_hp";
@@ -35,6 +41,7 @@ public class AutoRoutines {
     private final String hpToFrontLeft = "hp_to_fl";
     private final String hpToFrontRight = "hp_to_fr";
     private final String leftStart = "left_start";
+    private final String centerStart = "center_start";
     private final String rightStart = "right_start";
     private final String hpToBackLeft = "hp_to_bl";
 
@@ -189,10 +196,110 @@ public class AutoRoutines {
         return routine;
     }
 
+    public AutoRoutine centerAuto() {
+        AutoRoutine routine = m_factory.newRoutine("Center Auto");
+
+        AutoTrajectory startToFirst = routine.trajectory(centerAuto, 0);
+        AutoTrajectory firstToBarge = routine.trajectory(centerAuto, 1);
+        AutoTrajectory bargeToSecond = routine.trajectory(centerAuto, 2);
+        AutoTrajectory secondToBarge = routine.trajectory(centerAuto, 3);
+        AutoTrajectory bargeToThird = routine.trajectory(centerAuto, 4);
+        AutoTrajectory thirdToBarge = routine.trajectory(centerAuto, 5);
+        AutoTrajectory bargeBack = routine.trajectory(centerAuto, 6);
+
+        Elevator elevator = RobotContainer.getElevator();
+        Wrist wrist = RobotContainer.getWrist();
+
+        routine.active()
+                .onTrue(Commands.sequence(
+                        m_factory.resetOdometry(centerStart), new ScheduleCommand(untangle()), startToFirst.cmd()));
+
+        startToFirst
+                .atTime(0)
+                .onTrue(Commands.sequence(
+                        aimLeftl2(),
+                        Commands.runOnce(() -> RobotStates.setAutoAimLeft(false)),
+                        firstToBarge.cmd().asProxy()));
+
+        firstToBarge
+                .atTime(0.6)
+                .onTrue(Commands.parallel(
+                        RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.Net),
+                        RobotContainer.getWrist().net()));
+
+        firstToBarge
+                .recentlyDone()
+                .onTrue(Commands.sequence(
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition())
+                                .withTimeout(0.5),
+                        algeaScore(),
+                        bargeToSecond.cmd().asProxy()));
+
+        bargeToSecond
+                .atTimeBeforeEnd(0.8)
+                .onTrue(Commands.sequence(
+                        aimLeftl3(),
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+                        score(),
+                        Commands.runOnce(() -> RobotStates.setAutoAimLeft(false)),
+                        secondToBarge.cmd().asProxy()));
+
+        secondToBarge
+                .atTimeBeforeEnd(0.4)
+                .onTrue(Commands.parallel(
+                        RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.Net),
+                        RobotContainer.getWrist().net()));
+
+        secondToBarge
+                .recentlyDone()
+                .onTrue(Commands.sequence(
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+                        algeaScore(),
+                        bargeToThird.cmd().asProxy()));
+
+        bargeToThird
+                .atTimeBeforeEnd(0.6)
+                .onTrue(Commands.sequence(
+                        aimLeftl3(),
+                        Commands.runOnce(() -> RobotStates.setAutoAimLeft(false)),
+                        thirdToBarge.cmd().asProxy()));
+
+        thirdToBarge
+                .atTimeBeforeEnd(0.25)
+                .onTrue(Commands.parallel(
+                        RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.Net),
+                        RobotContainer.getWrist().net()));
+
+        thirdToBarge
+                .recentlyDone()
+                .onTrue(Commands.sequence(
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+                        algeaScore(),
+                        bargeBack.cmd().asProxy()));
+
+        return routine;
+    }
+
     public Command aimLeft() {
         return Commands.sequence(
                 Commands.runOnce(() -> RobotStates.setAutol4(true)),
                 Commands.runOnce(() -> RobotStates.setAutol4(false)),
+                Commands.runOnce(() -> RobotStates.setAutoAimLeft(true)),
+                Commands.waitUntil(RobotStates::isAimed));
+    }
+
+    public Command aimLeftl3() {
+        return Commands.sequence(
+                Commands.runOnce(() -> RobotStates.setAutol3(true)),
+                Commands.runOnce(() -> RobotStates.setAutol3(false)),
+                Commands.runOnce(() -> RobotStates.setAutoAimLeft(true)),
+                Commands.waitUntil(RobotStates::isAimed));
+    }
+
+    public Command aimLeftl2() {
+        return Commands.sequence(
+                Commands.runOnce(() -> RobotStates.setAutol2(true)),
+                Commands.runOnce(() -> RobotStates.setAutol2(false)),
                 Commands.runOnce(() -> RobotStates.setAutoAimLeft(true)),
                 Commands.waitUntil(RobotStates::isAimed));
     }
@@ -213,6 +320,13 @@ public class AutoRoutines {
                 Commands.runOnce(() -> RobotStates.setAutoscore(false)));
     }
 
+    public Command algeaScore() {
+        return Commands.sequence(
+                Commands.runOnce(() -> RobotStates.setAutoscore(true)),
+                Commands.waitSeconds(0.5),
+                Commands.runOnce(() -> RobotStates.setAutoscore(false)));
+    }
+
     public static Command untangle() {
         return Commands.sequence(
                 Commands.runOnce(() -> RobotContainer.getClimber().zero()),
@@ -227,7 +341,7 @@ public class AutoRoutines {
                         Rotation2d.k180deg)));
     }
 
-    public void chain(AutoTrajectory a, AutoTrajectory b, double delaySeconds) {
+    public void chainWithDelay(AutoTrajectory a, AutoTrajectory b, double delaySeconds) {
         a.doneDelayed(delaySeconds).onTrue(b.cmd());
     }
 
