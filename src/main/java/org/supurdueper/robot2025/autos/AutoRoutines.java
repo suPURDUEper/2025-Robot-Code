@@ -44,6 +44,14 @@ public class AutoRoutines {
     private final String centerStart = "center_start";
     private final String rightStart = "right_start";
     private final String hpToBackLeft = "hp_to_bl";
+    private final String hptoBackRight = "hp_to_br";
+    private final String centerToFirst = "center_to_first";
+    private final String firstToBarge = "first_to_barge";
+    private final String bargeToLeft = "barge_to_left";
+    private final String secondToBarge = "left_to_barge";
+    private final String bargeToRight = "barge_to_right";
+    private final String thirdBarge = "right_to_barge";
+    private final String bargeOffLine = "barge_off_line";
 
     public AutoRoutines(AutoFactory factory) {
         m_factory = factory;
@@ -142,62 +150,133 @@ public class AutoRoutines {
         AutoRoutine routine = m_factory.newRoutine("Three Coral Right");
 
         AutoTrajectory startToFirstCoral = routine.trajectory(rightStart);
-        AutoTrajectory firstCoralToHp = routine.trajectory(backRightLeftToHp);
+        AutoTrajectory firstCoralToHp = routine.trajectory(backRightRightToHp);
         AutoTrajectory hpToSecondCoral = routine.trajectory(hpToFrontRight);
-        AutoTrajectory secondCoralToHp = routine.trajectory(frontRightRightToHp);
+        AutoTrajectory secondCoralToHp = routine.trajectory(frontRightLeftToHp);
         AutoTrajectory hpToThirdCoral = routine.trajectory(hpToFrontRight);
-        AutoTrajectory thirdCoralToHp = routine.trajectory(frontRightLeftToHp);
-        AutoTrajectory hpToFourthCoral = routine.trajectory(rightHpToFront);
+        AutoTrajectory thirdCoralToHp = routine.trajectory(frontRightRightToHp);
+        AutoTrajectory hpToFourthCoral = routine.trajectory(hptoBackRight);
 
         routine.active()
                 .onTrue(Commands.sequence(
                         m_factory.resetOdometry(rightStart), new ScheduleCommand(untangle()), startToFirstCoral.cmd()));
 
-        startToFirstCoral.active().onTrue(RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.L3));
+        hpToSecondCoral
+                .active()
+                .and(RobotContainer.getCoralScore()::hasCoral)
+                .onTrue(RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.L3));
+        hpToThirdCoral
+                .active()
+                .and(RobotContainer.getCoralScore()::hasCoral)
+                .onTrue(RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.L3));
+        hpToFourthCoral
+                .active()
+                .and(RobotContainer.getCoralScore()::hasCoral)
+                .onTrue(RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.L3));
 
         startToFirstCoral
-                .recentlyDone()
+                .atTime(0.35)
                 .onTrue(Commands.sequence(
-                        aimLeft(),
+                        new ScheduleCommand(
+                                RobotContainer.getFunnelTilt().goToPosition(() -> FunnelTiltConstants.kIntakePosition)),
+                        aimRight(),
                         Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
                         Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
                         score(),
+                        Commands.runOnce(() -> RobotStates.setAutoAimRight(false)),
                         firstCoralToHp.cmd().asProxy()));
         firstCoralToHp.atTime(1).onTrue(intake());
         firstCoralToHp.chain(hpToSecondCoral);
         hpToSecondCoral
-                .recentlyDone()
+                .atTimeBeforeEnd(0.5)
                 .onTrue(Commands.sequence(
-                        aimRight(),
-                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
-                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+                        aimLeft(),
+                        Commands.waitSeconds(0.1),
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition())
+                                .withTimeout(0.5),
+                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4())
+                                .withTimeout(0.5),
                         score(),
+                        Commands.runOnce(() -> RobotStates.setAutoAimLeft(false)),
                         secondCoralToHp.cmd().asProxy()));
         secondCoralToHp.atTime(1).onTrue(intake());
         secondCoralToHp.chain(hpToThirdCoral);
         hpToThirdCoral
-                .recentlyDone()
+                .atTimeBeforeEnd(0.5)
                 .onTrue(Commands.sequence(
-                        aimLeft(),
-                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
-                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+                        aimRight(),
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition())
+                                .withTimeout(0.5),
+                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4())
+                                .withTimeout(0.5),
                         score(),
+                        Commands.runOnce(() -> RobotStates.setAutoAimRight(false)),
                         thirdCoralToHp.cmd().asProxy()));
         thirdCoralToHp.atTime(1).onTrue(intake());
         thirdCoralToHp.chain(hpToFourthCoral);
         hpToFourthCoral
-                .recentlyDone()
+                .atTimeBeforeEnd(0.5)
                 .onTrue(Commands.sequence(
-                        aimRight(),
-                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
-                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+                        aimLeft(),
+                        Commands.waitSeconds(0.15),
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition())
+                                .withTimeout(0.5),
+                        Commands.waitUntil(() -> RobotContainer.getWrist().atL4())
+                                .withTimeout(0.5),
                         score()));
 
         return routine;
+
+        // routine.active()
+        //         .onTrue(Commands.sequence(
+        //                 m_factory.resetOdometry(rightStart), new ScheduleCommand(untangle()),
+        // startToFirstCoral.cmd()));
+
+        // startToFirstCoral.active().onTrue(RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.L3));
+
+        // startToFirstCoral
+        //         .recentlyDone()
+        //         .onTrue(Commands.sequence(
+        //                 aimLeft(),
+        //                 Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+        //                 Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+        //                 score(),
+        //                 firstCoralToHp.cmd().asProxy()));
+        // firstCoralToHp.atTime(1).onTrue(intake());
+        // firstCoralToHp.chain(hpToSecondCoral);
+        // hpToSecondCoral
+        //         .recentlyDone()
+        //         .onTrue(Commands.sequence(
+        //                 aimRight(),
+        //                 Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+        //                 Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+        //                 score(),
+        //                 secondCoralToHp.cmd().asProxy()));
+        // secondCoralToHp.atTime(1).onTrue(intake());
+        // secondCoralToHp.chain(hpToThirdCoral);
+        // hpToThirdCoral
+        //         .recentlyDone()
+        //         .onTrue(Commands.sequence(
+        //                 aimLeft(),
+        //                 Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+        //                 Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+        //                 score(),
+        //                 thirdCoralToHp.cmd().asProxy()));
+        // thirdCoralToHp.atTime(1).onTrue(intake());
+        // thirdCoralToHp.chain(hpToFourthCoral);
+        // hpToFourthCoral
+        //         .recentlyDone()
+        //         .onTrue(Commands.sequence(
+        //                 aimRight(),
+        //                 Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+        //                 Commands.waitUntil(() -> RobotContainer.getWrist().atL4()),
+        //                 score()));
+
+        // return routine;
     }
 
-    public AutoRoutine centerAuto() {
-        AutoRoutine routine = m_factory.newRoutine("Center Auto");
+    public AutoRoutine centerAutoRightFirst() {
+        AutoRoutine routine = m_factory.newRoutine("Center Auto Right First");
 
         AutoTrajectory startToFirst = routine.trajectory(centerAuto, 0);
         AutoTrajectory firstToBarge = routine.trajectory(centerAuto, 1);
@@ -276,6 +355,88 @@ public class AutoRoutines {
                         Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
                         algeaScore(),
                         bargeBack.cmd().asProxy()));
+
+        return routine;
+    }
+
+    public AutoRoutine centerAutoLeftFirst() {
+
+        AutoRoutine routine = m_factory.newRoutine("Center Auto Left First");
+
+        AutoTrajectory startToFirst = routine.trajectory(centerToFirst);
+        AutoTrajectory firstBarge = routine.trajectory(firstToBarge);
+        AutoTrajectory bargeToSecond = routine.trajectory(bargeToLeft);
+        AutoTrajectory secondBarge = routine.trajectory(secondToBarge);
+        AutoTrajectory bargeToThird = routine.trajectory(bargeToRight);
+        AutoTrajectory thirdToBarge = routine.trajectory(thirdBarge);
+        AutoTrajectory bargeBack = routine.trajectory(bargeOffLine);
+
+        startToFirst
+                .atTime(0)
+                .onTrue(Commands.sequence(
+                        aimLeftl2(),
+                        Commands.runOnce(() -> RobotStates.setAutoAimLeft(false)),
+                        firstBarge.cmd().asProxy()));
+
+        firstBarge
+                .atTime(0.6)
+                .onTrue(Commands.parallel(
+                        RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.Net),
+                        RobotContainer.getWrist().net()));
+
+        firstBarge
+                .recentlyDone()
+                .onTrue(Commands.sequence(
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition())
+                                .withTimeout(0.5),
+                        algeaScore(),
+                        bargeToSecond.cmd().asProxy()));
+
+        bargeToSecond
+                .atTimeBeforeEnd(0.8)
+                .onTrue(Commands.sequence(
+                        aimLeftl3(),
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+                        score(),
+                        Commands.runOnce(() -> RobotStates.setAutoAimLeft(false)),
+                        secondBarge.cmd().asProxy()));
+
+        secondBarge
+                .atTimeBeforeEnd(0.4)
+                .onTrue(Commands.parallel(
+                        RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.Net),
+                        RobotContainer.getWrist().net()));
+
+        secondBarge
+                .recentlyDone()
+                .onTrue(Commands.sequence(
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+                        algeaScore(),
+                        bargeToThird.cmd().asProxy()));
+
+        bargeToThird
+                .atTimeBeforeEnd(0.6)
+                .onTrue(Commands.sequence(
+                        aimLeftl3(),
+                        Commands.runOnce(() -> RobotStates.setAutoAimLeft(false)),
+                        thirdToBarge.cmd().asProxy()));
+
+        thirdToBarge
+                .atTimeBeforeEnd(0.25)
+                .onTrue(Commands.parallel(
+                        RobotContainer.getElevator().setStateAndGoToHeight(ElevatorHeight.Net),
+                        RobotContainer.getWrist().net()));
+
+        thirdToBarge
+                .recentlyDone()
+                .onTrue(Commands.sequence(
+                        Commands.waitUntil(RobotContainer.getElevator().isAtPosition()),
+                        algeaScore(),
+                        bargeBack.cmd().asProxy()));
+
+        routine.active()
+                .onTrue(Commands.sequence(
+                        m_factory.resetOdometry(centerStart), new ScheduleCommand(untangle()), startToFirst.cmd()));
 
         return routine;
     }
