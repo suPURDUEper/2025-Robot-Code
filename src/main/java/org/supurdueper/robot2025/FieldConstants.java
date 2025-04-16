@@ -88,7 +88,7 @@ public class FieldConstants {
         return robotPose.relativeTo(aprilTagPose).rotateBy(Rotation2d.k180deg);
     }
 
-    public static final FieldType fieldType = FieldType.ANDYMARK;
+    public static final FieldType fieldType = FieldType.WELDED;
 
     public static final double fieldLength =
             AprilTagLayoutType.OFFICIAL.getLayout().getFieldLength();
