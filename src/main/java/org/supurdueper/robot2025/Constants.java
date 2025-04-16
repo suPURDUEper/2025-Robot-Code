@@ -173,7 +173,7 @@ public final class Constants {
     public final class FunnelConstants {
         public static final CurrentLimitsConfigs kCurrentLimit =
                 new CurrentLimitsConfigs().withStatorCurrentLimit(60).withStatorCurrentLimitEnable(true);
-        public static final Voltage kIntakeVoltage = Volts.of(6);
+        public static final Voltage kIntakeVoltage = Volts.of(8);
         public static final Voltage kUnjamVoltage = Volts.of(-3);
         public static final Voltage kL1IntakeVoltage = Volts.of(-6);
         public static final Voltage kL1ScoreVoltage = Volts.of(4);
